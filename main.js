@@ -6,8 +6,10 @@ import $userService from './utils/userService.js'
 import store from './store'
 import config from './config'
 import $code from './utils/code.js'
+import uView from "uview-ui";
 
 Vue.config.productionTip = false
+Vue.use(uView); 
 Vue.prototype.$http = $http
 Vue.prototype.$store = store
 Vue.prototype.$config = config
