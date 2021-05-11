@@ -26,7 +26,7 @@
             "path" : "pages/livephoto/livephoto",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "直播相册",
                 "enablePullDownRefresh": false
             }
             
