@@ -1,13 +1,19 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/game/game",
+			"style": {
+				"navigationBarTitleText": "赛事",
+				"backgroundColor": "#fdfdfd"
+			}
+		},{
 			"path": "pages/home/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "Home"
 			}
 		}
-	    ,{
-            "path" : "pages/home/index",
+        ,{
+            "path" : "pages/uc/uc",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
@@ -18,8 +24,27 @@
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
+		"navigationBarTitleText": "",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+	    "color": "#7A7E83",
+	    "selectedColor": "#3cc51f",
+	    "borderStyle": "black",
+	    "backgroundColor": "#ffffff",
+	    "list": [{
+	        "pagePath": "pages/home/index",
+			"iconPath":"",
+			"selectedIconPath":"",
+	        "text": "首页"
+	    }, {
+	        "pagePath": "pages/uc/uc",
+	        "text": "我的"
+	    }]
+	},
+	"easycom": {
+		// "^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue",
+		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
 	}
 }

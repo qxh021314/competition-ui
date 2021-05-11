@@ -13,6 +13,7 @@
  */
 
 /* 颜色变量 */
+@import 'uview-ui/theme.scss';
 
 /* 行为相关颜色 */
 $uni-color-primary: #007aff;
@@ -63,6 +64,7 @@ $uni-spacing-row-lg: 30rpx;
 $uni-spacing-col-sm: 8rpx;
 $uni-spacing-col-base: 16rpx;
 $uni-spacing-col-lg: 24rpx;
+
 
 /* 透明度 */
 $uni-opacity-disabled: 0.3; // 组件禁用态的透明度

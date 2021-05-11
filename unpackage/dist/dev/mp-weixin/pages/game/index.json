@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "赛事",
+  "backgroundColor": "#fdfdfd",
+  "usingComponents": {
+    "u-card": "/uview-ui/components/u-card/u-card"
+  }
+}

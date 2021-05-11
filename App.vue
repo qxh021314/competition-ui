@@ -12,6 +12,13 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
+	/* uview */
+	@import "uview-ui/index.scss";
+	
 	/*每个页面公共css */
+	page {
+		background: #eee;
+		box-sizing: border-box;
+	}
 </style>
