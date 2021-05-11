@@ -6,14 +6,24 @@
 				"navigationBarTitleText": "赛事",
 				"backgroundColor": "#fdfdfd"
 			}
-		},{
+		},
+		{
 			"path": "pages/home/index",
 			"style": {
 				"navigationBarTitleText": "Home"
 			}
-		}
-        ,{
+		},
+		{
             "path" : "pages/uc/uc",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/livephoto/livephoto",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
