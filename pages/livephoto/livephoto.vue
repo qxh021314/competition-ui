@@ -19,9 +19,18 @@
 
 		<u-tabs :list="tabs" :is-scroll="false" :current="currentTab" @change="changeTab">
 		</u-tabs>
+		
+		<!--  tab pannel  -->
 		<view class="tab-pannel">
-			<view v-if="currentTab === 0" class="u-p-20">
-				Lorem.
+			<view v-if="currentTab === 0 || currentTab === 1" class="u-p-20">
+				<u-row class="photo-item" v-for="i in 5">
+					<u-col span="6" @click="onClickPhotoItem">
+						<image src="" mode="aspectFill"></image>
+					</u-col>
+					<u-col span="6">
+						<image src="" mode="aspectFill"></image>
+					</u-col>
+				</u-row>
 			</view>
 		</view>
 	</view>
@@ -31,10 +40,15 @@
 	export default {
 		data() {
 			return {
-				tabs: [
-					{ name: "照片" },
-					{ name: "热门" },
-					{ name: "我的照片" },
+				tabs: [{
+						name: "照片"
+					},
+					{
+						name: "热门"
+					},
+					{
+						name: "我的照片"
+					},
 				],
 				currentTab: 0
 			}
@@ -42,6 +56,9 @@
 		methods: {
 			changeTab(n) {
 				this.currentTab = n
+			},
+			onClickPhotoItem(item) {
+				console.log('click photo item')
 			}
 		}
 	}
@@ -64,10 +81,19 @@
 			padding: 20rpx 10rpx 0;
 		}
 	}
-	
+
 	.tab-pannel {
 		width: 100%;
 		min-height: 400rpx;
 		background: #fff;
+	}
+
+	.photo-item {
+		image {
+			width: 100%;
+			height: 200rpx;
+			background: #eee;
+			border-radius: 8rpx;
+		}
 	}
 </style>
