@@ -19,24 +19,111 @@
 
 		<u-tabs :list="tabs" :is-scroll="false" :current="currentTab" @change="changeTab">
 		</u-tabs>
-		
+
 		<!--  tab pannel  -->
 		<view class="tab-pannel">
-			<view v-if="currentTab === 0 || currentTab === 1" class="u-p-20">
-				<u-row class="photo-item" v-for="i in 5">
-					<u-col span="6" @click="onClickPhotoItem">
-						<image src="" mode="aspectFill"></image>
+			<view v-if="currentTab === 0" class="u-p-20">
+				<u-row class="photo-item" v-for="row in photosUI">
+					<u-col v-for="item in row" v-if="item" class="photo-item-bd" span="6"
+						@click="onClickPhotoItem(item)">
+						<image :src="item.src" mode="aspectFill"></image>
+						<view v-if="isActiveSelect" class="photo-item-select">
+							{{ getSelectItemPos(item) | formatSelectedIndex }}
+						</view>
 					</u-col>
-					<u-col span="6">
-						<image src="" mode="aspectFill"></image>
-					</u-col>
+					<u-col v-else span="6"></u-col>
 				</u-row>
 			</view>
 		</view>
+
+		<!-- footer -->
+		<view class="live-photo-footer">
+			<u-row v-if="!isActiveSelect" align="center">
+				<u-col span="4" text-align="center" @click="toggleSelectPhoto(1)">
+					<u-icon name="camera" size="46" />
+					<view>拼图</view>
+				</u-col>
+				<u-col span="4" text-align="center">
+					<u-icon name="share" size="46" />
+					<view>分享</view>
+				</u-col>
+				<u-col span="4" text-align="center">
+					<u-icon name="download" size="46" />
+					<view>下载</view>
+				</u-col>
+			</u-row>
+
+			<!-- 拼图操作栏 -->
+			<u-row v-else align="center" class="photo-action">
+				<u-col span="6" text-align="center" @click="toggleSelectPhoto(0)">
+					取消
+				</u-col>
+				<u-col span="6" text-align="center" @click="mergeSelectPhoto">
+					确认
+					<text v-if="selected.length" class="photo-action--badge">{{ selected.length }}</text>
+				</u-col>
+			</u-row>
+		</view>
+
+		<!-- popup -->
+		<u-popup v-model="showPopPage" mode="right" length="100%" closeable close-icon-color="#eee" close-icon-size="50">
+			<view class="pop-page">
+				<image :src="mergeImg" mode="widthFix" />
+			</view>
+
+		</u-popup>
+
+		<!-- toast -->
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
 <script>
+	import chunkDataWithInUI from '@/utils/chunkArray.js'
+	import mergeImages from '@/utils/mergeImages.js'
+
+	// mock data ->
+	const mockData = {
+		photos: [{
+				id: 1,
+				exif: 'abcd1111',
+				src: 'https://c360-o2o.c360dn.com/MTg5ODA1OTY3MjgxNjE4NzMxNjgzMTIy375'
+			},
+			{
+				id: 2,
+				exif: 'abcd2222',
+				src: 'https://c360-o2o.c360dn.com/MTg5ODA1OTY3MjgxNjE4NzMxNjkzMDk0375'
+			},
+			{
+				id: 3,
+				exif: 'abcd2222',
+				src: 'https://c360-o2o.c360dn.com/MTg5ODA1OTY3MjgxNjE4NzMxNjkzMDk0375'
+			},
+			{
+				id: 4,
+				exif: 'abcd2222',
+				src: 'https://c360-o2o.c360dn.com/Fjnp1vNTP0I5UNgCZ193xYYHuF_e375'
+			},
+			{
+				id: 5,
+				exif: 'abcd2222',
+				src: 'https://c360-o2o.c360dn.com/MTg5ODA1OTY3MjgxNjE4NzMxNjkzMDk0375'
+			},
+			{
+				id: 6,
+				exif: 'abcd2222',
+				src: 'https://c360-o2o.c360dn.com/MTg5ODA1OTY3MjgxNjE4NDc3NjA3MjMx'
+			},
+			{
+				id: 7,
+				exif: 'abcd3333',
+				src: 'https://c360-o2o.c360dn.com/MTg5ODA1OTY3MjgxNjE4NzMxNjkzMDk0375'
+			}
+		]
+	}
+	// <- mock data
+
+
 	export default {
 		data() {
 			return {
@@ -50,21 +137,100 @@
 						name: "我的照片"
 					},
 				],
-				currentTab: 0
+				currentTab: 0,
+				photos: [],
+
+				selected: [],
+				isActiveSelect: false,
+				showPopPage: false,
+
+				mergeImg: '' // 合并后的图片 - base64
+			}
+		},
+		computed: {
+			photosUI() {
+				return chunkDataWithInUI(this.photos, 2)
+			}
+		},
+		filters: {
+			formatSelectedIndex(n) {
+				return (n + 1) || ''
 			}
 		},
 		methods: {
 			changeTab(n) {
 				this.currentTab = n
 			},
+			toggleSelectPhoto(n) {
+				this.isActiveSelect = !!n
+				if (!this.isActiveSelect) {
+					this.selected = []
+				}
+			},
+			/**
+			 * @param {Object} item id需不重复
+			 */
 			onClickPhotoItem(item) {
-				console.log('click photo item')
+				if (!this.isActiveSelect) {
+					console.log('图片分享 ...')
+					return
+				}
+
+				const pos = this.getSelectItemPos(item)
+				if (pos !== -1) {
+					this.selected.splice(pos, 1)
+				} else {
+					this.selected.push(`${item.src}?${item.id}`)
+				}
+
+				console.log('选择拼图')
+			},
+			getSelectItemPos(item) {
+				return this.selected.indexOf(`${item.src}?${item.id}`)
+			},
+			/**
+			 * 合图
+			 */
+			mergeSelectPhoto() {
+				if (this.selected.length) {
+					this.showPopPage = true
+					const opts = []
+					for (let i = 0; i < this.selected.length; i++) {
+						opts.push({
+							src: this.selected[i]
+						})
+					}
+					
+					console.log('opts', opts)
+					mergeImages(opts, {
+						direction: 'y',
+						crossOrigin: 'Anonymous',
+						width: 375
+					}).then(b64 => {
+						this.mergeImg = b64
+					})
+
+				} else {
+					this.$refs.uToast.show({
+						title: '请选择图片',
+						type: 'warning'
+					})
+				}
 			}
+		},
+		onLoad() {
+			this.photos = mockData.photos
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	$bottomBarHeight: 120rpx;
+
+	.live-photo {
+		padding-bottom: $bottomBarHeight;
+	}
+
 	.card-bd {
 		display: flex;
 		justify-content: center;
@@ -94,6 +260,64 @@
 			height: 200rpx;
 			background: #eee;
 			border-radius: 8rpx;
+		}
+
+		&-bd {
+			position: relative;
+		}
+
+		&-select {
+			position: absolute;
+			right: 24rpx;
+			bottom: 24rpx;
+			background: #fff;
+			width: 54rpx;
+			height: 54rpx;
+			border-radius: 100%;
+			border: 1px solid #333;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+	}
+
+	.live-photo-footer {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		width: 100%;
+		height: $bottomBarHeight;
+		border-top: 1px solid #c7c7c7;
+		background: #f9f9f9;
+		color: #999;
+		font-size: 24rpx;
+
+		.u-row {
+			height: 100%;
+		}
+
+		.u-col:active {
+			opacity: .8;
+		}
+
+		.photo-action {
+			font-size: 30rpx;
+
+			&--badge {
+				margin-left: 10rpx;
+				padding: 0 20rpx;
+				border: 1px solid #999;
+				background: #f8f8f8;
+				border-radius: 20rpx;
+				font-size: 24rpx;
+			}
+		}
+	}
+
+	.pop-page {
+		image {
+			width: 100%;
 		}
 	}
 </style>
