@@ -13,7 +13,7 @@
 
 				<u-line class="u-m-t-40 u-m-b-30"></u-line>
 
-				<u-icon name="clock" label="2021-01-01" size=""></u-icon>
+				<u-icon name="clock" label="2021-01-01"></u-icon>
 			</view>
 		</u-card>
 
@@ -40,15 +40,15 @@
 		<view class="live-photo-footer">
 			<u-row v-if="!isActiveSelect" align="center">
 				<u-col span="4" text-align="center" @click="toggleSelectPhoto(1)">
-					<u-icon name="camera" size="46" />
+					<u-icon name="camera" :size="46" />
 					<view>拼图</view>
 				</u-col>
 				<u-col span="4" text-align="center">
-					<u-icon name="share" size="46" />
+					<u-icon name="share" :size="46" />
 					<view>分享</view>
 				</u-col>
 				<u-col span="4" text-align="center">
-					<u-icon name="download" size="46" />
+					<u-icon name="download" :size="46" />
 					<view>下载</view>
 				</u-col>
 			</u-row>
@@ -66,7 +66,8 @@
 		</view>
 
 		<!-- popup -->
-		<u-popup v-model="showPopPage" mode="right" length="100%" closeable close-icon-color="#eee" close-icon-size="50">
+		<u-popup v-model="showPopPage" mode="right" length="100%" closeable close-icon-color="#eee"
+			close-icon-size="50">
 			<view class="pop-page">
 				<image :src="mergeImg" mode="widthFix" />
 			</view>
@@ -200,7 +201,7 @@
 							src: this.selected[i]
 						})
 					}
-					
+
 					console.log('opts', opts)
 					mergeImages(opts, {
 						direction: 'y',
@@ -224,100 +225,110 @@
 	}
 </script>
 
-<style lang="scss" scoped>
-	$bottomBarHeight: 120rpx;
-
+<style lang="scss">
 	.live-photo {
+		$bottomBarHeight: 120rpx;
+
 		padding-bottom: $bottomBarHeight;
-	}
 
-	.card-bd {
-		display: flex;
-		justify-content: center;
-		flex-direction: column;
-
-		image {
-			width: 100%;
-			height: 340rpx;
-			background: #eee;
-			border-radius: 6px;
-		}
-
-		text {
-			padding: 20rpx 10rpx 0;
-		}
-	}
-
-	.tab-pannel {
-		width: 100%;
-		min-height: 400rpx;
-		background: #fff;
-	}
-
-	.photo-item {
-		image {
-			width: 100%;
-			height: 200rpx;
-			background: #eee;
-			border-radius: 8rpx;
-		}
-
-		&-bd {
-			position: relative;
-		}
-
-		&-select {
-			position: absolute;
-			right: 24rpx;
-			bottom: 24rpx;
-			background: #fff;
-			width: 54rpx;
-			height: 54rpx;
-			border-radius: 100%;
-			border: 1px solid #333;
+		.card-bd {
 			display: flex;
 			justify-content: center;
-			align-items: center;
-		}
-	}
+			flex-direction: column;
 
-	.live-photo-footer {
-		position: fixed;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		width: 100%;
-		height: $bottomBarHeight;
-		border-top: 1px solid #c7c7c7;
-		background: #f9f9f9;
-		color: #999;
-		font-size: 24rpx;
+			image {
+				width: 100%;
+				height: 340rpx;
+				background: #eee;
+				border-radius: 6px;
+			}
 
-		.u-row {
-			height: 100%;
-		}
-
-		.u-col:active {
-			opacity: .8;
-		}
-
-		.photo-action {
-			font-size: 30rpx;
-
-			&--badge {
-				margin-left: 10rpx;
-				padding: 0 20rpx;
-				border: 1px solid #999;
-				background: #f8f8f8;
-				border-radius: 20rpx;
-				font-size: 24rpx;
+			text {
+				padding: 20rpx 10rpx 0;
 			}
 		}
-	}
 
-	.pop-page {
-		image {
+		.tab-pannel {
 			width: 100%;
+			min-height: 400rpx;
+			background: #fff;
 		}
+
+		.photo-item {
+			image {
+				width: 100%;
+				height: 200rpx;
+				background: #eee;
+				border-radius: 8rpx;
+			}
+
+			&-bd {
+				position: relative;
+			}
+			
+			// 兼容小程序
+			.u-col.u-col-6 {
+				position: relative;
+			}
+
+			&-select {
+				position: absolute;
+				right: 24rpx;
+				bottom: 24rpx;
+				background: #fff;
+				width: 54rpx;
+				height: 54rpx;
+				border-radius: 100%;
+				border: 1px solid #333;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+		}
+
+		.live-photo-footer {
+			position: fixed;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			width: 100%;
+			height: $bottomBarHeight;
+			border-top: 1px solid #c7c7c7;
+			background: #f9f9f9;
+			color: #999;
+			font-size: 24rpx;
+			padding-top: 10rpx;
+
+
+			.u-row {
+				height: 100%;
+			}
+
+			.u-col:active {
+				opacity: .8;
+			}
+
+
+			.photo-action {
+				font-size: 30rpx;
+				line-height: $bottomBarHeight;
+
+				&--badge {
+					margin-left: 10rpx;
+					padding: 0 20rpx;
+					border: 1px solid #999;
+					background: #f8f8f8;
+					border-radius: 20rpx;
+					font-size: 24rpx;
+				}
+			}
+		}
+
+		.pop-page {
+			image {
+				width: 100%;
+			}
+		}
+
 	}
 </style>

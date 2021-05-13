@@ -1,6 +1,14 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+		    "path" : "pages/livephoto/livephoto",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "直播相册",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		},{
 			"path": "pages/game/game",
 			"style": {
 				"navigationBarTitleText": "赛事",
@@ -22,15 +30,7 @@
             }
             
         }
-        ,{
-            "path" : "pages/livephoto/livephoto",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "直播相册",
-                "enablePullDownRefresh": false
-            }
-            
-        }
+      
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
