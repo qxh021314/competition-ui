@@ -1,37 +1,52 @@
 {
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		{
-		    "path" : "pages/livephoto/livephoto",
-		    "style" :                                                                                    
-		    {
-		        "navigationBarTitleText": "直播相册",
-		        "enablePullDownRefresh": false
-		    }
-		    
-		},{
-			"path": "pages/game/game",
+	"pages": [{
+			"path": "pages/views/home/index",
 			"style": {
-				"navigationBarTitleText": "赛事",
-				"backgroundColor": "#fdfdfd"
+				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": false
 			}
 		},
+
 		{
-			"path": "pages/home/index",
+			"path": "pages/views/uc/uc",
 			"style": {
-				"navigationBarTitleText": "Home"
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
 			}
-		},
-		{
-            "path" : "pages/uc/uc",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-      
-    ],
+		}
+	],
+
+	"subPackages": [{
+		"root": "package-events",
+		"pages": [{
+				"path": "views/game/game",
+				"style": {
+					"navigationBarTitleText": "赛事",
+					"backgroundColor": "#fdfdfd"
+				}
+			},
+			//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+			{
+				"path": "views/livephoto/livephoto",
+				"style": {
+					"navigationBarTitleText": "直播相册",
+					"enablePullDownRefresh": false
+				}
+			}, {
+				"path": "views/event-details/index",
+				"style": {
+					"navigationBarTitleText": "小组赛",
+					"enablePullDownRefresh": false
+				}
+			}, {
+				"path": "views/group-stage/index",
+				"style": {
+					"navigationBarTitleText": "小组赛",
+					"enablePullDownRefresh": false
+				}
+			}
+		]
+	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "",
@@ -39,19 +54,19 @@
 		"backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {
-	    "color": "#7A7E83",
-	    "selectedColor": "#3cc51f",
-	    "borderStyle": "black",
-	    "backgroundColor": "#ffffff",
-	    "list": [{
-	        "pagePath": "pages/home/index",
-			"iconPath":"",
-			"selectedIconPath":"",
-	        "text": "首页"
-	    }, {
-	        "pagePath": "pages/uc/uc",
-	        "text": "我的"
-	    }]
+		"color": "#7A7E83",
+		"selectedColor": "#3cc51f",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [{
+				"pagePath": "pages/views/home/index",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/views/uc/uc",
+				"text": "我的"
+			}
+		]
 	},
 	"easycom": {
 		// "^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue",

@@ -3,7 +3,7 @@
  * @author wdd.
  **/
 const $utils = {
-  themeColor: '#860200',
+  themeColor: '#63d5c4',
 
   //折线图秒数转换为小时
   formatHour(value) {

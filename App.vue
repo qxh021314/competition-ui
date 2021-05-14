@@ -17,6 +17,11 @@
 	@import "uview-ui/index.scss";
 	
 	/*每个页面公共css */
+	image {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
 	page {
 		background: #eee;
 		box-sizing: border-box;
