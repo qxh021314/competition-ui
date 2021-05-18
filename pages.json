@@ -1,6 +1,6 @@
 {
 	"pages": [{
-			"path": "pages/views/home/index",
+			"path": "pages/views/home/home",
 			"style": {
 				"navigationBarTitleText": "首页",
 				"enablePullDownRefresh": false
@@ -8,23 +8,31 @@
 		},
 
 		{
+			"path": "pages/views/activity/activity",
+			"style": {
+				"navigationBarTitleText": "活动",
+				"enablePullDownRefresh": false
+			}
+		}, {
 			"path": "pages/views/uc/uc",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "我的",
 				"enablePullDownRefresh": false
+			}
+		}, {
+			"path": "pages/views/scheme/scheme",
+			"style": {
+				"navigationBarTitleText": "方案",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom", // 隐藏系统导航栏
+				"navigationBarTextStyle": "white" // 状态栏字体为白色，只能为 white-白色，black-黑色 二选一
 			}
 		}
 	],
 
 	"subPackages": [{
 		"root": "package-events",
-		"pages": [{
-				"path": "views/game/game",
-				"style": {
-					"navigationBarTitleText": "赛事",
-					"backgroundColor": "#fdfdfd"
-				}
-			},
+		"pages": [
 			//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 			{
 				"path": "views/livephoto/livephoto",
@@ -44,8 +52,45 @@
 					"navigationBarTitleText": "小组赛",
 					"enablePullDownRefresh": false
 				}
+			}, {
+				"path": "views/product/index",
+				"style": {
+					"navigationBarTitleText": "产品",
+					"enablePullDownRefresh": false
+				}
+
+			}, {
+				"path": "views/scheme-details/index",
+				"style": {
+					"navigationBarTitleText": "详情",
+					"enablePullDownRefresh": false
+				}
+
+			}, {
+				"path": "views/activity-details/index",
+				"style": {
+					"navigationBarTitleText": "精彩赛事",
+					"enablePullDownRefresh": false
+				}
+
+			}, {
+				"path": "views/activity-details/events-details",
+				"style": {
+					"navigationBarTitleText": "赛事详情",
+					"enablePullDownRefresh": false
+				}
+
 			}
-		]
+		    ,{
+                    "path" : "views/activity-details/sign-up",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "立即报名",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -55,18 +100,30 @@
 	},
 	"tabBar": {
 		"color": "#7A7E83",
-		"selectedColor": "#3cc51f",
+		"selectedColor": "#63d5c4",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [{
-				"pagePath": "pages/views/home/index",
-				"text": "首页"
-			},
-			{
-				"pagePath": "pages/views/uc/uc",
-				"text": "我的"
-			}
-		]
+			"pagePath": "pages/views/home/home",
+			"iconPath": "static/homepre.png",
+			"selectedIconPath": "static/homeaft.png",
+			"text": "首页"
+		}, {
+			"pagePath": "pages/views/scheme/scheme",
+			"iconPath": "static/schemepre.png",
+			"selectedIconPath": "static/schemeaft.png",
+			"text": "方案"
+		}, {
+			"pagePath": "pages/views/activity/activity",
+			"iconPath": "static/activitypre.png",
+			"selectedIconPath": "static/activityaft.png",
+			"text": "活动"
+		}, {
+			"pagePath": "pages/views/uc/uc",
+			"iconPath": "static/ucpre.png",
+			"selectedIconPath": "static/ucaft.png",
+			"text": "我的"
+		}]
 	},
 	"easycom": {
 		// "^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue",

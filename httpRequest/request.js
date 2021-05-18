@@ -58,7 +58,9 @@ const $http = {
 					// clearTimeout($utils.delayed)
 					// $utils.delayed = null;
 					if (!hideLoading) {
-						uni.hideLoading()
+						setTimeout(() => {
+							uni.hideLoading()
+						}, 500)
 					}
 
 					if (res.data.code == 406 && !loginLock) {

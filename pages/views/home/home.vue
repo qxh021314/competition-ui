@@ -2,22 +2,25 @@
 	<view>
 		<!-- 背景图 -->
 		<view class="titleNview-background"></view>
+
 		<!-- 公告 -->
-		<u-notice-bar mode="horizontal" color="#ffffff" :list="textList"></u-notice-bar>
+		<u-notice-bar bg-color="#ffffff" mode="horizontal" color="#ffffff" :list="textList"></u-notice-bar>
 
-		<u-swiper bgColor="" name="imgUrl" height="300" :list="listBanner" :effect3d="true"
-				  effect3d-previous-margin="40" @click="bannerToDetails"></u-swiper>
+		<view class="zit-banner">
+			<u-swiper bgColor="" name="imgUrl" height="300" :list="listBanner" :effect3d="true"
+				effect3d-previous-margin="40" @click="bannerToDetails"></u-swiper>
+		</view>
 
-		<br>
 		<view class="zit-menu">
 			<!-- 菜单 -->
-			<menu-list></menu-list>
+			<menu-list :list="menuList"></menu-list>
 		</view>
 
 		<!-- 企业动态 -->
 		<view class="zit-busin">
 			<view class="zit-busin_title">
-				<u-section :line-color="lineColor" :sub-color="lineColor" font-size="33" title="企业动态" sub-title="更多动态"></u-section>
+				<u-section :line-color="lineColor" :sub-color="lineColor" font-size="33" title="企业动态" sub-title="更多动态">
+				</u-section>
 			</view>
 			<view class="zit-busin_content">
 				<zit-news-card></zit-news-card>
@@ -34,10 +37,48 @@
 		},
 		data() {
 			return {
+				noticeColor: this.$utils.themeColor,
+				menuList: [{
+					img: '/static/gywm.png',
+					name: '关于我们',
+					url: '/pages/bidding-notice/index',
+					color: this.$utils.themeColor,
+					oauth: true
+				}, {
+					img: '/static/hxcp.png',
+					name: '核心产品',
+					url: '/package-events/views/product/index',
+					color: this.$utils.themeColor,
+					oauth: false
+				}, {
+					img: '/static/csal.png',
+					name: '成熟案例',
+					color: this.$utils.themeColor,
+					url: '',
+					oauth: false
+				}, {
+					img: '/static/tycg.png',
+					name: '体育场馆',
+					color: this.$utils.themeColor,
+					url: '/pages/bidding-notice/index',
+					oauth: false
+				}, {
+					img: '/static/jchd.png',
+					name: '精彩活动',
+					color: this.$utils.themeColor,
+					url: '',
+					oauth: false
+				}, {
+					img: '/static/gdss.png',
+					name: '更多搜索',
+					color: this.$utils.themeColor,
+					url: '/pages/bidding-notice/index',
+					oauth: false
+				}],
 				lineColor: this.$utils.themeColor,
-				textList: ['和辣椒刺激目前为'],
+				textList: ['功能正在开发中，敬请期待！'],
 				listBanner: [{
-					imgUrl: "https://platform-xrsj.oss-cn-hangzhou.aliyuncs.com/media/20210429/8f74a1810c7c40c8aced49175ba1f1bc.jpg"
+					imgUrl: "/static/16pic_5797042_b.jpg"
 				}]
 			}
 		},
@@ -99,22 +140,30 @@
 		border-radius: 10rpx;
 	}
 
+	.zit-banner {
+		// margin: 30rpx 0;
+	}
+
+	/deep/ .u-swiper-wrap {
+		margin-bottom: 20rpx;
+	}
+
 	.zit-busin {
-		margin: 20rpx;
-		background-color: #FFFFFF;
 		&_title {
 			background-color: #FFFFFF;
 			padding: 20rpx 10rpx;
 		}
+		&_content{
+			// background-color: #ffffff;
+		}
 	}
 
 	.zit-menu {
-		margin: 20rpx;
+		margin: 20rpx 0;
 		background-color: #FFFFFF;
-		box-shadow: 0 8rpx 16rpx 0 rgba(0, 0, 0, 0.14);
+		// box-shadow: 0 8rpx 16rpx 0 rgba(0, 0, 0, 0.14);
 		border-radius: 10rpx;
 		background-color: #FFFFFF;
-		margin-top: -20rpx;
 		position: relative;
 	}
 </style>

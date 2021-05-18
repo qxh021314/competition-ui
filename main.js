@@ -10,6 +10,7 @@ import uView from "uview-ui";
 
 Vue.config.productionTip = false
 Vue.use(uView); 
+
 Vue.prototype.$http = $http
 Vue.prototype.$store = store
 Vue.prototype.$config = config

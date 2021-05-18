@@ -23,10 +23,10 @@
 		<!--  tab pannel  -->
 		<view class="tab-pannel">
 			<view v-if="currentTab === 0" class="u-p-20">
-				<u-row class="photo-item" v-for="row in photosUI">
-					<u-col v-for="item in row" v-if="item" class="photo-item-bd" span="6"
-						@click="onClickPhotoItem(item)">
-						<image :src="item.src" mode="aspectFill"></image>
+				<u-row class="photo-item" v-for="(row, index) in photosUI" :key="index">
+					<u-col v-for="(item, indexchild) in row" :key="indexchild" v-if="item" class="photo-item-bd"
+						span="6" @click="onClickPhotoItem(item)">
+						<image :src="item.src" mode="aspectFill" />
 						<view v-if="isActiveSelect" class="photo-item-select">
 							{{ getSelectItemPos(item) | formatSelectedIndex }}
 						</view>
@@ -71,9 +71,9 @@
 			<view class="pop-page">
 				<image :src="mergeImg" mode="widthFix" />
 			</view>
-
 		</u-popup>
-
+		<poster v-if="list.length" :list="list" background-color="#FFF" :width="750" :height="height"
+			@on-success="posterSuccess" ref="poster" />
 		<!-- toast -->
 		<u-toast ref="uToast" />
 	</view>
@@ -81,7 +81,7 @@
 
 <script>
 	import chunkDataWithInUI from '@/utils/chunkArray.js'
-	import mergeImages from '@/utils/mergeImages.js'
+	import Poster from '../../components/Poster.vue'
 
 	// mock data ->
 	const mockData = {
@@ -124,8 +124,10 @@
 	}
 	// <- mock data
 
-
 	export default {
+		components: {
+			Poster
+		},
 		data() {
 			return {
 				tabs: [{
@@ -140,11 +142,11 @@
 				],
 				currentTab: 0,
 				photos: [],
-
+				list: [],
 				selected: [],
 				isActiveSelect: false,
 				showPopPage: false,
-
+				height: 1200,
 				mergeImg: '' // 合并后的图片 - base64
 			}
 		},
@@ -158,7 +160,43 @@
 				return (n + 1) || ''
 			}
 		},
+
 		methods: {
+			posterSuccess(e) {
+				this.showPopPage = true
+				uni.hideLoading()
+				this.mergeImg = e
+			},
+
+			photoPoster() {
+				let list = []
+				list.push({
+					type: 'image',
+					path: 'https://img.zcool.cn/community/015f52598d716700000021298c562f.jpg@1280w_1l_2o_100sh.jpg',
+					x: 0,
+					y: 100,
+					width: 750,
+					height: 350
+				})
+				list.push({
+					type: 'image',
+					x: 0,
+					y: 450,
+					width: 750,
+					height: 350,
+					path: 'https://img.zcool.cn/community/015f52598d716700000021298c562f.jpg@1280w_1l_2o_100sh.jpg'
+				})
+				list.push({
+					type: 'image',
+					x: 0,
+					y: 800,
+					width: 750,
+					height: 350,
+					path: 'https://img.zcool.cn/community/015f52598d716700000021298c562f.jpg@1280w_1l_2o_100sh.jpg'
+				})
+				this.calculate(list)
+			},
+
 			changeTab(n) {
 				this.currentTab = n
 			},
@@ -193,30 +231,37 @@
 			 * 合图
 			 */
 			mergeSelectPhoto() {
-				if (this.selected.length) {
-					this.showPopPage = true
-					const opts = []
-					for (let i = 0; i < this.selected.length; i++) {
-						opts.push({
-							src: this.selected[i]
-						})
-					}
-
-					console.log('opts', opts)
-					mergeImages(opts, {
-						direction: 'y',
-						crossOrigin: 'Anonymous',
-						width: 375
-					}).then(b64 => {
-						this.mergeImg = b64
-					})
-
-				} else {
-					this.$refs.uToast.show({
-						title: '请选择图片',
-						type: 'warning'
-					})
+				this.list = []
+				this.calculate(this.selected)
+				uni.showLoading({
+					mask: true,
+					title: '请稍候...'
+				})
+			},
+			/**
+			 * 合图计算位置
+			 * @param {Object} num 图片数量
+			 */
+			calculate(imgList) {
+				this.height = 100 + imgList.length * 350
+				let mergeImg = {
+					type: 'image',
+					path: '',
+					x: 0,
+					y: 0,
+					width: 750,
+					height: 350
 				}
+				let y = 100
+				let list = []
+				for (var i = 0; i < imgList.length; i++) {
+					mergeImg.y = y
+					mergeImg.path = imgList[i]
+					list.push(JSON.parse(JSON.stringify(mergeImg)))
+					y = mergeImg.y + mergeImg.height
+					console.log(mergeImg);
+				}
+				this.list = list
 			}
 		},
 		onLoad() {
@@ -265,7 +310,7 @@
 			&-bd {
 				position: relative;
 			}
-			
+
 			// 兼容小程序
 			.u-col.u-col-6 {
 				position: relative;

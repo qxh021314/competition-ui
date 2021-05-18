@@ -23,7 +23,7 @@
 		height: 100%;
 	}
 	page {
-		background: #eee;
+		background: #f1f2f7;
 		box-sizing: border-box;
 	}
 </style>

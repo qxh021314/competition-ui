@@ -161,8 +161,8 @@
 <style lang="scss" scoped>
 	uni-video {
 		width: 100%;
+		height: 300rpx;
 	}
-
 	.video-tit {
 		position: absolute;
 		background-color: #000000;

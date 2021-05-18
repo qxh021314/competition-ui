@@ -24,26 +24,29 @@
 
 		<view class="u-margin-20">
 			<!-- 菜单 -->
-			<menu-list></menu-list>
+			<menu-list :list="menuList"></menu-list>
 		</view>
 
 		<!-- 直播相册 -->
 		<zt-title name="直播相册"></zt-title>
 		<u-card margin="20rpx" :show-head="false" :show-foot="false">
 			<view slot="body">
-				
+
 				<view class="envent--image">
-					<image src="https://img11.360buyimg.com/n7/jfs/t1/94448/29/2734/524808/5dd4cc16E990dfb6b/59c256f85a8c3757.jpg" alt="">
+					<image
+						src="https://img11.360buyimg.com/n7/jfs/t1/94448/29/2734/524808/5dd4cc16E990dfb6b/59c256f85a8c3757.jpg"
+						alt="" />
 				</view>
-				
+
 				<view class="envent--title">
 					<text>啊u奴的趣味的得起我们的前五大区相册</text>
 				</view>
-				
+
 				<view class="envent--num">
 					<text class="">共计100张照片</text>
 					<text class="envent--num_margin">已有1000次浏览相册</text>
 				</view>
+				
 			</view>
 		</u-card>
 	</view>
@@ -53,7 +56,43 @@
 	export default {
 		data() {
 			return {
-
+				menuList: [{
+					img: '/static/test1.png',
+					name: '签位表',
+					url: '/pages/bidding-notice/index',
+					color: this.$utils.themeColor,
+					oauth: true
+				}, {
+					img: '/static/test2.png',
+					name: '赛程进程表',
+					url: '/pages/bidding-notice/index',
+					color: this.$utils.themeColor,
+					oauth: false
+				}, {
+					img: '/static/test3.png',
+					name: '场次表',
+					color: this.$utils.themeColor,
+					url: '',
+					oauth: false
+				}, {
+					img: '/static/test4.png',
+					name: '对阵表',
+					color: this.$utils.themeColor,
+					url: '/pages/bidding-notice/index',
+					oauth: false
+				}, {
+					img: '/static/test6.png',
+					name: '赛况',
+					color: this.$utils.themeColor,
+					url: '',
+					oauth: false
+				}, {
+					img: '/static/test5.png',
+					name: '成绩',
+					color: this.$utils.themeColor,
+					url: '/pages/bidding-notice/index',
+					oauth: false
+				}]
 			}
 		},
 		methods: {
@@ -63,33 +102,37 @@
 </script>
 
 <style lang="scss" scoped>
-
-	.envent{
-		&--margin{
+	.envent {
+		&--margin {
 			margin: 10rpx 0;
 		}
-		&--fontweight{
+
+		&--fontweight {
 			font-weight: bold;
 			margin-bottom: 20rpx;
 		}
-		&--width{
+
+		&--width {
 			display: flex;
 		}
-		&--image{
+
+		&--image {
 			width: 100%;
 			height: 300rpx;
 		}
-		&--title{
+
+		&--title {
 			font-size: 30rpx;
 			margin: 10rpx 0;
 		}
-		&--num{
+
+		&--num {
 			color: #7e7e7e;
 			margin: 10rpx 0;
-			&_margin{
+
+			&_margin {
 				margin: 0 20rpx;
 			}
 		}
 	}
-
 </style>

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 	<view class="game-card">
 		<u-card v-for="item in gameList" :show-head="false" :show-foot="false" padding="20" class="card-wrap">
 			<view class="card-bd" slot="body">
@@ -128,3 +128,4 @@
 
 	}
 </style>
+ -->

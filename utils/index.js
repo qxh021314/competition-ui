@@ -233,7 +233,7 @@ const $utils = {
    * @param {Object} text	密码
    */
   isPassword(text) {
-    if ((/^[0-9a-zA-Z_]{6,16}$/.test(text))) {
+    if ((/^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?!([^(0-9a-zA-Z)])+$).{6,}$/.test(text))) {
       return true;
     }
     return false;
