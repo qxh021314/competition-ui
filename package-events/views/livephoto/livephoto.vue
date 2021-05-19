@@ -231,8 +231,11 @@
 			 * 合图
 			 */
 			mergeSelectPhoto() {
+				
 				this.list = []
-				this.calculate(this.selected)
+				this.$nextTick(function(){
+					this.calculate(this.selected)
+				})
 				uni.showLoading({
 					mask: true,
 					title: '请稍候...'
