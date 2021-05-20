@@ -37,5 +37,37 @@ const mockData = {
 	]
 }
 
+// const photoPoster = () => {
+// 	let list = []
+// 	list.push({
+// 		type: 'image',
+// 		path: 'https://img.zcool.cn/community/015f52598d716700000021298c562f.jpg@1280w_1l_2o_100sh.jpg',
+// 		x: 0,
+// 		y: 100,
+// 		width: 750,
+// 		height: 350
+// 	})
+// 	list.push({
+// 		type: 'image',
+// 		x: 0,
+// 		y: 450,
+// 		width: 750,
+// 		height: 350,
+// 		path: 'https://img.zcool.cn/community/015f52598d716700000021298c562f.jpg@1280w_1l_2o_100sh.jpg'
+// 	})
+// 	list.push({
+// 		type: 'image',
+// 		x: 0,
+// 		y: 800,
+// 		width: 750,
+// 		height: 350,
+// 		path: 'https://img.zcool.cn/community/015f52598d716700000021298c562f.jpg@1280w_1l_2o_100sh.jpg'
+// 	})
+// 	this.calculate(list)
+// }
 
-export { mockData }
+
+
+export {
+	mockData
+}

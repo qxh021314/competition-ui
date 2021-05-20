@@ -34,6 +34,42 @@
 					<u-col v-else span="6"></u-col>
 				</u-row>
 			</view>
+
+			<view v-if="currentTab === 1" class="u-p-20">
+				<u-row class="photo-item hot" v-for="(item, index) in hotPhotos" :key="index">
+					<u-col class="photo-item-bd" @click="onClickPhotoItem(item)">
+						<image :src="item.src" mode="aspectFill" />
+					</u-col>
+					<u-col>
+						<view class="u-flex u-row-right u-p-30">
+							<view @click="likePhoto(item)">
+								<u-icon name="thumb-up" size="40" color="#999" />
+								<text class="u-p-l-5 u-m-r-35 u-font-12">100点赞</text>
+							</view>
+							<u-icon name="share" size="50" color="#333" @click="sharePhoto(item)" />
+						</view>
+					</u-col>
+				</u-row>
+			</view>
+
+			<view v-if="currentTab === 2" class="u-p-20">
+				<u-row class="photo-item" v-for="(row, index) in myPhotosUI" :key="index">
+					<u-col v-for="(item, indexchild) in row" :key="indexchild" v-if="item" class="photo-item-bd"
+						span="6" @click="onClickPhotoItem(item)">
+						<image :src="item.src" mode="aspectFill" />
+						<view v-if="isActiveSelect" class="photo-item-select">
+							<u-icon v-if="selected.length && (selected.length===photos.length)" name="checkmark">
+							</u-icon>
+							<text v-else>{{ getSelectItemPos(item) | formatSelectedIndex }}</text>
+						</view>
+					</u-col>
+					<u-col v-else span="6"></u-col>
+				</u-row>
+			</view>
+
+			<view class="u-p-t-30 u-p-b-50">
+				<u-loadmore :status="loadStatus" :load-text="loadText" @loadmore="updateTabData" />
+			</view>
 		</view>
 
 
@@ -83,8 +119,6 @@
 		</view>
 
 
-
-
 		<!-- popup - 合图 -->
 		<u-popup v-model="showPopPage" mode="right" length="100%" closeable close-icon-color="#eee"
 			close-icon-size="50">
@@ -95,7 +129,7 @@
 		<poster v-if="list.length" :list="list" background-color="#FFF" :width="750" :height="height"
 			@on-success="posterSuccess" ref="poster" />
 
-		<!-- popup - 分享 -->
+		<!-- popup - 分享按钮 -->
 		<u-popup v-model="isShowPopShare" mode="bottom">
 			<view class="u-flex u-row-around u-text-center u-p-t-40 u-p-b-40">
 				<view>
@@ -114,6 +148,9 @@
 			</view>
 		</u-popup>
 
+		<!-- popup - 点赞 -->
+		<like-photo :show.sync="showLikePopPage" :data="linkPhotoItem"/>
+
 		<!-- toast -->
 		<u-toast ref="uToast" />
 	</view>
@@ -122,6 +159,7 @@
 <script>
 	import chunkDataWithInUI from '@/utils/chunkArray.js'
 	import Poster from '../../components/Poster.vue'
+	import LikePhoto from './likePhoto.vue'
 
 	// mock data ->
 	import {
@@ -138,7 +176,8 @@
 
 	export default {
 		components: {
-			Poster
+			Poster,
+			LikePhoto
 		},
 		data() {
 			return {
@@ -153,19 +192,47 @@
 					},
 				],
 				currentTab: 0,
-				photos: [],
+				photos: [], // 照片
+				hotPhotos: [], // 热门
+				myPhotos: [], // 我的照片
+
+				// 分页
+				page: {
+					page: 2, // 一页条数
+					photoNo: 0,
+					hotNo: 0,
+					myNo: 0,
+					photoTotal: 1,
+					hotTotal: 1,
+					myTotal: 1
+				},
+				pending: false, // 数据请求中
+				// 点赞
+				showLikePopPage: false,
+				linkPhotoItem: {},
+
 				list: [],
 				selected: [],
 				isActiveSelect: 0,
 				showPopPage: false,
 				height: 1200,
 				mergeImg: '', // 合并后的图片 - base64
-				isShowPopShare: false
+				isShowPopShare: false,
+				// load more
+				loadStatus: 'loadmore',
+				loadText: {
+					loadmore: '点击或上滑加载更多',
+					loading: '',
+					nomore: '没有更多了'
+				}
 			}
 		},
 		computed: {
 			photosUI() {
 				return chunkDataWithInUI(this.photos, 2)
+			},
+			myPhotosUI() {
+				return chunkDataWithInUI(this.myPhotos, 2)
 			}
 		},
 		filters: {
@@ -173,45 +240,87 @@
 				return (n + 1) || ''
 			}
 		},
-
+		onReachBottom() {
+			if (!this.pending) this.updateTabData()
+		},
+		watch: {
+			showLikePopPage(b) {
+				if (!b) this.linkPhotoItem = {}
+			}
+		},
 		methods: {
+			// Data ->
+			updateTabData() {
+				if (this.currentTab === 0) this.fetchPhotos();
+				if (this.currentTab === 1) this.fetchHotPhotos();
+				if (this.currentTab === 2) this.fetchMyPhotos();
+			},
+			async fetchPhotos() {
+				if (this.page.photoNo >= this.page.photoTotal) {
+					this.loadStatus = 'nomore'
+					console.log('nomore ...');
+				} else {
+					this.loadStatus = 'loading'
+					this.photos.push(...(await this.fetchData(0)))
+					this.page.photoTotal = 10
+					this.page.photoNo++
+					if (this.page.photoNo === this.page.photoTotal) {
+						this.loadStatus = 'nomore'
+					}
+					console.log('fetch Photos ...');
+				}
+			},
+			async fetchHotPhotos() {
+				if (this.page.hotNo >= this.page.hotTotal) {
+					this.loadStatus = 'nomore'
+					console.log('nomore ...');
+				} else {
+					this.hotPhotos.push(...(await this.fetchData(1)))
+					this.page.hotTotal = 1
+					this.page.hotNo++
+					if (this.page.hotNo === this.page.hotTotal) {
+						this.loadStatus = 'nomore'
+					}
+					console.log('fetch hot Photos ...');
+				}
+			},
+			async fetchMyPhotos() {
+				if (this.page.myNo >= this.page.myTotal) {
+					this.loadStatus = 'nomore'
+					console.log('nomore ...');
+				} else {
+					this.loadStatus = 'loading'
+					this.myPhotos.push(...(await this.fetchData(2)))
+					this.page.myTotal = 3
+					this.page.myNo++
+					if (this.page.myNo === this.page.myTotal) {
+						this.loadStatus = 'nomore'
+					}
+					console.log('fetch my Photos ...');
+				}
+			},
+			// 拿接口数据
+			fetchData(tid) {
+				console.log('Tab::', tid);
+				return new Promise(resolve => {
+					this.pending = true
+					const data = mockData.photos.slice(0, 5)
+					setTimeout(() => {
+						resolve(data)
+						this.pending = false
+					}, 500)
+				})
+			},
+			// <-
+
 			posterSuccess(e) {
 				this.showPopPage = true
 				uni.hideLoading()
 				this.mergeImg = e
 			},
-
-			photoPoster() {
-				let list = []
-				list.push({
-					type: 'image',
-					path: 'https://img.zcool.cn/community/015f52598d716700000021298c562f.jpg@1280w_1l_2o_100sh.jpg',
-					x: 0,
-					y: 100,
-					width: 750,
-					height: 350
-				})
-				list.push({
-					type: 'image',
-					x: 0,
-					y: 450,
-					width: 750,
-					height: 350,
-					path: 'https://img.zcool.cn/community/015f52598d716700000021298c562f.jpg@1280w_1l_2o_100sh.jpg'
-				})
-				list.push({
-					type: 'image',
-					x: 0,
-					y: 800,
-					width: 750,
-					height: 350,
-					path: 'https://img.zcool.cn/community/015f52598d716700000021298c562f.jpg@1280w_1l_2o_100sh.jpg'
-				})
-				this.calculate(list)
-			},
-
 			changeTab(n) {
 				this.currentTab = n
+				this.updateTabData()
 			},
 			toggleSelectPhoto(n) {
 				this.isActiveSelect = n
@@ -224,6 +333,8 @@
 			 */
 			onClickPhotoItem(item) {
 				if (!this.isActiveSelect) {
+					this.showLikePopPage = true
+					this.linkPhotoItem = item
 					console.log('图片分享 ...')
 					return
 				}
@@ -240,6 +351,7 @@
 			getSelectItemPos(item) {
 				return this.selected.indexOf(`${item.src}?${item.id}`)
 			},
+
 			/**
 			 * 合图
 			 */
@@ -281,6 +393,17 @@
 				this.list = list
 			},
 
+			// 点赞
+			likePhoto(item) {
+				this.showLikePopPage = true
+				this.linkPhotoItem = item
+				console.log('like::', item);
+			},
+			// 分享
+			sharePhoto(item) {
+				console.log('share::', item);
+			},
+			// 分享图片
 			/**
 			 * 全选图片
 			 */
@@ -333,7 +456,7 @@
 
 		},
 		onLoad() {
-			this.photos = mockData.photos
+			this.fetchPhotos()
 		},
 
 		onShareAppMessage() {
@@ -370,7 +493,7 @@
 
 		.tab-pannel {
 			width: 100%;
-			min-height: 400rpx;
+			min-height: 450rpx;
 			background: #fff;
 		}
 
@@ -380,6 +503,16 @@
 				height: 200rpx;
 				background: #eee;
 				border-radius: 8rpx;
+			}
+
+			&.hot {
+				image {
+					height: 400rpx;
+				}
+
+				text {
+					color: #999;
+				}
 			}
 
 			&-bd {
@@ -421,6 +554,7 @@
 			border-top: 1px solid #c7c7c7;
 			background: #f9f9f9;
 			color: #333;
+			z-index: 10;
 
 
 			.u-row {
@@ -456,5 +590,10 @@
 			}
 		}
 
+		.pop-page-like {
+			.u-drawer {
+				background: #000;
+			}
+		}
 	}
 </style>
