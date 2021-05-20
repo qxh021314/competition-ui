@@ -7,7 +7,7 @@
 		<view class="wd-user_info">
 			<view class="wd-flex">
 				<view class="wd-user_img">
-					<image :src="userInfo.avatarUrl" mode=""></image>
+					<image :src="userInfo.avatarUrl ? userInfo.avatarUrl : '/static/roster.png'" mode=""></image>
 				</view>
 			</view>
 			<view class="wd-user_card">
@@ -37,6 +37,7 @@
 				</view>
 			</view>
 		</view>
+		<user-oauth></user-oauth>
 	</view>
 </template>
 
@@ -44,11 +45,6 @@
 	export default {
 		data() {
 			return {
-				userInfo: {
-					avatarUrl: 'http://www.zqgame.com.cn/picture/editorimage/attached/image/20160525/201605251464138259953.jpg',
-					nickName: '王东东'
-
-				},
 				phoneNumber: '1876738123',
 				backgroundImg: 'http://www.zqgame.com.cn/picture/editorimage/attached/image/20160525/201605251464138259953.jpg',
 				menuList: [{
@@ -67,10 +63,17 @@
 				}]
 			}
 		},
-		onLoad() {
-
+		computed: {
+			userInfo() {
+				const user = this.$userService.getUserEncryInfo()
+				if (user) {
+					return user
+				}
+				return this.$store.state.userService.userEncryInfo
+			}
 		},
-		onShow() {},
+		onLoad() {
+		},
 		methods: {
 			navigatorTo(item) {
 				switch (item.name) {
@@ -170,8 +173,8 @@
 		.wd-user_img {
 			width: 180rpx;
 			height: 180rpx;
-
 			image {
+				background-color: #f9f9f9;
 				border-radius: 50%;
 			}
 		}

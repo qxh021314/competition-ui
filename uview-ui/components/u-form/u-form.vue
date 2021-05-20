@@ -56,7 +56,7 @@ export default {
 		// label的宽度，单位rpx
 		labelWidth: {
 			type: [String, Number],
-			default: 90
+			default: 180
 		},
 		// lable字体的对齐方式
 		labelAlign: {

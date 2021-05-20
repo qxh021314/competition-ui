@@ -327,41 +327,6 @@ const $utils = {
     });
   },
   /**
-   * 1. 待付款
-   * 2. 已付款/待发货
-   * 3. 待收货/已发货
-   * 4. 已完成
-   * 5. 已取消
-   * 6. 售后中
-   * @param {Object} status
-   */
-  orderStatus(status) {
-    switch (status) {
-      case 1:
-        return '待付款'
-        break
-      case 2:
-        return '待发货'
-        break;
-      case 3:
-        return '待收货'
-        break
-      case 4:
-        return '已完成'
-        break;
-      case 5:
-        return '已取消'
-        break;
-      case 6:
-        return '售后中'
-        break;
-      default:
-        return ''
-        break;
-    }
-
-  },
-  /**
    * 图片转base64
    * @param {Object} url	本地图片本身
    */

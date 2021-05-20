@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import sys from './modules/sys.js'
+import userService from './modules/userService.js'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
-  modules: {
-    sys
-  }
+	modules: {
+		userService
+	}
 })
 
 export default store

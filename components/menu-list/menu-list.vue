@@ -42,9 +42,20 @@
 		methods: {
 			toUrl(item) {
 				console.log(item);
-				uni.navigateTo({
-					url: item.url
-				})
+				if (item.name == '精彩活动') {
+					uni.switchTab({
+						url: item.url
+					})
+				} else if (item.name == '成熟案例') {
+					uni.switchTab({
+						url: item.url
+					})
+				} else {
+					uni.navigateTo({
+						url: item.url
+					})
+				}
+	
 			},
 			getMenuList() {
 				

@@ -6,7 +6,7 @@
 		</view>
 
 		<view class="zit-banner">
-			<u-swiper bgColor="#ffffff" name="imgUrl" height="300" :list="listBanner" :effect3d="true"
+			<u-swiper bgColor="#ffffff" name="pic" height="300" :list="recordObj.matchBannerList" :effect3d="true"
 				effect3d-previous-margin="40" @click="bannerToDetails"></u-swiper>
 		</view>
 
@@ -23,9 +23,7 @@
 				<view class="scheme--intro_title">
 					<u-section font-size="35" title="赛事简介" :right="false"></u-section>
 				</view>
-				<view class="scheme--intro_content">
-					方案是计划中内容最为复杂的一种。由于一些具有某种职能的具体工作比较复杂，不作全面部署不足以说明问题，因而公文内容构成势必要繁琐一些，一般有指导思想、主要目标、工作重点、实施步骤、政策措施、具体要求等项目。方案的内容多是上级对下级或涉及面比较大的工作，一般都用带“文件头”形式下发，所以不用落款，只有标题、成文时间和正文三部分内容。
-				</view>
+				<view class="scheme--intro_content">{{recordObj.matchDesc}}</view>
 			</view>
 
 			<!-- 赛事报名 -->
@@ -34,7 +32,7 @@
 					<u-section font-size="35" title="赛事报名" :right="false"></u-section>
 				</view>
 				<view class="scheme--intro_content">
-					方案是计划中内容最为复杂的一种。由于一些具有某种职能的具体工作比较复杂，不作全面部署不足以说明问题，因而公文内容构成势必要繁琐一些，一般有指导思想、主要目标、工作重点、实施步骤、政策措施、具体要求等项目。方案的内容多是上级对下级或涉及面比较大的工作，一般都用带“文件头”形式下发，所以不用落款，只有标题、成文时间和正文三部分内容。
+					{{recordObj.matchApply}}
 				</view>
 				<view class="scheme--intro_btn">
 					<view class="scheme--intro_btn_icon" @click="toRegister()">
@@ -63,26 +61,31 @@
 </template>
 
 <script>
+	import {
+		qMatchById
+	} from '@/api/competition.js'
 	export default {
 		data() {
 			return {
 				listBanner: [{
 					imgUrl: "https://img.zcool.cn/community/015f52598d716700000021298c562f.jpg@1280w_1l_2o_100sh.jpg"
 				}],
-				
+				paramsId: '',
+				recordObj: {},
 				objList: [{
 						name: '签位表',
-						icon: '/static/thedraw.png'
+						icon: '/static/thedraw.png',
+						menuUrl: '/package-events/views/group-stage/index'
 					},
 					{
 						name: '选手名单',
 						icon: '/static/roster.png',
-						menuUrl: ''
+						menuUrl: '/package-events/views/players/players'
 					},
 					{
 						name: '赛事章程',
 						icon: '/static/constitution.png',
-						menuUrl: ''
+						menuUrl: '/package-events/views/constitution/constitution'
 					},
 					{
 						name: '赛事相册',
@@ -90,19 +93,32 @@
 						menuUrl: '/package-events/views/livephoto/livephoto'
 					}
 				],
-				textList: ['重要信息播报：测试中，具体功能尽情期待！']
+				textList: []
 			}
 		},
+		onLoad(options) {
+			this.paramsId = options.id
+			this.getqMatchById()
+		},
 		methods: {
+			getqMatchById() {
+				qMatchById({
+					id: this.paramsId
+				}).then((res) => {
+					this.recordObj = res.record
+					this.textList.push(res.record.matchNotice)
+					console.log(res);
+				})
+			},
 			// 
 			toHref(item) {
 				uni.navigateTo({
-					url: item.menuUrl
+					url: item.menuUrl + `?id=${this.paramsId}`
 				})
 			},
 			toRegister() {
 				uni.navigateTo({
-					url: '/package-events/views/activity-details/sign-up'
+					url: `/package-events/views/activity-details/subject?matchId=${this.paramsId}`
 				})
 			},
 			bannerToDetails() {
@@ -172,14 +188,15 @@
 				display: flex;
 				justify-content: center;
 				align-items: center;
-
+				margin: 20rpx 0;
 				&_icon {
 					display: flex;
-					flex-direction: column;
+					justify-content: center;
 					align-items: center;
 					background-color: rgba($color: $global-color, $alpha: 1);
 					border-radius: 10rpx;
-					padding: 30rpx 45rpx;
+					width: 100%;
+					padding: 20rpx 145rpx;
 					color: #FFFFFF;
 				}
 

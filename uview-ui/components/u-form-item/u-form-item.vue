@@ -158,7 +158,7 @@
 				// 父组件的参数，在computed计算中，无法得知this.parent发生变化，故将父组件的参数值，放到data中
 				parentData: {
 					borderBottom: true,
-					labelWidth: 90,
+					labelWidth: 180,
 					labelPosition: 'left',
 					labelStyle: {},
 					labelAlign: 'left',
@@ -251,7 +251,6 @@
 			getRules() {
 				// 父组件的所有规则
 				let rules = this.parent.rules;
-				console.log(rules);
 				rules = rules ? rules[this.prop] : [];
 				// 保证返回的是一个数组形式
 				return [].concat(rules || []);

@@ -2,7 +2,7 @@
 	<view>
 
 		<view class="sight-navbar">
-			<u-navbar :is-back="false" :border-bottom="false" :title-bold="true" title="方案"
+			<u-navbar :is-back="false" :border-bottom="false" title="方案"
 				navbarInnerBackGround="#FFFFFF">
 				<view class="u-navbar_left" @click="show = true">
 					<!-- <text class="u-navbar_name">{{selectText}}</text> -->
@@ -16,9 +16,9 @@
 			</u-navbar>
 		</view>
 
-		<zit-scheme-card :title="true" @change="toDetails"></zit-scheme-card>
+		<zit-scheme-card v-if="listData && listData.length > 0" :title="true" @change="toDetails"></zit-scheme-card>
 
-
+		<no-data v-else></no-data>
 		<!-- <u-select v-model="show" :list="list" @confirm="confirm"></u-select> -->
 	</view>
 </template>
@@ -33,6 +33,7 @@
 			return {
 				show: 1,
 				selectText: '筛选',
+				listData: [],
 				list: [{
 						value: '1',
 						label: '智慧变电'

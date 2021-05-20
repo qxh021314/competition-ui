@@ -1,11 +1,11 @@
 <template>
 	<view>
-		<view class="zit-scheme" v-for="index in 1" :key="index" @click="toDetails()">
+		<view class="zit-scheme" v-for="(item, index) in listData" :key="index" @click="toDetails(item)">
 			<view class="zit-scheme_title u-line-1" v-if="title">
 				智慧变电：变电站智慧运检解决方案
 			</view>
 			<view class="zit-scheme_img">
-				<image src="http://pic.616pic.com/bg_w1180/00/14/52/W0OnDtpHCJ.jpg!/fw/1120" mode=""></image>
+				<image :src="item.mainPic" mode=""></image>
 			</view>
 			<view class="zit-scheme_status" v-if="showStatus">
 				<text>进行中</text>
@@ -33,6 +33,12 @@
 			sectionText: {
 				type: Boolean,
 				default: true
+			},
+			listData: {
+				type: Array,
+				default: function () {
+					return []
+				}
 			}
 		},
 		data() {
@@ -41,8 +47,8 @@
 			};
 		},
 		methods: {
-			toDetails() {
-				this.$emit('change')
+			toDetails(item) {
+				this.$emit('change', item)
 			}
 		}
 	}

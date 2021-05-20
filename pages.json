@@ -80,17 +80,49 @@
 					"enablePullDownRefresh": false
 				}
 
+			}, {
+				"path": "views/activity-details/sign-up",
+				"style": {
+					"navigationBarTitleText": "立即报名",
+					"enablePullDownRefresh": false
+				}
+
+			}, {
+				"path": "views/activity-details/subject",
+				"style": {
+					"navigationBarTitleText": "报名",
+					"enablePullDownRefresh": false
+				}
+
+			}, {
+				"path": "views/activity-details/view-enrollment-options",
+				"style": {
+					"navigationBarTitleText": "我的报名",
+					"enablePullDownRefresh": false
+				}
+
+			}, {
+				"path": "views/constitution/constitution",
+				"style": {
+					"navigationBarTitleText": "赛事章程",
+					"enablePullDownRefresh": false
+				}
+
+			}, {
+				"path": "views/players/players",
+				"style": {
+					"navigationBarTitleText": "选手名单",
+					"enablePullDownRefresh": false
+				}
+			}, {
+				"path": "views/group-stage/grouping",
+				"style": {
+					"navigationBarTitleText": "分组",
+					"enablePullDownRefresh": false
+				}
+
 			}
-		    ,{
-                    "path" : "views/activity-details/sign-up",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "立即报名",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-            ]
+		]
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

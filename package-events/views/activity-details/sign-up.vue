@@ -1,112 +1,252 @@
 <template>
 	<view class="sign-up">
 		<view class="sign-up_form">
-			<u-form :rules="rules" :model="form" ref="uForm" label-width="150" :label-style="labelStyle">
-				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="团队名称" prop="userName">
-					<u-input input-align="right" v-model="form.userName" placeholder="请输入团队名称(不超过8个字)" />
+			<u-form :rules="rules" :model="form" ref="uForm" label-width="180" :label-style="labelStyle">
+				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="团队名称" prop="teamName">
+					<u-input input-align="right" v-model="form.teamName" placeholder="请输入团队名称(不超过8个字)" maxlength="8" />
 				</u-form-item>
-
 			</u-form>
 		</view>
 
-		<view class="sign-up_form">
-			<u-form :model="form" ref="uForm" label-width="150" :label-style="labelStyle">
-				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="队长姓名" prop="mobile">
-					<u-input input-align="right" v-model="form.mobile" placeholder="请输入队长姓名" />
+		<view class="sign-up_form" v-for="(item, indexparent) in form.athleteList" :key="indexparent">
+			<u-form :rules="rules" :model="item" ref="uForm" label-width="180" :label-style="labelStyle">
+				<u-form-item :required="true" :leftIconStyle="leftIconStyle" :label="item.teamRole == '1' ? '队长姓名' : '队员姓名'"
+					prop="name">
+					<u-input input-align="right" v-model="item.name" placeholder="请输入姓名" />
 				</u-form-item>
-				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="身份证" prop="companyName">
-					<u-input input-align="right" v-model="form.companyName" placeholder="请输入身份证号码" />
+				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="身份证" prop="idCard">
+					<u-input input-align="right" v-model="item.idCard" placeholder="请输入身份证号码" />
 				</u-form-item>
-				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="性别" prop="companyName">
-					<view class="u-flex-1 u-text-right">
-						<u-radio-group v-model="sexValue" @change="radioGroupChange">
-							<u-radio v-for="(item, index) in sexList" :key="index" :name="item.name"
-								:disabled="item.disabled">
-								{{item.name}}
+				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="性别" prop="sex">
+					<view class="sign-up_sex">
+						<u-radio-group v-model="item.sex" @change="radioGroupChange">
+							<u-radio v-for="(itemChild, index) in sexList" :key="index" :name="itemChild.value"
+								@change="radioChange" :disabled="itemChild.disabled">
+								{{itemChild.name}}
 							</u-radio>
 						</u-radio-group>
 					</view>
 				</u-form-item>
-				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="年龄" prop="mobile">
-					<u-input input-align="right" v-model="form.mobile" placeholder="请输入年龄" />
+				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="年龄" prop="age">
+					<u-input input-align="right" v-model="item.age" placeholder="请输入年龄" />
 				</u-form-item>
-				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="生日" prop="companyScaleName">
-					<u-input input-align="right" v-model="form.companyScaleName" placeholder="请选择日期" type="select"
-						@click="showSelect()" />
+				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="生日" prop="birthDay">
+					<u-input input-align="right" v-model="item.birthDay" placeholder="请选择日期" type="select"
+						@click="showSelect(indexparent)" />
 				</u-form-item>
-				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="学校单位" prop="mobile">
-					<u-input input-align="right" v-model="form.mobile" placeholder="请输入学校单位" />
+				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="学校单位" prop="schoolUnit">
+					<u-input input-align="right" v-model="item.schoolUnit" placeholder="请输入学校单位" />
 				</u-form-item>
-				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="手机号" prop="companyName">
-					<u-input input-align="right" v-model="form.companyName" placeholder="请输入手机号码" />
+				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="手机号" prop="phoneNo">
+					<u-input input-align="right" v-model="item.phoneNo" placeholder="请输入手机号码" maxlength="11" />
+				</u-form-item>
+				<u-form-item v-if="indexparent !== 0">
+					<view class="sign-delete">
+						<u-button type="error" size="mini" @click="deleteSign(item, indexparent)">删除</u-button>
+					</view>
 				</u-form-item>
 			</u-form>
 		</view>
 
 
-		<u-calendar v-model="show" :mode="mode"></u-calendar>
+		<u-calendar v-model="show" :mode="mode" @change="changeCal"></u-calendar>
 
 		<view class="sign-up_prompt">
 			<view class="sign-up_prompt_til">温馨提示：</view>
 			<view class="sign-up_prompt_msg">填写完毕后，请再次检查所填信息，确认无误后，再点击提交按钮。</view>
 		</view>
+
+		<view class="sign-up_btn" style="background-color: #FFFFFF;color: #000000;" @click="addPlayers()">
+			<text>添加队员</text>
+		</view>
 		<view class="sign-up_btn" @click="insertAppUserCourse()"><text>提交</text></view>
+
+		<!-- 授权弹窗 -->
+		<user-oauth></user-oauth>
 	</view>
 </template>
 
 <script>
+	import {
+		getMyApplyInfo,
+		athleteSave
+	} from '@/api/competition.js'
 	export default {
 		data() {
 			return {
 				labelStyle: {
-					padding: '0 10rpx'
+					padding: '0'
 				},
 				leftIconStyle: {
 					color: '#ff0000',
 					fontSize: '32rpx'
 				},
+				noneOauth: false,
+				userInfoObj: null,
+				wxCode: '',
 				sexValue: '男',
 				sexList: [{
+						value: 1,
 						name: '男',
 						disabled: false
 					},
 					{
+						value: 2,
 						name: '女',
 						disabled: false
 					}
 				],
 				selectType: '',
+				birthDayIndex: 0,
 				list: [],
 				form: {
-					"userName": "",
-					"mobile": "",
-					"companyName": "",
-					"companyScale": "",
-					"companyScaleName": "",
-					"city": "",
-					"cityName": '',
-					"industry": "",
-					industryName: '',
-					"budget": "",
-					"remark": "",
-					"courseImportId": ""
+					"teamName": '',
+					"matchId": '',
+					"openId": '',
+					"subjectId": '',
+					"athleteList": [{
+						"name": "",
+						"idCard": "",
+						"sex": 1,
+						"age": '',
+						"birthDay": "2020-09-09",
+						"schoolUnit": "",
+						"phoneNo": "",
+						"teamRole": 1
+					}]
+				},
+				athleteObj: {
+					"name": "",
+					"idCard": "",
+					"sex": 1,
+					"age": '',
+					"birthDay": "2020-09-09",
+					"schoolUnit": "",
+					"phoneNo": "",
+					"teamRole": 0
 				},
 				show: false,
-				mode: "date"
+				mode: "date",
+				rules: {
+					teamName: [{
+						required: true,
+						message: '请输入团队名称',
+						// 可以单个或者同时写两个触发验证方式 
+						trigger: ['blur','change']
+					}],
+					name: [{
+						required: true,
+						message: '请输入姓名',
+						// 可以单个或者同时写两个触发验证方式 
+						trigger: ['blur','change']
+					}],
+					phoneNo: [{
+							required: true,
+							message: '请输入手机号',
+							// 可以单个或者同时写两个触发验证方式 
+							trigger: ['blur','change']
+						},
+						{
+							required: true,
+							// 自定义验证函数，见上说明
+							validator: (rule, value, callback) => {
+								// 上面有说，返回true表示校验通过，返回false表示不通过
+								// this.$u.test.mobile()就是返回true或者false的
+								return this.$u.test.mobile(value);
+							},
+							message: '手机号码不正确',
+							// 触发器可以同时用blur和change
+							trigger: ['blur','change']
+						}
+					],
+					age: [{
+						required: true,
+						message: '请输入年龄',
+						trigger: ['blur','change']
+					}],
+					birthDay: [{
+						required: true,
+						message: '请输入出生日期',
+						trigger: ['blur','change']
+					}],
+
+					idCard: [{
+						required: true,
+						message: '请输入身份证号码',
+						trigger: ['blur','change']
+					}, {
+						// 自定义验证函数，见上说明
+						validator: (rule, value, callback) => {
+							// 上面有说，返回true表示校验通过，返回false表示不通过
+							// this.$u.test.mobile()就是返回true或者false的
+							return this.$u.test.idCard(value)
+						},
+						message: '身份证号码不正确',
+						// 触发器可以同时用blur和change
+						trigger: ['blur','change']
+					}],
+					schoolUnit: [{
+						required: true,
+						message: '请输入选校单位',
+						trigger: ['blur','change']
+					}]
+				}
 			}
 		},
 		onLoad(option) {
-			this.form.courseImportId = option.courseImportId
+			this.form.matchId = option.matchId
+			this.form.subjectId = option.subjectId
+			if (option.type == 'update') {
+				this.getMyApplyInfo()
+			}
+			this.form.openId = this.$userService.getOpenId()
+		},
+		// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
+		onReady() {
+			// this.$refs.uForm.setRules(this.rules);
 		},
 		methods: {
-			showSelect(type) {
+			showSelect(index) {
+				this.birthDayIndex = index
 				this.show = true
 			},
+			changeCal(e) {
+				this.form.athleteList[this.birthDayIndex].birthDay = e.result
+			},
+			// 进行编辑时获取的数据
+			getMyApplyInfo() {
+				getMyApplyInfo({
+					matchId: this.form.matchId,
+					subjectId: this.form.subjectId,
+					openId: this.$userService.getOpenId()
+				}).then((res) => {
+					console.log(res);
+					this.form = res.record
+				})
+			},
+			// 添加队员
+			addPlayers() {
+				this.athleteObj.name = ''
+				this.form.athleteList.push(JSON.parse(JSON.stringify(this.athleteObj)))
+			},
+			// 删除队员
+			deleteSign(item, index) {
+				
+				this.form.athleteList.splice(index,1)
+			},
 			// 性别选择
-			radioGroupChange() {},
+			radioGroupChange(e) {
+			},
+			radioChange(e) {
+			},
 			// 立即报名
 			insertAppUserCourse() {
-
+				athleteSave(this.form).then((res) => {
+					this.$utils.toast('您报名成功！')
+					uni.navigateTo({
+						url: `/package-events/views/activity-details/view-enrollment-options?matchId=${this.form.matchId}`
+					})
+				})
 			}
 		}
 	}
@@ -146,5 +286,90 @@
 			background-color: $global-color;
 			color: #FFFFFF;
 		}
+
+		&_sex {
+			flex: 1;
+			display: flex;
+			justify-content: flex-end;
+		}
+	}
+
+	.oauth {
+		&--title {
+			text-align: center;
+			font-weight: bold;
+			font-size: 34rpx;
+			padding: 35rpx 0;
+		}
+
+		&--content {
+			margin: 50rpx 20rpx;
+
+			&_tips {
+				margin: 20rpx 0;
+				font-size: 35rpx;
+				letter-spacing: 3rpx;
+			}
+
+			&_text {
+				letter-spacing: 3rpx;
+			}
+		}
+
+		&--option {
+			display: flex;
+
+			&_btn {
+				flex: 1;
+
+				/* #ifndef MP-WEIXIN */
+				uni-button {
+					border-radius: 0;
+					background-color: #FFFFFF;
+				}
+
+				uni-button:after {
+					border-radius: 0;
+					border: none;
+				}
+
+				/* #endif */
+				/* #ifdef MP-WEIXIN */
+				button {
+					border-radius: 0;
+					background-color: #FFFFFF;
+				}
+
+				button:after {
+					border-radius: 0;
+					border: none;
+				}
+
+				/* #endif */
+			}
+
+			&_confirm {
+
+				/* #ifdef MP-WEIXIN */
+				button {
+					background-color: #09BB07;
+					color: #FFFFFF;
+				}
+
+				/* #endif */
+
+				/* #ifndef MP-WEIXIN */
+				uni-button {
+					background-color: #09BB07;
+					color: #FFFFFF;
+				}
+
+				/* #endif */
+			}
+		}
+	}
+	.sign-delete{
+		width: 100%;
+		text-align: right;
 	}
 </style>

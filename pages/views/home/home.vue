@@ -54,7 +54,7 @@
 					img: '/static/csal.png',
 					name: '成熟案例',
 					color: this.$utils.themeColor,
-					url: '',
+					url: '/pages/views/scheme/scheme',
 					oauth: false
 				}, {
 					img: '/static/tycg.png',
@@ -66,7 +66,7 @@
 					img: '/static/jchd.png',
 					name: '精彩活动',
 					color: this.$utils.themeColor,
-					url: '',
+					url: '/pages/views/activity/activity',
 					oauth: false
 				}, {
 					img: '/static/gdss.png',
