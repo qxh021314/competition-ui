@@ -6,14 +6,12 @@
 				<text>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure placeat.</text>
 			</view>5
 			<view slot="foot">
-				<view class="u-flex u-row-around">
+				<view class="u-flex u-row-around u-m-b-20">
 					<text>123张相册</text>
 					<text>888次相册浏览</text>
 				</view>
-
-				<u-line class="u-m-t-40 u-m-b-30"></u-line>
-
-				<u-icon name="clock" label="2021-01-01"></u-icon>
+				<u-line></u-line>
+				<u-icon class="u-m-t-50" name="clock" label="2021-01-01"></u-icon>
 			</view>
 		</u-card>
 
@@ -28,7 +26,9 @@
 						span="6" @click="onClickPhotoItem(item)">
 						<image :src="item.src" mode="aspectFill" />
 						<view v-if="isActiveSelect" class="photo-item-select">
-							{{ getSelectItemPos(item) | formatSelectedIndex }}
+							<u-icon v-if="selected.length && (selected.length===photos.length)" name="checkmark">
+							</u-icon>
+							<text v-else>{{ getSelectItemPos(item) | formatSelectedIndex }}</text>
 						</view>
 					</u-col>
 					<u-col v-else span="6"></u-col>
@@ -36,36 +36,56 @@
 			</view>
 		</view>
 
+
+
 		<!-- footer -->
 		<view class="live-photo-footer">
-			<u-row v-if="!isActiveSelect" align="center">
-				<u-col span="4" text-align="center" @click="toggleSelectPhoto(1)">
+
+			<view v-if="!isActiveSelect" class="photo-action u-text-center u-font-sm">
+				<view @click="toggleSelectPhoto(1)">
 					<u-icon name="camera" :size="46" />
 					<view>拼图</view>
-				</u-col>
-				<u-col span="4" text-align="center">
+				</view>
+
+				<view @click="togglePopShare">
 					<u-icon name="share" :size="46" />
 					<view>分享</view>
-				</u-col>
-				<u-col span="4" text-align="center">
+				</view>
+
+				<view @click="toggleSelectPhoto(2)">
 					<u-icon name="download" :size="46" />
 					<view>下载</view>
-				</u-col>
-			</u-row>
+				</view>
+			</view>
 
 			<!-- 拼图操作栏 -->
-			<u-row v-else align="center" class="photo-action">
-				<u-col span="6" text-align="center" @click="toggleSelectPhoto(0)">
-					取消
-				</u-col>
-				<u-col span="6" text-align="center" @click="mergeSelectPhoto">
-					确认
-					<text v-if="selected.length" class="photo-action--badge">{{ selected.length }}</text>
-				</u-col>
-			</u-row>
+			<template v-else>
+				<view v-if="isActiveSelect===1" class="photo-action u-font-34">
+					<text @click="toggleSelectPhoto(0)">取消</text>
+					<view @click="mergeSelectPhoto">
+						<text>确认</text>
+						<text v-if="selected.length" class="photo-action--badge">{{ selected.length }}</text>
+					</view>
+				</view>
+
+				<view v-if="isActiveSelect===2" class="photo-action u-font-34">
+					<text @click="selectAllPhoto">全选</text>
+					<view>
+						<text @click="toggleSelectPhoto(0)">取消</text>
+						<text class="u-p-l-30 u-p-r-30">|</text>
+						<text @click="downSelectPhoto">下载</text>
+						<text v-if="selected.length" @click="downSelectPhoto"
+							class="photo-action--badge">{{ selected.length }}</text>
+					</view>
+				</view>
+
+			</template>
 		</view>
 
-		<!-- popup -->
+
+
+
+		<!-- popup - 合图 -->
 		<u-popup v-model="showPopPage" mode="right" length="100%" closeable close-icon-color="#eee"
 			close-icon-size="50">
 			<view class="pop-page">
@@ -74,6 +94,26 @@
 		</u-popup>
 		<poster v-if="list.length" :list="list" background-color="#FFF" :width="750" :height="height"
 			@on-success="posterSuccess" ref="poster" />
+
+		<!-- popup - 分享 -->
+		<u-popup v-model="isShowPopShare" mode="bottom">
+			<view class="u-flex u-row-around u-text-center u-p-t-40 u-p-b-40">
+				<view>
+					<view class="u-m-b-20">
+						<u-icon name="grid" size="80" color="#333" />
+					</view>
+					<u-button plain open-type="share">二维码分享</u-button>
+				</view>
+
+				<view>
+					<view class="u-m-b-20">
+						<u-icon name="attach" size="80" color="#333" />
+					</view>
+					<u-button plain @click="copyShareLink">链接分享</u-button>
+				</view>
+			</view>
+		</u-popup>
+
 		<!-- toast -->
 		<u-toast ref="uToast" />
 	</view>
@@ -84,45 +124,17 @@
 	import Poster from '../../components/Poster.vue'
 
 	// mock data ->
-	const mockData = {
-		photos: [{
-				id: 1,
-				exif: 'abcd1111',
-				src: 'https://c360-o2o.c360dn.com/MTg5ODA1OTY3MjgxNjE4NzMxNjgzMTIy375'
-			},
-			{
-				id: 2,
-				exif: 'abcd2222',
-				src: 'https://c360-o2o.c360dn.com/MTg5ODA1OTY3MjgxNjE4NzMxNjkzMDk0375'
-			},
-			{
-				id: 3,
-				exif: 'abcd2222',
-				src: 'https://c360-o2o.c360dn.com/MTg5ODA1OTY3MjgxNjE4NzMxNjkzMDk0375'
-			},
-			{
-				id: 4,
-				exif: 'abcd2222',
-				src: 'https://c360-o2o.c360dn.com/Fjnp1vNTP0I5UNgCZ193xYYHuF_e375'
-			},
-			{
-				id: 5,
-				exif: 'abcd2222',
-				src: 'https://c360-o2o.c360dn.com/MTg5ODA1OTY3MjgxNjE4NzMxNjkzMDk0375'
-			},
-			{
-				id: 6,
-				exif: 'abcd2222',
-				src: 'https://c360-o2o.c360dn.com/MTg5ODA1OTY3MjgxNjE4NDc3NjA3MjMx'
-			},
-			{
-				id: 7,
-				exif: 'abcd3333',
-				src: 'https://c360-o2o.c360dn.com/MTg5ODA1OTY3MjgxNjE4NzMxNjkzMDk0375'
-			}
-		]
-	}
+	import {
+		mockData
+	} from './mock.js'
 	// <- mock data
+
+	// 配置小程序分享
+	// 链接
+	const MPLINK = 'mp://test'
+	// 二维码
+	const MPCODEIMG = 'https://ypjc-resource.c360dn.com/jony/galleryH5/resource/images/shareQr_new.png'
+
 
 	export default {
 		components: {
@@ -144,10 +156,11 @@
 				photos: [],
 				list: [],
 				selected: [],
-				isActiveSelect: false,
+				isActiveSelect: 0,
 				showPopPage: false,
 				height: 1200,
-				mergeImg: '' // 合并后的图片 - base64
+				mergeImg: '', // 合并后的图片 - base64
+				isShowPopShare: false
 			}
 		},
 		computed: {
@@ -201,7 +214,7 @@
 				this.currentTab = n
 			},
 			toggleSelectPhoto(n) {
-				this.isActiveSelect = !!n
+				this.isActiveSelect = n
 				if (!this.isActiveSelect) {
 					this.selected = []
 				}
@@ -231,15 +244,16 @@
 			 * 合图
 			 */
 			mergeSelectPhoto() {
-				
 				this.list = []
-				this.$nextTick(function(){
-					this.calculate(this.selected)
-				})
-				uni.showLoading({
-					mask: true,
-					title: '请稍候...'
-				})
+				if (this.selected.length) {
+					this.$nextTick(function() {
+						this.calculate(this.selected)
+					})
+					uni.showLoading({
+						mask: true,
+						title: '请稍候...'
+					})
+				}
 			},
 			/**
 			 * 合图计算位置
@@ -265,10 +279,68 @@
 					console.log(mergeImg);
 				}
 				this.list = list
+			},
+
+			/**
+			 * 全选图片
+			 */
+			selectAllPhoto() {
+				this.selected = this.photos.map(item => item.src)
+			},
+			/**
+			 * 下载图片
+			 */
+			async downSelectPhoto() {
+				if (this.selected) {
+					uni.showLoading({
+						title: '正在下载图片'
+					})
+					for (let item of this.selected) {
+						const [error, res] = await uni.downloadFile({
+							url: item
+						})
+						if (res) {
+							const saveRes = await uni.saveImageToPhotosAlbum({
+								filePath: res.tempFilePath
+							})
+							console.log('保存::', saveRes);
+						}
+						console.log('下载::', res, error)
+					}
+					this.selected = []
+					uni.hideLoading()
+				}
+			},
+			// -- 分享 --
+			togglePopShare(b) {
+				if (b !== undefined) {
+					this.isShowPopShare = !!b
+				} else {
+					this.isShowPopShare = !this.isShowPopShare
+				}
+			},
+			copyShareLink() {
+				uni.setClipboardData({
+					data: MPLINK,
+					success: () => {
+						this.togglePopShare(false)
+						uni.showToast({
+							title: '复制成功'
+						})
+					}
+				})
 			}
+
 		},
 		onLoad() {
 			this.photos = mockData.photos
+		},
+
+		onShareAppMessage() {
+			return {
+				title: '分享二维码',
+				imageUrl: MPCODEIMG
+			}
 		}
 	}
 </script>
@@ -331,6 +403,11 @@
 				display: flex;
 				justify-content: center;
 				align-items: center;
+
+				&--down {
+					background: #333;
+					border: 1px solid #fff;
+				}
 			}
 		}
 
@@ -343,9 +420,7 @@
 			height: $bottomBarHeight;
 			border-top: 1px solid #c7c7c7;
 			background: #f9f9f9;
-			color: #999;
-			font-size: 24rpx;
-			padding-top: 10rpx;
+			color: #333;
 
 
 			.u-row {
@@ -358,8 +433,11 @@
 
 
 			.photo-action {
-				font-size: 30rpx;
-				line-height: $bottomBarHeight;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				height: $bottomBarHeight;
+				padding: 0 100rpx;
 
 				&--badge {
 					margin-left: 10rpx;
