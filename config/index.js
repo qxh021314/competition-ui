@@ -1,5 +1,5 @@
 const config = {
-	baseUrl: 'http://xxhvgu.natappfree.cc/platform-api',
+	baseUrl: 'http://localhost:8889/platform-api',
 	prodUrl: 'http://xinrui.liliudong.com/platform-api',
 	//接口地址
 	interfaceUrl: function() {

@@ -383,6 +383,34 @@ const $utils = {
   isNotBlank(val) {
     return val !== undefined && val !== null && val !== ''
   },
+  
+  /**
+   * 0：待提交
+   * 1：审核中
+   * 2：审核成功
+   * 3：审核失败
+   * @param {Object} status
+   */
+  getStatus(status) {
+    switch (status) {
+      case '0':
+        return '待提交'
+        break
+      case '1':
+        return '审核中'
+        break;
+      case '2':
+        return '审核成功'
+        break
+      case '3':
+        return '审核失败'
+        break;
+      default:
+        return ''
+        break;
+    }
+  },
+  
   /**
    * 判断是否为空值
    * @param {Object} obj

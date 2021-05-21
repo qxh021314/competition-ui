@@ -1,5 +1,6 @@
 <template>
 	<view class="sign-up">
+		
 		<view class="sign-up_form">
 			<u-form :rules="rules" :model="form" ref="uForm" label-width="180" :label-style="labelStyle">
 				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="团队名称" prop="teamName">
@@ -10,8 +11,8 @@
 
 		<view class="sign-up_form" v-for="(item, indexparent) in form.athleteList" :key="indexparent">
 			<u-form :rules="rules" :model="item" ref="uForm" label-width="180" :label-style="labelStyle">
-				<u-form-item :required="true" :leftIconStyle="leftIconStyle" :label="item.teamRole == '1' ? '队长姓名' : '队员姓名'"
-					prop="name">
+				<u-form-item :required="true" :leftIconStyle="leftIconStyle"
+					:label="item.teamRole == '1' ? '队长姓名' : '队员姓名'" prop="name">
 					<u-input input-align="right" v-model="item.name" placeholder="请输入姓名" />
 				</u-form-item>
 				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="身份证" prop="idCard">
@@ -56,10 +57,18 @@
 			<view class="sign-up_prompt_msg">填写完毕后，请再次检查所填信息，确认无误后，再点击提交按钮。</view>
 		</view>
 
-		<view class="sign-up_btn" style="background-color: #FFFFFF;color: #000000;" @click="addPlayers()">
-			<text>添加队员</text>
+		<view class="" v-if="triggerStatus">
+			<view class="sign-up_btn" style="background-color: #FFFFFF;color: #000000;" @click="addPlayers()">
+				<text>添加队员</text>
+			</view>
+
+			<view class="sign-up_btn" style="background-color: #FFFFFF;color: #000000;" @click="savePlayers()">
+				<text>保存</text>
+			</view>
+
+			<view class="sign-up_btn" @click="insertAppUserCourse()"><text>提交</text></view>
 		</view>
-		<view class="sign-up_btn" @click="insertAppUserCourse()"><text>提交</text></view>
+
 
 		<!-- 授权弹窗 -->
 		<user-oauth></user-oauth>
@@ -69,7 +78,8 @@
 <script>
 	import {
 		getMyApplyInfo,
-		athleteSave
+		athleteSave,
+		athleteSaveBefore
 	} from '@/api/competition.js'
 	export default {
 		data() {
@@ -81,6 +91,7 @@
 					color: '#ff0000',
 					fontSize: '32rpx'
 				},
+				triggerStatus: true,
 				noneOauth: false,
 				userInfoObj: null,
 				wxCode: '',
@@ -103,6 +114,7 @@
 					"teamName": '',
 					"matchId": '',
 					"openId": '',
+					"applyId": '',
 					"subjectId": '',
 					"athleteList": [{
 						"name": "",
@@ -132,19 +144,19 @@
 						required: true,
 						message: '请输入团队名称',
 						// 可以单个或者同时写两个触发验证方式 
-						trigger: ['blur','change']
+						trigger: ['blur', 'change']
 					}],
 					name: [{
 						required: true,
 						message: '请输入姓名',
 						// 可以单个或者同时写两个触发验证方式 
-						trigger: ['blur','change']
+						trigger: ['blur', 'change']
 					}],
 					phoneNo: [{
 							required: true,
 							message: '请输入手机号',
 							// 可以单个或者同时写两个触发验证方式 
-							trigger: ['blur','change']
+							trigger: ['blur', 'change']
 						},
 						{
 							required: true,
@@ -156,24 +168,24 @@
 							},
 							message: '手机号码不正确',
 							// 触发器可以同时用blur和change
-							trigger: ['blur','change']
+							trigger: ['blur', 'change']
 						}
 					],
 					age: [{
 						required: true,
 						message: '请输入年龄',
-						trigger: ['blur','change']
+						trigger: ['blur', 'change']
 					}],
 					birthDay: [{
 						required: true,
 						message: '请输入出生日期',
-						trigger: ['blur','change']
+						trigger: ['blur', 'change']
 					}],
 
 					idCard: [{
 						required: true,
 						message: '请输入身份证号码',
-						trigger: ['blur','change']
+						trigger: ['blur', 'change']
 					}, {
 						// 自定义验证函数，见上说明
 						validator: (rule, value, callback) => {
@@ -183,21 +195,27 @@
 						},
 						message: '身份证号码不正确',
 						// 触发器可以同时用blur和change
-						trigger: ['blur','change']
+						trigger: ['blur', 'change']
 					}],
 					schoolUnit: [{
 						required: true,
 						message: '请输入选校单位',
-						trigger: ['blur','change']
+						trigger: ['blur', 'change']
 					}]
 				}
 			}
 		},
 		onLoad(option) {
 			this.form.matchId = option.matchId
+			this.form.applyId = option.applyId
 			this.form.subjectId = option.subjectId
-			if (option.type == 'update') {
+			console.log(this.form);
+			if (option.status && option.status == '001') {
 				this.getMyApplyInfo()
+				this.triggerStatus = false
+			}
+			if (option.type && option.type == 'update') {
+				this.triggerStatus = true
 			}
 			this.form.openId = this.$userService.getOpenId()
 		},
@@ -218,9 +236,9 @@
 				getMyApplyInfo({
 					matchId: this.form.matchId,
 					subjectId: this.form.subjectId,
+					applyId: this.form.applyId,
 					openId: this.$userService.getOpenId()
 				}).then((res) => {
-					console.log(res);
 					this.form = res.record
 				})
 			},
@@ -229,23 +247,32 @@
 				this.athleteObj.name = ''
 				this.form.athleteList.push(JSON.parse(JSON.stringify(this.athleteObj)))
 			},
+			// 保存
+			savePlayers() {
+				athleteSaveBefore(this.form).then((res) => {
+					this.$utils.toast('您保存成功！')
+					uni.navigateTo({
+						url: `/package-events/views/activity-details/view-enrollment-options?matchId=${this.form.matchId}`
+					})
+				})
+			},
 			// 删除队员
 			deleteSign(item, index) {
-				
-				this.form.athleteList.splice(index,1)
+				this.form.athleteList.splice(index, 1)
 			},
 			// 性别选择
-			radioGroupChange(e) {
-			},
-			radioChange(e) {
-			},
+			radioGroupChange(e) {},
+			radioChange(e) {},
 			// 立即报名
 			insertAppUserCourse() {
 				athleteSave(this.form).then((res) => {
 					this.$utils.toast('您报名成功！')
-					uni.navigateTo({
-						url: `/package-events/views/activity-details/view-enrollment-options?matchId=${this.form.matchId}`
-					})
+					setTimeout(() => {
+						uni.navigateTo({
+							url: `/package-events/views/activity-details/view-enrollment-options?matchId=${this.form.matchId}`
+						})
+					},1000)
+		
 				})
 			}
 		}
@@ -368,7 +395,8 @@
 			}
 		}
 	}
-	.sign-delete{
+
+	.sign-delete {
 		width: 100%;
 		text-align: right;
 	}

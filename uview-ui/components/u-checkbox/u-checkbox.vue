@@ -1,5 +1,5 @@
 <template>
-	<view class="u-checkbox" :style="[checkboxStyle]">
+	<view class="u-checkbox" :style="[checkboxStyle, { margin: checkMargin ? '20rpx 0' : '' }]">
 		<view class="u-checkbox__icon-wrap" @tap.stop="toggle" :class="[iconClass]" :style="[iconStyle]">
 			<u-icon class="u-checkbox__icon-wrap__icon" name="checkbox-mark" :size="checkboxIconSize" :color="iconColor"/>
 		</view>
@@ -29,6 +29,10 @@
 	export default {
 		name: "u-checkbox",
 		props: {
+			checkMargin: {
+				type: Boolean,
+				default: false
+			},
 			// checkbox的名称
 			name: {
 				type: [String, Number],
@@ -220,7 +224,6 @@
 		overflow: hidden;
 		user-select: none;
 		line-height: 1.8;
-		
 		&__icon-wrap {
 			color: $u-content-color;
 			flex: none;

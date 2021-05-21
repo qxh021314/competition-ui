@@ -13,12 +13,14 @@
                      :show-scrollbar="true">
             <u-table bg-color="#FFFFFF">
                 <u-tr>
-                    <u-th v-for="index in 5" :key="index">
+                    <u-th v-for="index in 4" :key="index">
+
                         <!-- #ifdef H5 -->
                         <view class="zit-td" v-if="index == 1">
                             <view class="diagonal" :style="{'width': grpWidth}"></view>
                         </view>
                         <!-- #endif -->
+
                         <!-- #ifndef H5 -->
                         <view class="zit-td" v-if="index == 0">
                             <view class="diagonal" :style="{'width': grpWidth}"></view>
@@ -28,16 +30,19 @@
                         <view class="zit-td" v-else>
                             {{index}}A大学
                         </view>
+						
                     </u-th>
                 </u-tr>
-                <u-tr v-for="index in 4" :key="index">
-                    <u-td v-for="indexchild in 5" :key="indexchild">
+				
+                <u-tr v-for="index in 3" :key="index">
+                    <u-td v-for="indexchild in 4" :key="indexchild">
                         <view class="zit-td" v-if="(index + 1) == indexchild"></view>
                         <view class="zit-td" v-else>
                             {{index + 1}}A大学
                         </view>
                     </u-td>
                 </u-tr>
+				
             </u-table>
         </scroll-view>
     </view>
