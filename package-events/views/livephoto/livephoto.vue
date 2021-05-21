@@ -53,21 +53,27 @@
 			</view>
 
 			<view v-if="currentTab === 2" class="u-p-20">
-				<u-row class="photo-item" v-for="(row, index) in myPhotosUI" :key="index">
-					<u-col v-for="(item, indexchild) in row" :key="indexchild" v-if="item" class="photo-item-bd"
-						span="6" @click="onClickPhotoItem(item)">
-						<image :src="getOssPicture(item.pictureUrl)" mode="aspectFill" />
-						<view v-if="isActiveSelect" class="photo-item-select">
-							<u-icon v-if="selected.length && (selected.length===photos.length)" name="checkmark">
-							</u-icon>
-							<text v-else>{{ getSelectItemPos(item) | formatSelectedIndex }}</text>
-						</view>
-					</u-col>
-					<u-col v-else span="6"></u-col>
-				</u-row>
+				<view v-if="!hasUploadPic" class="u-p-30">
+					<u-button @click="uploadPic">上传照片</u-button>
+				</view>
+				<template v-else>
+					<u-row class="photo-item" v-for="(row, index) in myPhotosUI" :key="index">
+						<u-col v-for="(item, indexchild) in row" :key="indexchild" v-if="item" class="photo-item-bd"
+							span="6" @click="onClickPhotoItem(item)">
+							<image :src="getOssPicture(item.pictureUrl)" mode="aspectFill" />
+							<view v-if="isActiveSelect" class="photo-item-select">
+								<u-icon v-if="selected.length && (selected.length===photos.length)" name="checkmark">
+								</u-icon>
+								<text v-else>{{ getSelectItemPos(item) | formatSelectedIndex }}</text>
+							</view>
+						</u-col>
+						<u-col v-else span="6"></u-col>
+					</u-row>
+					<no-data v-if="!myPhotos.length"></no-data>
+				</template>
 			</view>
 
-			<view class="u-p-t-30 u-p-b-50">
+			<view v-if="showLoadMore" class="u-p-t-30 u-p-b-50">
 				<u-loadmore :status="loadStatus" :load-text="loadText" @loadmore="updateTabData" />
 			</view>
 		</view>
@@ -201,16 +207,15 @@
 				photos: [], // 照片
 				hotPhotos: [], // 热门
 				myPhotos: [], // 我的照片
+				hasUploadPic: false,
 
 				// 分页
 				page: {
 					size: 10, // 一页条数
 					photoNo: 1,
 					hotNo: 1,
-					myNo: 1,
 					photoTotal: 1,
-					hotTotal: 1,
-					myTotal: 1
+					hotTotal: 1
 				},
 				pending: false, // 数据请求中
 				// 点赞
@@ -239,6 +244,9 @@
 			},
 			myPhotosUI() {
 				return chunkDataWithInUI(this.myPhotos, 2)
+			},
+			showLoadMore() {
+				return this.currentTab !== 2
 			}
 		},
 		filters: {
@@ -259,7 +267,6 @@
 			updateTabData() {
 				if (this.currentTab === 0) this.fetchPhotos();
 				if (this.currentTab === 1) this.fetchHotPhotos();
-				if (this.currentTab === 2) this.fetchMyPhotos();
 			},
 			async fetchPhotos() {
 				if (this.page.photoNo > this.page.photoTotal) {
@@ -309,28 +316,6 @@
 					}
 					
 					console.log('fetch hot Photos ...');
-				}
-			},
-			async fetchMyPhotos() {
-				if (this.page.myNo > this.page.myTotal) {
-					this.loadStatus = 'nomore'
-					console.log('nomore ...');
-				} else {
-					const q = {
-						pageNo: this.page.myNo,
-						pageSize: this.page.size
-					}
-					const page = await this.fetchData(q)
-					const records = page.records || []
-					this.myPhotos.push(...records)
-					this.page.myTotal = page.pages
-					this.page.myNo++
-					
-					if (!records.length || (this.page.myNo === this.page.myTotal)) {
-						this.loadStatus = 'nomore'
-					}
-					
-					console.log('fetch my Photos ...');
 				}
 			},
 			// 拿接口数据
@@ -483,6 +468,42 @@
 					this.selected = []
 					uni.hideLoading()
 				}
+			},
+			// 人脸识别
+			uploadPic() {
+				const id = this.album.id
+				
+				uni.chooseImage({
+				    count: 1,
+				    sizeType: ['compressed'],
+				    sourceType: ['album'],
+				    success: temp => {
+						console.log(temp)
+				        const filePath = temp.tempFilePaths[0]
+						uni.showLoading({
+							title: '请稍候'
+						})
+						uni.uploadFile({
+							url: `http://192.168.3.35:8889/platform-api/match/photo/searchFace/${id}`,
+							fileType: 'image',
+							filePath,
+							name: 'headPic',
+							success: res => {
+								const data = JSON.parse(res.data) || {}
+								this.myPhotos = data.list || []
+								this.hasUploadPic = true
+								console.log('uploadPic::', res);
+							},
+							fail: err => {
+								console.error(err)
+							},
+							complete: () => {
+								uni.hideLoading()
+							}
+						})
+				    }
+				})
+				
 			},
 			// -- 分享 --
 			togglePopShare(b) {
