@@ -2,7 +2,7 @@ import $userService from '@/utils/userService.js'
 const userService = {
 	state: {
 		// 地址信息存储
-		userEncryInfo: null,
+		userEncryInfo: {},
 		openId: '',
 		sessionKey: ''
 	},

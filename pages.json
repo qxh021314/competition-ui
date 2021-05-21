@@ -128,7 +128,16 @@
 				}
 
 			}
-		]
+		    ,{
+                    "path" : "views/my-activity/my-activity",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "我的活动",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

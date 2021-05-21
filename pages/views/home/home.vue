@@ -26,6 +26,7 @@
 				<zit-news-card></zit-news-card>
 			</view>
 		</view>
+		
 	</view>
 </template>
 

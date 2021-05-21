@@ -21,6 +21,11 @@ function athleteSave(params) {
 	return $http.request(`/match/athlete/save`, 'post', params)
 }
 
+// 保存
+function athleteSaveBefore(params) {
+	return $http.request(`/match/athlete/saveBefore`, 'post', params)
+}
+
 // 查看我的报名
 function listMyMatchBySubject(params) {
 	return $http.request(`/match/athlete/listMyMatchBySubject?matchId=${params.matchId}&openId=${params.openId}`, 'get', params)
@@ -61,6 +66,25 @@ function getLivePhotoLike(params) {
 	return $http.request(`http://192.168.3.35:8889/platform-api/match/photo/like/${params.id}`, 'get', params)
 }
 
+// 团队的分组导航
+function arrangeList(params) {
+	return $http.request(`/match/arrange/list?subjectId=${params.subjectId}`, 'get', params)
+}
+
+// 团队下选手的列表，用于分组的
+function listAthleteByTeam(params) {
+	return $http.request(`/match/athlete/listAthleteByTeam?teamId=${params.teamId}`, 'get', params)
+}
+
+// 我的报名列表
+function listMyMatch(params) {
+	return $http.request(`/match/listMyMatch?openId=${params.openId}&pageNum=${params.pageNum}&pageSize=${params.pageSize}`, 'get', params)
+}
+// 我的报名列表
+function arrangeSave(params) {
+	return $http.request(`/match/arrange/save`, 'post', params)
+}
+
 export {
 	qMatchByPage,
 	qMatchById,
@@ -68,10 +92,16 @@ export {
 	athleteSave,
 	listMyMatchBySubject,
 	getMyApplyInfo,
+	listMyMatch,
 	listAthlete,
 	groupList,
 	qLivePhotoListByPage,
 	qLivePhotoDetailByPage,
 	getLivePhotoBrowse,
 	getLivePhotoLike
+	groupList,
+	arrangeList,
+	arrangeSave,
+	listAthleteByTeam,
+	athleteSaveBefore
 }

@@ -59,7 +59,7 @@
 					name: '我的活动',
 					img: '/static/schemeaft.png',
 					tenderType: '11',
-					url: '/pages/bidding-notice/index'
+					url: '/package-events/views/my-activity/my-activity'
 				}]
 			}
 		},

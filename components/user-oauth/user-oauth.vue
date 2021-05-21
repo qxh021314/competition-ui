@@ -47,6 +47,7 @@
 		},
 		methods: {
 			getUserInfo(e) {
+				console.log(e);
 				this.openOauth = false
 				if (e.detail.userInfo) {
 					this.userInfo = e.detail.userInfo;

@@ -1,24 +1,28 @@
 <template>
 	<view>
-		<view class="enrollment-card" v-for="(item ,index) in listData" :key="index">
+		<view class="enrollment-card" v-for="(item ,index) in listData" :key="index" @click="toHref(item)">
 			<view class="u-body-item u-flex u-border-bottom u-col-between u-p-t-0">
 				<image
 					src="https://img11.360buyimg.com/n7/jfs/t1/94448/29/2734/524808/5dd4cc16E990dfb6b/59c256f85a8c3757.jpg"
 					mode="aspectFill"></image>
 				<view class="u-body-item-title">
 					<view class="u-line-2 enrollment-card_title">
-						{{item.subjectName}}
+						{{item.subjectName ? item.subjectName : item.matchName}}
 					</view>
 					<view class="u-line-1 willnum">
-						报名人: {{item.subjectName}}
+						报名人: {{item.name}}
 					</view>
 					<view class="u-line-1 willnumtime">
 						报名时间: {{item.createTime}}
 					</view>
 				</view>
 			</view>
-			<view class="enrollment-card_foot">
-				<u-icon name="edit-pen-fill" color="#2979ff" label-color="#2979ff" size="34" label="编辑" @click="update(item)"></u-icon>
+			<view class="enrollment-card_foot" v-if="item.status">
+				<view class="enrollment-card_foot_status">{{$utils.getStatus(item.status)}}</view>
+				<u-icon v-if="item.status == '0'" name="edit-pen-fill" color="#2979ff" label-color="#2979ff" size="34" label="编辑"></u-icon>
+				<view v-if="item.status == '2'" @click.stop="toGroup(item)">
+					<u-icon name="edit-pen-fill" color="#ffaa00" label-color="#ffaa00" size="34" label="进行分组"></u-icon>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -40,7 +44,18 @@
 		},
 		methods: {
 			update(item) {
-				this.$emit('change', item)
+			},
+			toHref(item) {
+				if (item.status && item.status == '0') {
+					this.$emit('change', item, 'update')
+				} else {
+					this.$emit('change', item)
+				}
+			},
+			toGroup(item) {
+				uni.navigateTo({
+					url: `/package-events/views/group-stage/grouping?teamId=${item.teamId}&subjectId=${item.subjectId}`
+				})
 			}
 		}
 	};
@@ -97,5 +112,15 @@
 	.willnumtime {
 		font-size: 30rpx;
 		color: #ababab;
+	}
+	
+	.enrollment-card_foot{
+		display: flex;
+		justify-content: space-between;
+		&_status{
+			color: #FFFFFF;
+			background-color: $global-color;
+			padding: 5rpx 10rpx;
+		}
 	}
 </style>

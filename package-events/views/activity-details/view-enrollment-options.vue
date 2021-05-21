@@ -26,14 +26,16 @@
 		},
 		methods: {
 			// 编辑
-			getMyApplyInfo(e) {
-				uni.navigateTo({
-					url: `/package-events/views/activity-details/sign-up?matchId=${this.matchId}&subjectId=${e.subjectId}&type=update`
-				})
-				// getMyApplyInfo({
-				// 	matchId: this.matchId,
-				// 	openId: this.$userService.getOpenId()
-				// }).then((res) => {})
+			getMyApplyInfo(e, type) {
+				if (type && type == 'update') {
+					uni.navigateTo({
+						url: `/package-events/views/activity-details/sign-up?matchId=${this.matchId}&subjectId=${e.subjectId}&applyId=${e.id}&status=001&type=update`
+					})
+				} else {
+					uni.navigateTo({
+						url: `/package-events/views/activity-details/sign-up?matchId=${this.matchId}&subjectId=${e.subjectId}&applyId=${e.id}&status=001`
+					})
+				}
 			},
 			// 获取列表
 			getListMyMatchBySubject() {
