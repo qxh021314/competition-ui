@@ -98,8 +98,7 @@ export {
 	qLivePhotoListByPage,
 	qLivePhotoDetailByPage,
 	getLivePhotoBrowse,
-	getLivePhotoLike
-	groupList,
+	getLivePhotoLike,
 	arrangeList,
 	arrangeSave,
 	listAthleteByTeam,
