@@ -35,6 +35,12 @@
 		"pages": [
 			//pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 			{
+				"path": "views/livephoto/list",
+				"style": {
+					"navigationBarTitleText": "相册列表",
+					"enablePullDownRefresh": false
+				}
+			}, {
 				"path": "views/livephoto/livephoto",
 				"style": {
 					"navigationBarTitleText": "直播相册",

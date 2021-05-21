@@ -2,13 +2,13 @@
 	<view class="live-photo">
 		<u-card :show-head="false" :foot-border-top="false" margin="0" :border-radius="0">
 			<view class="card-bd" slot="body">
-				<image src="" mode="aspectFill" />
-				<text>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure placeat.</text>
+				<image :src="album.imgUrl" mode="aspectFill" />
+				<text>{{ album.albumName }}</text>
 			</view>5
 			<view slot="foot">
 				<view class="u-flex u-row-around u-m-b-20">
-					<text>123张相册</text>
-					<text>888次相册浏览</text>
+					<text>{{ albumTotal }}张相册</text>
+					<text>{{ album.browseCount }}次相册浏览</text>
 				</view>
 				<u-line></u-line>
 				<u-icon class="u-m-t-50" name="clock" label="2021-01-01"></u-icon>
@@ -24,7 +24,7 @@
 				<u-row class="photo-item" v-for="(row, index) in photosUI" :key="index">
 					<u-col v-for="(item, indexchild) in row" :key="indexchild" v-if="item" class="photo-item-bd"
 						span="6" @click="onClickPhotoItem(item)">
-						<image :src="item.src" mode="aspectFill" />
+						<image :src="getOssPicture(item.pictureUrl)" mode="aspectFill" />
 						<view v-if="isActiveSelect" class="photo-item-select">
 							<u-icon v-if="selected.length && (selected.length===photos.length)" name="checkmark">
 							</u-icon>
@@ -38,7 +38,7 @@
 			<view v-if="currentTab === 1" class="u-p-20">
 				<u-row class="photo-item hot" v-for="(item, index) in hotPhotos" :key="index">
 					<u-col class="photo-item-bd" @click="onClickPhotoItem(item)">
-						<image :src="item.src" mode="aspectFill" />
+						<image :src="getOssPicture(item.pictureUrl)" mode="aspectFill" />
 					</u-col>
 					<u-col>
 						<view class="u-flex u-row-right u-p-30">
@@ -56,7 +56,7 @@
 				<u-row class="photo-item" v-for="(row, index) in myPhotosUI" :key="index">
 					<u-col v-for="(item, indexchild) in row" :key="indexchild" v-if="item" class="photo-item-bd"
 						span="6" @click="onClickPhotoItem(item)">
-						<image :src="item.src" mode="aspectFill" />
+						<image :src="getOssPicture(item.pictureUrl)" mode="aspectFill" />
 						<view v-if="isActiveSelect" class="photo-item-select">
 							<u-icon v-if="selected.length && (selected.length===photos.length)" name="checkmark">
 							</u-icon>
@@ -149,7 +149,7 @@
 		</u-popup>
 
 		<!-- popup - 点赞 -->
-		<like-photo :show.sync="showLikePopPage" :data="linkPhotoItem"/>
+		<like-photo :show.sync="showLikePopPage" :data="linkPhotoItem" />
 
 		<!-- toast -->
 		<u-toast ref="uToast" />
@@ -161,10 +161,13 @@
 	import Poster from '../../components/Poster.vue'
 	import LikePhoto from './likePhoto.vue'
 
-	// mock data ->
 	import {
-		mockData
-	} from './mock.js'
+		qLivePhotoDetailByPage,
+		getLivePhotoBrowse
+	} from '@/api/competition.js'
+
+	// mock data ->
+	// import { mockData } from './mock.js'
 	// <- mock data
 
 	// 配置小程序分享
@@ -181,6 +184,9 @@
 		},
 		data() {
 			return {
+				album: {}, // 相册信息
+				albumTotal: 0,
+				
 				tabs: [{
 						name: "照片"
 					},
@@ -198,10 +204,10 @@
 
 				// 分页
 				page: {
-					page: 2, // 一页条数
-					photoNo: 0,
-					hotNo: 0,
-					myNo: 0,
+					size: 10, // 一页条数
+					photoNo: 1,
+					hotNo: 1,
+					myNo: 1,
 					photoTotal: 1,
 					hotTotal: 1,
 					myTotal: 1
@@ -256,59 +262,92 @@
 				if (this.currentTab === 2) this.fetchMyPhotos();
 			},
 			async fetchPhotos() {
-				if (this.page.photoNo >= this.page.photoTotal) {
+				if (this.page.photoNo > this.page.photoTotal) {
 					this.loadStatus = 'nomore'
 					console.log('nomore ...');
 				} else {
 					this.loadStatus = 'loading'
-					this.photos.push(...(await this.fetchData(0)))
-					this.page.photoTotal = 10
+					const q = {
+						pageNo: this.page.photoNo,
+						pageSize: this.page.size
+					}
+					const page = await this.fetchData(q)
+					const records = page.records || []
+					this.photos.push(...records)
+					this.page.photoTotal = page.pages
 					this.page.photoNo++
-					if (this.page.photoNo === this.page.photoTotal) {
+					
+					if (!records.length || (this.page.photoNo === this.page.photoTotal)) {
 						this.loadStatus = 'nomore'
 					}
+					
+					// 相册总数
+					this.albumTotal = page.total || 0
+					
 					console.log('fetch Photos ...');
 				}
 			},
 			async fetchHotPhotos() {
-				if (this.page.hotNo >= this.page.hotTotal) {
-					this.loadStatus = 'nomore'
-					console.log('nomore ...');
-				} else {
-					this.hotPhotos.push(...(await this.fetchData(1)))
-					this.page.hotTotal = 1
-					this.page.hotNo++
-					if (this.page.hotNo === this.page.hotTotal) {
-						this.loadStatus = 'nomore'
-					}
-					console.log('fetch hot Photos ...');
-				}
-			},
-			async fetchMyPhotos() {
-				if (this.page.myNo >= this.page.myTotal) {
+				if (this.page.hotNo > this.page.hotTotal) {
 					this.loadStatus = 'nomore'
 					console.log('nomore ...');
 				} else {
 					this.loadStatus = 'loading'
-					this.myPhotos.push(...(await this.fetchData(2)))
-					this.page.myTotal = 3
-					this.page.myNo++
-					if (this.page.myNo === this.page.myTotal) {
+					const q = {
+						pageNo: this.page.hotNo,
+						pageSize: this.page.size,
+						order: 1
+					}
+					const page = await this.fetchData(q)
+					const records = page.records || []
+					this.hotPhotos.push(...records)
+					this.page.hotTotal = page.pages
+					this.page.hotNo++
+					
+					if (!records.length || (this.page.hotNo === this.page.photoTotal)) {
 						this.loadStatus = 'nomore'
 					}
+					
+					console.log('fetch hot Photos ...');
+				}
+			},
+			async fetchMyPhotos() {
+				if (this.page.myNo > this.page.myTotal) {
+					this.loadStatus = 'nomore'
+					console.log('nomore ...');
+				} else {
+					const q = {
+						pageNo: this.page.myNo,
+						pageSize: this.page.size
+					}
+					const page = await this.fetchData(q)
+					const records = page.records || []
+					this.myPhotos.push(...records)
+					this.page.myTotal = page.pages
+					this.page.myNo++
+					
+					if (!records.length || (this.page.myNo === this.page.myTotal)) {
+						this.loadStatus = 'nomore'
+					}
+					
 					console.log('fetch my Photos ...');
 				}
 			},
 			// 拿接口数据
-			fetchData(tid) {
-				console.log('Tab::', tid);
+			fetchData(q) {
+				console.log('Tab::', q);
 				return new Promise(resolve => {
 					this.pending = true
-					const data = mockData.photos.slice(0, 5)
-					setTimeout(() => {
-						resolve(data)
+					// const data = mockData.photos.slice(0, 5)
+					qLivePhotoDetailByPage({
+						pageNum: q.pageNo,
+						pageSize: q.pageSize,
+						order: q.order
+					}).then(res => {
+						resolve(res.page || {})
 						this.pending = false
-					}, 500)
+						console.log('res::', res);
+					})
 				})
 			},
 			// <-
@@ -343,13 +382,23 @@
 				if (pos !== -1) {
 					this.selected.splice(pos, 1)
 				} else {
-					this.selected.push(`${item.src}?${item.id}`)
+					this.selected.push(`${item.pictureUrl}`)
 				}
 
 				console.log('选择拼图')
 			},
 			getSelectItemPos(item) {
-				return this.selected.indexOf(`${item.src}?${item.id}`)
+				return this.selected.indexOf(`${item.pictureUrl}`)
+			},
+			
+			/**
+			 * @param {String} url
+			 * @param {Number} wsize 默认宽度
+			 * @param {Boolean} original 是否原图
+			 */
+			getOssPicture(url, wsize = 375, original) {
+				if (original) return url
+				return `${url}?x-oss-process=image/resize,w_${wsize}`
 			},
 
 			/**
@@ -358,8 +407,9 @@
 			mergeSelectPhoto() {
 				this.list = []
 				if (this.selected.length) {
+					const list = this.selected.map(item => this.getOssPicture(item, 750))
 					this.$nextTick(function() {
-						this.calculate(this.selected)
+						this.calculate(list)
 					})
 					uni.showLoading({
 						mask: true,
@@ -408,7 +458,7 @@
 			 * 全选图片
 			 */
 			selectAllPhoto() {
-				this.selected = this.photos.map(item => item.src)
+				this.selected = this.photos.map(item => item.pictureUrl)
 			},
 			/**
 			 * 下载图片
@@ -452,11 +502,15 @@
 						})
 					}
 				})
+			},
+			initData() {
+				this.album = this.$store.state.livePhoto.album
+				this.fetchPhotos()
+				getLivePhotoBrowse({id: this.album.id}) // 上报浏览量
 			}
-
 		},
 		onLoad() {
-			this.fetchPhotos()
+			this.initData()
 		},
 
 		onShareAppMessage() {
