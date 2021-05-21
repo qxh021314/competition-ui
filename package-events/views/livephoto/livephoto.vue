@@ -44,7 +44,7 @@
 						<view class="u-flex u-row-right u-p-30">
 							<view @click="likePhoto(item)">
 								<u-icon name="thumb-up" size="40" color="#999" />
-								<text class="u-p-l-5 u-m-r-35 u-font-12">100点赞</text>
+								<text class="u-p-l-5 u-m-r-35 u-font-12">{{item.likesCount}}点赞</text>
 							</view>
 							<u-icon name="share" size="50" color="#333" @click="sharePhoto(item)" />
 						</view>
