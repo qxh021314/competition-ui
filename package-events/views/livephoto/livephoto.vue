@@ -169,7 +169,8 @@
 
 	import {
 		qLivePhotoDetailByPage,
-		getLivePhotoBrowse
+		getLivePhotoBrowse,
+		uploadHeadPic
 	} from '@/api/competition.js'
 
 	// mock data ->
@@ -472,7 +473,6 @@
 			// 人脸识别
 			uploadPic() {
 				const id = this.album.id
-				
 				uni.chooseImage({
 				    count: 1,
 				    sizeType: ['compressed'],
@@ -484,7 +484,7 @@
 							title: '请稍候'
 						})
 						uni.uploadFile({
-							url: `http://192.168.3.35:8889/platform-api/match/photo/searchFace/${id}`,
+							url: uploadHeadPic({id}),
 							fileType: 'image',
 							filePath,
 							name: 'headPic',
