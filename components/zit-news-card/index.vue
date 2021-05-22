@@ -1,39 +1,33 @@
 <template>
 	<view>
-		<view class="zit-news u-border-bottom u-body-item" v-for="indexp in 1" :key="indexp">
+
+		<view @click="entry(item)" class="zit-news u-border-bottom u-body-item" v-for="item in list" :key="item.id">
 			<view class="zit-news_title u-line-1">
-				标题/名称1
-			</view>
-			<view class="u-flex u-col-between u-p-t-0">
-				<view class="u-body-item-title u-line-2">
-					瓶身描绘的牡丹一如你初妆，冉冉檀香透过窗心事我了然，宣纸上走笔至此搁一半
-					瓶身描绘的牡丹一如你初妆，冉冉檀香透过窗心事我了然，宣纸上走笔至此搁一半
-				</view>
-				<image src="https://img.zcool.cn/community/015f52598d716700000021298c562f.jpg@1280w_1l_2o_100sh.jpg"
-					mode="aspectFill"></image>
-			</view>
-			<view class="zit-news_time">
-				2021-05-17 09:09
+				{{ item.title }}
 			</view>
 
+			<template v-if="item.images && (item.images.length > 1)">
+				<view class="u-flex u-p-20">
+					<view class="u-body-item-title u-line-2">
+						{{ item.intro }}
+					</view>
+				</view>
+				<view class="zit-news_image u-flex u-p-20">
+					<image v-for="src in item.images" :src="src" :key="src" mode="aspectFill"></image>
+				</view>
+			</template>
+
+			<view v-else class="u-flex u-row-between u-p-l-20 u-p-r-20">
+				<view class="u-body-item-title u-line-2">
+					{{ item.intro }}
+				</view>
+				<image v-if="item.images && item.images.length" :src="item.images[0]" mode="aspectFill"></image>
+			</view>
+			<view class="zit-news_time u-p-l-20">
+				{{ item.createTime }}
+			</view>
 		</view>
-		<view class="zit-news u-border-bottom u-body-item">
-			<view class="zit-news_title u-line-1">
-				标题/名称2
-			</view>
-			<view class="u-body-item u-flex u-col-between u-p-t-0">
-				<view class="u-body-item-title u-line-2">瓶身描绘的牡丹一如你初妆，冉冉檀香透过窗心事我了然，宣纸上走笔至此搁一半</view>
-			</view>
-			<view class="zit-news_image u-flex">
-				<image src="https://img.zcool.cn/community/015f52598d716700000021298c562f.jpg@1280w_1l_2o_100sh.jpg"
-					mode="aspectFill"></image>
-				<image src="http://pic.616pic.com/bg_w1180/00/14/52/W0OnDtpHCJ.jpg!/fw/1120" mode="aspectFill"></image>
-				<image src="http://img.aiimg.com/uploads/allimg/190622/1-1Z622001G7.jpg" mode="aspectFill"></image>
-			</view>
-			<view class="zit-news_time">
-				2021-05-17 09:09
-			</view>
-		</view>
+
 	</view>
 </template>
 
@@ -41,11 +35,21 @@
 	export default {
 		data() {
 			return {
-
+				list: []
 			}
 		},
 		methods: {
-
+			entry(item) {
+				uni.navigateTo({
+					url: `/package-events/views/news/detail?id=${item.id}`
+				})
+			},
+			init() {
+				this.list = this.$store.state.news.list
+			}
+		},
+		created() {
+			this.init()
 		}
 	}
 </script>
@@ -68,6 +72,7 @@
 	.u-body-item-title {
 		letter-spacing: 3rpx;
 		font-size: 29rpx;
+		text-indent: 1em;
 	}
 
 	.zit-news {
@@ -81,6 +86,8 @@
 		}
 
 		&_image {
+			overflow-x: auto;
+
 			image {
 				height: 150rpx;
 				flex: 0 0 30%;

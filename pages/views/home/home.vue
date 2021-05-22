@@ -19,7 +19,7 @@
 		<!-- 企业动态 -->
 		<view class="zit-busin">
 			<view class="zit-busin_title">
-				<u-section :line-color="lineColor" :sub-color="lineColor" font-size="33" title="企业动态" sub-title="更多动态">
+				<u-section :line-color="lineColor" :sub-color="lineColor" font-size="33" title="企业动态" sub-title="更多动态" @click="showNewsListPage">
 				</u-section>
 			</view>
 			<view class="zit-busin_content">
@@ -96,7 +96,12 @@
 					showCancel: false
 				})
 			},
-			bannerToDetails() {}
+			bannerToDetails() {},
+			showNewsListPage() {
+				uni.navigateTo({
+					url: '/package-events/views/news/list'
+				})
+			}
 		}
 	}
 </script>
