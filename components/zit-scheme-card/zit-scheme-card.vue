@@ -1,84 +1,97 @@
 <template>
-	<view>
-		<view class="zit-scheme" v-for="(item, index) in listData" :key="index" @click="toDetails(item)">
-			<view class="zit-scheme_title u-line-1" v-if="title">
-				智慧变电：变电站智慧运检解决方案
-			</view>
-			<view class="zit-scheme_img">
-				<image :src="item.mainPic" mode=""></image>
-			</view>
-			<view class="zit-scheme_status" v-if="showStatus">
-				<text>进行中</text>
-			</view>
-			<u-section v-if="sectionText" :show-line="false" title=" " sub-title="查看详情"></u-section>
-			<u-section v-if="!sectionText" :show-line="false" title=" " sub-title="查看赛况"></u-section>
-		</view>
-	</view>
+  <view class="list-wrap">
+    <template v-if="listData && listData.length > 0">
+      <u-card  v-for="item in listData" :key="item.id" :show-head="false"
+               :show-foot="false" padding="20" class="card-wrap">
+        <view class="card-bd" slot="body">
+          <u-row @click="entry(item)">
+            <u-col span="4">
+              <image :lazy-load="true" :src="item.images[0]" mode="aspectFill"></image>
+            </u-col>
+            <u-col span="8">
+              <view class="card-bd--title u-line-1">{{ item.title }}</view>
+              <view class="card-bd--content u-line-2">{{ item.intro }}</view>
+              <view class="card-bd--time u-p-10">{{ item.createTime }}</view>
+            </u-col>
+          </u-row>
+        </view>
+      </u-card>
+    </template>
+    <no-data v-else></no-data>
+    
+<!--    <u-loadmore v-if="listData && listData.length > 0" :status="status" :icon-type="iconType"-->
+<!--                :load-text="contentText" />-->
+  </view>
 </template>
 
 <script>
-	import tyVideo from '@/components/ty-video/ty-video.vue'
-	export default {
-		name: "zit-scheme-card",
-		components: {tyVideo},
-		props: {
-			title: {
-				type: Boolean,
-				default: false
-			},
-			showStatus: {
-				type: Boolean,
-				default: false
-			},
-			sectionText: {
-				type: Boolean,
-				default: true
-			},
-			listData: {
-				type: Array,
-				default: function () {
-					return []
-				}
-			}
-		},
-		data() {
-			return {
 
-			};
-		},
-		methods: {
-			toDetails(item) {
-				this.$emit('change', item)
-			}
-		}
-	}
+export default {
+  props: {
+    listData: Array,
+    default: () => []
+  },
+  data() {
+    return {
+      // contentText: {
+      //   loadmore: '上拉显示更多',
+      //   loading: '努力加载中',
+      //   nomore: '没有更多了'
+      // },
+      // iconType: 'flower',
+      // status: 'loading',
+      // listData: [],
+      // queryParams: {
+      //   "pageNum": 1,
+      //   "pageSize": 10
+      // }
+    }
+  },
+  methods: {
+    // 进入详情
+    entry(item) {
+      uni.navigateTo({
+        url: `/package-events/views/scheme-details/index?id=${item.id}`
+      })
+      console.log(item)
+    }
+  }
+}
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
+.list-wrap {
+  padding: 0;
+}
 
-	.zit-scheme {
-		background-color: #FFFFFF;
-		padding: 20rpx;
-		margin: 20rpx 0;
-		position: relative;
-		&_title{
-			font-weight: bold;
-			font-size: 30rpx;
-		}
-		&_img{
-			width: 100%;
-			height: 300rpx;
-			margin: 20rpx 0;
-		}
-		
-		&_status{
-			position: absolute;
-			left: 0rpx;
-			top: 15rpx;
-			padding: 0 30rpx;
-			color: #FFFFFF;
-			background-color: #09BB07;
-			transform: rotate(-20deg);
-		}
-	}
+
+.card-wrap {}
+
+.card-bd {
+  color: #333;
+  
+  image {
+    width: 100%;
+    height: 180rpx;
+    border-radius: 6rpx;
+    background: #eee;
+  }
+  
+  &--content {
+    padding: 5rpx 0;
+    font-size: 32rpx;
+    color: #666;
+  }
+  
+  &--title {
+    font-weight: bolder;
+    font-size: 36rpx;
+  }
+  
+  &--time {
+    font-size: 30rpx;
+    color: #666;
+  }
+  
+}
 </style>

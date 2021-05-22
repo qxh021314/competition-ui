@@ -2,9 +2,8 @@
 	<view>
 
 		<view class="sight-navbar">
-			<u-navbar :is-back="false" :border-bottom="false" title="方案"
-				navbarInnerBackGround="#FFFFFF">
-				<view class="u-navbar_left" @click="show = true">
+			<u-navbar :is-back="false" :border-bottom="false" title="方案" navbarInnerBackGround="#FFFFFF">
+				<view class="u-navbar_left">
 					<!-- <text class="u-navbar_name">{{selectText}}</text> -->
 					<u-icon name="/static/filtrate.png" size="40"></u-icon>
 					<u-dropdown active-color="#860200">
@@ -16,9 +15,9 @@
 			</u-navbar>
 		</view>
 
-		<zit-scheme-card v-if="listData && listData.length > 0" :title="true" @change="toDetails"></zit-scheme-card>
+		<zit-scheme-card :list-data="listData"></zit-scheme-card>
 
-		<no-data v-else></no-data>
+		<!--		<no-data v-else></no-data>-->
 		<!-- <u-select v-model="show" :list="list" @confirm="confirm"></u-select> -->
 	</view>
 </template>
@@ -31,28 +30,33 @@
 		},
 		data() {
 			return {
-				show: 1,
+				show: -1,
 				selectText: '筛选',
 				listData: [],
 				list: [{
-						value: '1',
+						value: 0,
 						label: '智慧变电'
 					},
 					{
-						value: '2',
+						value: 1,
 						label: '智慧输电'
 					}, {
-						value: '3',
-						label: '智慧变电'
+						value: 2,
+						label: '智慧配电'
 					},
 					{
-						value: '4',
-						label: '智慧输电'
+						value: 3,
+						label: '视觉显示'
+					},
+					{
+						value: 4,
+						label: '全部'
 					}
 				]
 			}
 		},
 		onLoad() {
+			this.init()
 			// let comList = []
 			// let comObj = {
 			// 	value: 1,
@@ -70,10 +74,24 @@
 			confirm(e) {
 				this.selectText = this.list[e].label
 			},
-			toDetails() {
+			toDetails(id) {
 				uni.navigateTo({
-					url: '/package-events/views/scheme-details/index'
+					url: `/package-events/views/scheme-details/index?id=${id}`
 				})
+			},
+			init() {
+				const arr = this.$store.state.scheme.list
+				if (this.show === -1 || this.show === 4) {
+					this.listData = arr // 默认显示所有
+				} else {
+					this.listData = this.$store.state.scheme.list.filter(item => item.type === +this.show)
+				}
+				console.log('type::', this.show, arr)
+			}
+		},
+		watch: {
+			show() {
+				this.init()
 			}
 		}
 	}
@@ -101,14 +119,15 @@
 		border-radius: 10rpx;
 		flex: 0 0 160rpx;
 		// padding: 15rpx 0;
-		height: 50rpx;
+		// height: 50rpx;
 
 		.u-dropdown__menu {
 			height: 50rpx;
 
 			.u-dropdown__menu__item {
-				height: 50rpx;
-				width: 120rpx;
+				height: 80rpx;
+				width: 150rpx;
+				padding-left: 10rpx;
 				display: flex;
 				justify-content: center;
 				align-items: center;
@@ -127,11 +146,12 @@
 			margin-top: -30rpx;
 
 			.u-cell.u-border-bottom {
-				padding: 0rpx 20rpx;
+				padding: 20rpx 0;
 				border-radius: 10rpx;
 				text-align: center;
 
 				.u-cell_title {
+					width: 100%!important;
 					color: $global-color !important;
 				}
 
