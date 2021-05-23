@@ -74,11 +74,6 @@
 			confirm(e) {
 				this.selectText = this.list[e].label
 			},
-			toDetails(id) {
-				uni.navigateTo({
-					url: `/package-events/views/scheme-details/index?id=${id}`
-				})
-			},
 			init() {
 				const arr = this.$store.state.scheme.list
 				if (this.show === -1 || this.show === 4) {
