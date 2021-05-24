@@ -13,6 +13,7 @@
 				</view>
 			</view>
 		</view>
+		
 		<view class="group-user group-user_card">
 			<u-section title="选中名单" :right="false"></u-section>
 			<view class="players-list_flex">

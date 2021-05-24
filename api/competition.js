@@ -2,18 +2,18 @@ import $http from '../httpRequest/request.js'
 
 // 查询赛事列表
 function qMatchByPage(params) {
-	return $http.request(`/match/qMatchByPage?pageNum=${params.pageNum}&pageSize=${params.pageSize}`, 'get', params)
+	return $http.request(`/match/qMatchByPage`, 'get', params)
 }
 
 
 // 查询赛事详情
 function qMatchById(params) {
-	return $http.request(`/match/qMatchById?id==${params.id}`, 'get', params)
+	return $http.request(`/match/qMatchById`, 'get', params)
 }
 
 // 查询主题
 function getApplyInfo(params) {
-	return $http.request(`/match/getApplyInfo?matchId==${params.matchId}`, 'get', params)
+	return $http.request(`/match/getApplyInfo`, 'get', params)
 }
 
 // 报名
@@ -28,22 +28,22 @@ function athleteSaveBefore(params) {
 
 // 查看我的报名
 function listMyMatchBySubject(params) {
-	return $http.request(`/match/athlete/listMyMatchBySubject?matchId=${params.matchId}&openId=${params.openId}`, 'get', params)
+	return $http.request(`/match/athlete/listMyMatchBySubject`, 'get', params)
 }
 
 // 编辑
 function getMyApplyInfo(params) {
-	return $http.request(`/match/athlete/getMyApplyInfo?matchId=${params.matchId}&openId=${params.openId}&subjectId=${params.subjectId}`, 'get', params)
+	return $http.request(`/match/athlete/getMyApplyInfo`, 'get', params)
 }
 
 // 选手名单
 function listAthlete(params) {
-	return $http.request(`/match/athlete/listAthlete?matchId=${params.matchId}&subjectId=${params.subjectId}`, 'get', params)
+	return $http.request(`/match/athlete/listAthlete`, 'get', params)
 }
 
 // 分组
 function groupList(params) {
-	return $http.request(`/match/group/list?subjectId=${params.subjectId}`, 'get', params)
+	return $http.request(`/match/group/list`, 'get', params)
 }
 
 // 相册列表
@@ -73,21 +73,35 @@ function uploadHeadPic(params) {
 
 // 团队的分组导航
 function arrangeList(params) {
-	return $http.request(`/match/arrange/list?subjectId=${params.subjectId}`, 'get', params)
+	return $http.request(`/match/arrange/list`, 'get', params)
 }
 
 // 团队下选手的列表，用于分组的
 function listAthleteByTeam(params) {
-	return $http.request(`/match/athlete/listAthleteByTeam?teamId=${params.teamId}`, 'get', params)
+	return $http.request(`/match/athlete/listAthleteByTeam`, 'get', params)
 }
 
 // 我的报名列表
 function listMyMatch(params) {
-	return $http.request(`/match/listMyMatch?openId=${params.openId}&pageNum=${params.pageNum}&pageSize=${params.pageSize}`, 'get', params)
+	return $http.request(`/match/listMyMatch`, 'get', params)
 }
 // 我的报名列表
 function arrangeSave(params) {
 	return $http.request(`/match/arrange/save`, 'post', params)
+}
+
+// 分组
+function stageList(params) {
+	return $http.request(`/match/stage/list`, 'get', params)
+}
+
+function resultList(params) {
+	return $http.request(`/match/result/list`, 'get', params)
+}
+
+// /match/result/getDetail?subjectId=1394899244638289922&id=13
+function getEnventsDetail(params) {
+	return $http.request(`/match/result/getDetail`, 'get', params)
 }
 
 export {
@@ -108,5 +122,8 @@ export {
 	arrangeList,
 	arrangeSave,
 	listAthleteByTeam,
-	athleteSaveBefore
+	athleteSaveBefore,
+	stageList,
+	resultList,
+	getEnventsDetail
 }

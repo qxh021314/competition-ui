@@ -18,7 +18,7 @@
 				</view>
 			</view>
 			<view class="enrollment-card_foot" v-if="item.status">
-				<view class="enrollment-card_foot_status">{{$utils.getStatus(item.status)}}</view>
+				<view class="enrollment-card_foot_status" :style="{backgroundColor: statusBack(item.status)}">{{$utils.getStatus(item.status)}}</view>
 				<u-icon v-if="item.status == '0'" name="edit-pen-fill" color="#2979ff" label-color="#2979ff" size="34" label="编辑"></u-icon>
 				<view v-if="item.status == '2'" @click.stop="toGroup(item)">
 					<u-icon name="edit-pen-fill" color="#ffaa00" label-color="#ffaa00" size="34" label="进行分组"></u-icon>
@@ -40,9 +40,30 @@
 			}
 		},
 		data() {
-			return {};
+			return {
+		
+			};
 		},
 		methods: {
+			statusBack(status) {
+				switch (status) {
+				  case '0':
+				    return '#ffaa00'
+				    break
+				  case '1':
+				    return '#00aaff'
+				    break;
+				  case '2':
+					return this.$utils.themeColor
+				    break
+				  case '3':
+				    return '#ff0000'
+				    break;
+				  default:
+				    return ''
+				    break;
+				}
+			},
 			update(item) {
 			},
 			toHref(item) {

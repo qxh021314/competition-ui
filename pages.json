@@ -151,6 +151,15 @@
                 }
                 
                 }
+                ,{
+                    "path" : "views/group-stage/grouping-details",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "比赛详情",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
             ]
 	}],
 	"globalStyle": {
