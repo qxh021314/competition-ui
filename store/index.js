@@ -12,8 +12,7 @@ const store = new Vuex.Store({
 	modules: {
 		userService,
 		livePhoto,
-		sys
-		livePhoto,
+		sys,
 		news,
 		scheme
 	}
