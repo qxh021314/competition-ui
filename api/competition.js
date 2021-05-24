@@ -48,27 +48,27 @@ function groupList(params) {
 
 // 相册列表
 function qLivePhotoListByPage(params) {
-	return $http.request(`http://192.168.3.35:8889/platform-api/photo/album/page/${params.pageNum}/${params.pageSize}`, 'post', params)
+	return $http.request(`/photo/album/page/${params.pageNum}/${params.pageSize}`, 'post', params)
 }
 
 // 相册详情
 function qLivePhotoDetailByPage(params) {
-	return $http.request(`http://192.168.3.35:8889/platform-api/match/photo/page/${params.pageNum}/${params.pageSize}`, 'post', params)
+	return $http.request(`/match/photo/page/${params.pageNum}/${params.pageSize}`, 'post', params)
 }
 
 // 相册浏览量
 function getLivePhotoBrowse(params) {
-	return $http.request(`http://192.168.3.35:8889/platform-api/photo/album/browse/${params.id}`, 'get', params)
+	return $http.request(`/photo/album/browse/${params.id}`, 'get', params)
 }
 
 // 相册图片点赞
 function getLivePhotoLike(params) {
-	return $http.request(`http://192.168.3.35:8889/platform-api/match/photo/like/${params.id}`, 'get', params)
+	return $http.request(`/match/photo/like/${params.id}`, 'get', params)
 }
 
 // 头像上传
 function uploadHeadPic(params) {
-	return `http://192.168.3.35:8889/platform-api/match/photo/searchFace/${params.id}`
+	return `/match/photo/searchFace/${params.id}`
 }
 
 // 团队的分组导航

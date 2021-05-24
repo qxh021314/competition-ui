@@ -3,7 +3,7 @@
  */
 
 // 图片cdn地址
-const IMG_CDN = '/static/news/'
+const IMG_CDN = 'http://114.215.146.46/web/common/static/news/'
 
 /**
  * 新闻动态列表
