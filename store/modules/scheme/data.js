@@ -3,7 +3,7 @@
  */
 
 // 图片cdn地址
-const IMG_CDN = 'http://114.215.146.46/web/common/static/scheme/'
+const IMG_CDN = 'https://xcx.match.anhuity.com.cn/web/common/static/scheme/'
 
 /**
  * 方案列表
