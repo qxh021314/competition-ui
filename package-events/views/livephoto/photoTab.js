@@ -212,7 +212,7 @@ export default {
 					const filePath = temp.tempFilePaths[0]
 					uni.showLoading({
 						title: '请稍候'
-					})\
+					})
 					uni.uploadFile({
 						url: uploadHeadPic(id),
 						fileType: 'image',
