@@ -31,7 +31,6 @@
 									<view class="zit-td" v-else>
 										{{item.teamName}}
 									</view>
-
 								</u-th>
 							</u-tr>
 
@@ -39,7 +38,7 @@
 								<u-td v-for="(itemchild,indexchild) in item" :key="indexchild">
 									<view class="zit-td" v-if="itemchild == 'del'"></view>
 									<view class="zit-td" v-else>
-										{{itemchild.name}}
+											{{itemchild.name}}
 									</view>
 								</u-td>
 							</u-tr>
@@ -49,33 +48,37 @@
 			</scroll-view>
 		</view>
 
-		<view class="group-flex u-border-top" v-if="groupCurrent == 1">
-			<view class="group-flex_tabs" :style="[ enventsIndexList.indexOf(index) >= 0 ? styleAfter : styleBefore ]"
-				v-for="(item, index) in enventsList" :key="index" @click="selectEnvents(item, index)">{{item.stageName}}
+		<view class="" v-if="groupCurrent == 1">
+			<view class="group-flex u-border-top">
+				<view class="group-flex_tabs"
+					:style="[ enventsIndexList.indexOf(index) >= 0 ? styleAfter : styleBefore ]"
+					v-for="(item, index) in enventsList" :key="index" @click="selectEnvents(item, index)">
+					{{item.stageName}}
+				</view>
+			</view>
+
+
+			<view class="group--vs u-border" v-for="(item, index) in eventsResultList" :key="index"
+				@click="toHref(item)">
+				<view class="group--vs_pre">
+					<text class="group--vs_pre_name">{{item.ateamName}}</text>
+					<text class="group--vs_pre_val" v-if="item.ascoreList.length > 0">
+						<text style="margin: 0 20rpx;" v-for="(itemchild, indexchild) in item.ascoreList"
+							:key="indexchild">{{itemchild}}</text>
+					</text>
+					<text class="group--vs_pre_val" v-else>0</text>
+				</view>
+				<u-divider color="#fa3534" half-width="100%">VS</u-divider>
+				<view class="group--vs_pre">
+					<text class="group--vs_pre_name">{{item.bteamName}}</text>
+					<text class="group--vs_pre_val" v-if="item.bscoreList.length > 0">
+						<text style="margin: 0 20rpx;" v-for="(itemchild, indexchild) in item.bscoreList"
+							:key="indexchild">{{itemchild}}</text>
+					</text>
+					<text class="group--vs_pre_val" v-else>0</text>
+				</view>
 			</view>
 		</view>
-
-
-		<view class="group--vs u-border" v-for="(item, index) in eventsResultList" :key="index" @click="toHref(item)">
-			<view class="group--vs_pre">
-				<text class="group--vs_pre_name">{{item.ateamName}}</text>
-				<text class="group--vs_pre_val" v-if="item.ascoreList.length > 0">
-					<text style="margin: 0 20rpx;" v-for="(itemchild, indexchild) in item.ascoreList"
-						:key="indexchild">{{itemchild}}</text>
-				</text>
-				<text class="group--vs_pre_val" v-else>0</text>
-			</view>
-			<u-divider color="#fa3534" half-width="100%">VS</u-divider>
-			<view class="group--vs_pre">
-				<text class="group--vs_pre_name">{{item.bteamName}}</text>
-				<text class="group--vs_pre_val" v-if="item.bscoreList.length > 0">
-					<text style="margin: 0 20rpx;" v-for="(itemchild, indexchild) in item.bscoreList"
-						:key="indexchild">{{itemchild}}</text>
-				</text>
-				<text class="group--vs_pre_val" v-else>0</text>
-			</view>
-		</view>
-
 	</view>
 </template>
 
@@ -120,12 +123,13 @@
 		},
 		computed: {
 			grpWidth() {
-				console.log(this.dataObj);
-				let width = Math.pow((130 + 12) * this.dataObj.teamList[0].teamList.length, 2) + Math.pow((75 + 20) * this
-					.dataObj
-					.teamList[0].teamList.length, 2)
+				console.log(this.dataObj.teamList[0]);
+				let width = 0
+				if (this.dataObj.teamList[0]) {
+					width = Math.pow((130 + 12) * this.dataObj.teamList[0].teamList.length, 2) + Math.pow((75 + 20) * this
+						.dataObj.teamList[0].teamList.length, 2)
+				}
 				return Math.sqrt(width) + 'rpx'
-				// return '0rpx'
 			}
 		},
 		onLoad(options) {
@@ -179,6 +183,7 @@
 				console.log(teamList);
 				teamList.forEach((item, index) => {
 					item.matchList = []
+					console.log(item.teamList);
 					item.teamList.forEach((itemchild, indexchild) => {
 						let obj = {
 							name: itemchild.teamName
@@ -188,16 +193,23 @@
 						objChildList.push(JSON.parse(JSON.stringify(obj)))
 						if (matchResult && matchResult.length > 0) {
 							matchResult.forEach((filterItem, filterIndex) => {
-
-								if (itemchild.id == filterItem.aTeamId) {
-									obj.name = filterItem.aScore + '-' + filterItem.bScore
+								
+								if (itemchild.id == filterItem.ateamId) {
+									obj.name = filterItem.ascore + '-' + filterItem.bscore
+									if(filterItem.ascore  == '-100' || filterItem.bscore == '-100') {
+										obj.name = ''
+									}
 									objChildList.push(JSON.parse(JSON.stringify(obj)))
 								}
-								if (itemchild.id == filterItem.bTeamId) {
-									obj.name = filterItem.bScore + '-' + filterItem.aScore
+								
+								if (itemchild.id == filterItem.bteamId) {
+									obj.name = filterItem.bscore + '-' + filterItem.ascore
+									if(filterItem.ascore  == '-100' || filterItem.bscore == '-100') {
+										obj.name = ''
+									}
 									objChildList.push(JSON.parse(JSON.stringify(obj)))
 								}
-
+								
 							})
 						} else {
 							let leng = item.teamList.length - 1
@@ -207,11 +219,18 @@
 								})
 							}
 						}
+						
+						console.log(objChildList);
+						console.log(item.teamList);
+						// if (objChildList.length < item.teamList.length) {
+						// 	objChildList.push(JSON.parse(JSON.stringify({name: ''})))
+						// }
 
 						objChildList.splice(indexchild + 1, 0, {
 							name: ''
 						});
 						objList.push(objChildList)
+						console.log(objList);
 						item.matchList.push(...objList)
 					})
 					let listTeam = [{}]
@@ -252,8 +271,10 @@
 				this.grouplist = []
 				this.enventsList = []
 				this.current = e
+				this.groupCurrent = 0
+				this.industryIndexList = [0]
 				this.subjectId = this.listTab[e].id
-				this.getStageList()
+				this.getStageList(1)
 			}
 		}
 	}
@@ -303,7 +324,7 @@
 		top: 0;
 		left: 0;
 		height: 1rpx;
-		background-color: #6c6c6c;
+		background-color: rgb(228, 231, 237);
 		transform-origin: left;
 		transform: rotate(31.8deg);
 	}

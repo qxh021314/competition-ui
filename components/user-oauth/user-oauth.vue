@@ -13,8 +13,9 @@
 						<button class="oauth--option_back" @click="reFuseUserInfo">拒绝</button>
 					</view>
 					<view class="oauth--option_btn oauth--option_confirm">
-						<button type="success" open-type="getUserInfo" withCredentials="true" lang="zh_CN"
-							@getuserinfo="getUserInfo">允许</button>
+						<button @click="getUserInfo()">允许</button>
+				<!-- 		<button type="success" open-type="getUserInfo" withCredentials="true" lang="zh_CN"
+							@getuserinfo="getUserInfo">允许</button> -->
 					</view>
 				</view>
 			</view>
@@ -49,20 +50,73 @@
 			getUserInfo(e) {
 				console.log(e);
 				this.openOauth = false
-				if (e.detail.userInfo) {
-					this.userInfo = e.detail.userInfo;
-					this.encryptedDataUser = e.detail.encryptedData
-					this.ivUser = e.detail.iv
-					this.$store.commit('SET_USER_ENCRY_INFO',this.userInfo)
-					// 鉴权
-					uni.login({
-						provider: "weixin",
-						success: (res) => {
-							this.wxCode = res.code
-							this.checkLogin(res.code)
+				uni.getUserProfile({
+					desc: 'Wexin', // 这个参数是必须的
+					success: res => {
+						console.log(res)
+						if (res.userInfo) {
+							this.userInfo = res.userInfo;
+							this.encryptedDataUser = res.encryptedData
+							this.ivUser = res.iv
+							this.$store.commit('SET_USER_ENCRY_INFO', this.userInfo)
+							// 鉴权
+							uni.login({
+								provider: "weixin",
+								success: (res) => {
+									this.wxCode = res.code
+									this.checkLogin(res.code)
+								}
+							});
 						}
-					});
-				}
+					},
+					fail: err => {
+						console.log(err)
+					}
+				})
+
+				// #ifdef MP-WEIXIN
+				// uni.getProvider({
+				// 	service: 'oauth',
+				// 	success: function(res) {
+				// 		console.log(res);
+				// 		if (~res.provider.indexOf('weixin')) {
+				// 			this_.toLogin()
+				// 		} else {
+				// 			uni.showToast({
+				// 				title: '请先安装微信或升级版本',
+				// 				icon: "none"
+				// 			});
+				// 		}
+				// 	}
+				// });
+				//#endif
+			},
+			// 用户信息从微信获取，并调后端接口获取相应信息
+			toLogin() {
+				var this_ = this
+				uni.login({
+					provider: 'weixin',
+					success: (res) => {
+						uni.getUserInfo({
+							provider: 'weixin',
+							success: (info) => {
+								console.log(info);
+							},
+							fail: () => {
+								uni.showToast({
+									title: "微信登录授权失败",
+									icon: "none"
+								});
+							}
+						})
+					},
+					fail: () => {
+						uni.showToast({
+							title: "微信登录授权失败",
+							icon: "none"
+						});
+					}
+				})
 			},
 			reFuseUserInfo(e) {
 				this.openOauth = false
@@ -83,7 +137,7 @@
 </script>
 
 <style lang="scss">
-.oauth {
+	.oauth {
 		&--title {
 			text-align: center;
 			font-weight: bold;

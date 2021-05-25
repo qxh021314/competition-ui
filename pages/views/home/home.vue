@@ -42,7 +42,7 @@
 				menuList: [{
 					img: '/static/gywm.png',
 					name: '关于我们',
-					url: '/pages/bidding-notice/index',
+					url: '/package-events/views/other/other',
 					color: this.$utils.themeColor,
 					oauth: true
 				}, {
@@ -61,7 +61,7 @@
 					img: '/static/tycg.png',
 					name: '体育场馆',
 					color: this.$utils.themeColor,
-					url: '/pages/bidding-notice/index',
+					url: '',
 					oauth: false
 				}, {
 					img: '/static/jchd.png',
@@ -73,7 +73,7 @@
 					img: '/static/gdss.png',
 					name: '更多搜索',
 					color: this.$utils.themeColor,
-					url: '/pages/bidding-notice/index',
+					url: '',
 					oauth: false
 				}],
 				lineColor: this.$utils.themeColor,

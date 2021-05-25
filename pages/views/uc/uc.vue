@@ -15,13 +15,15 @@
 					<view class="wd-center wd-name">
 						<text>{{ userInfo.nickName }}</text>
 					</view>
-					<view class="wd-center">
-						<text>账户ID:{{ phoneNumber }}</text>
-					</view>
+					<!-- <view class="wd-center"> -->
+					<!-- <text>账户ID:{{ phoneNumber }}</text> -->
+					<!-- </view> -->
 				</view>
 			</view>
+
+
 		</view>
-		
+
 		<view class="wd-user_menu">
 			<view class="wd-user_select" v-for="(item, index) in menuList" :key="index" @click="navigatorTo(item)">
 				<view class="wd-select_bef">
@@ -37,7 +39,9 @@
 				</view>
 			</view>
 		</view>
-		<user-oauth></user-oauth>
+
+
+		<user-oauth v-if="userOauth"></user-oauth>
 	</view>
 </template>
 
@@ -45,19 +49,16 @@
 	export default {
 		data() {
 			return {
+				userOauth: false,
 				phoneNumber: '1876738123',
 				backgroundImg: 'http://www.zqgame.com.cn/picture/editorimage/attached/image/20160525/201605251464138259953.jpg',
 				menuList: [{
 					name: '我的资料',
-					img: '/static/schemeaft.png',
-					url: '/pages/user/account-data/account-data',
-				}, {
-					name: '我的关注',
-					img: '/static/schemeaft.png',
-					url: '/pages/subscription/index',
+					img: '/static/mydoc.png',
+					url: '',
 				}, {
 					name: '我的活动',
-					img: '/static/schemeaft.png',
+					img: '/static/myact.png',
 					tenderType: '11',
 					url: '/package-events/views/my-activity/my-activity'
 				}]
@@ -72,10 +73,29 @@
 				return this.$store.state.userService.userEncryInfo
 			}
 		},
-		onLoad() {
+
+		onHide() {
+			console.log('uc-hide');
+			this.userOauth = false
 		},
+
+		onShow() {
+			console.log('uc-show');
+			const openId = this.$userService.getOpenId();
+			console.log(openId);
+			// #ifdef MP-WEIXIN
+			if (!this.$utils.isNotBlank(openId)) {
+				this.userOauth = true
+			}
+			// #endif
+		},
+
 		methods: {
 			navigatorTo(item) {
+				if (item.url.length == 0) {
+					this.$utils.toast('功能正在开发中！')
+					return
+				}
 				switch (item.name) {
 					case '订阅信息':
 						uni.switchTab({
@@ -173,6 +193,7 @@
 		.wd-user_img {
 			width: 180rpx;
 			height: 180rpx;
+
 			image {
 				background-color: #f9f9f9;
 				border-radius: 50%;

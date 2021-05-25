@@ -1,7 +1,7 @@
 <template>
 	<view>
-		<zit-scheme-card v-if="listData && listData.length > 0" :listData="listData" :showStatus="true" :sectionText="false" @change="toDetails">
-		</zit-scheme-card>
+		<zit-envents-card v-if="listData && listData.length > 0" :listData="listData" :showStatus="true" :sectionText="false" @change="toDetails">
+		</zit-envents-card>
 		<no-data v-else></no-data>
 		<view class="placeholder"></view>
 		<u-loadmore v-if="listData && listData.length > 0" :status="status" :icon-type="iconType" :load-text="contentText" />
@@ -12,7 +12,9 @@
 	import {
 		qMatchByPage
 	} from '@/api/competition.js'
+	import zitEnventsCard from '../../components/zit-envents-card.vue'
 	export default {
+		components: {zitEnventsCard},
 		data() {
 			return {
 				contentText: {

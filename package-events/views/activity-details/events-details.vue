@@ -90,7 +90,7 @@
 					{
 						name: '赛事相册',
 						icon: '/static/photoalbum.png',
-						menuUrl: '/package-events/views/livephoto/livephoto'
+						menuUrl: '/package-events/views/livephoto/list'
 					}
 				],
 				textList: []

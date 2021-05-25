@@ -42,6 +42,10 @@
 		methods: {
 			toUrl(item) {
 				console.log(item);
+				if (item.url.length == 0) {
+					this.$utils.toast('功能正在开发中！')
+					return
+				}
 				if (item.name == '精彩活动') {
 					uni.switchTab({
 						url: item.url

@@ -50,7 +50,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wx06f8bfa403fd14f7",
+        "appid" : "wx541ceb5455df773f",
         "setting" : {
             "urlCheck" : false,
             "minified" : true,
@@ -81,6 +81,13 @@
     "uniStatistics" : {
         "enable" : false
     },
+	"h5" : {
+	    "title" : "赛事小程序",
+	    "router" : {
+	        "base" : "./"
+	    },
+	    "domain" : "https://xcx.match.anhuity.com.cn"
+	},
     "mp-qq" : {
         "setting" : {
             "es6" : false

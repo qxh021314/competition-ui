@@ -87,6 +87,7 @@ const $http = {
 				fail: (res) => {
 					// clearTimeout($utils.delayed)
 					// $utils.delayed = null;
+					console.log(res);
 					$utils.toast("网络不给力，请稍后再试~")
 					reject(res)
 				}

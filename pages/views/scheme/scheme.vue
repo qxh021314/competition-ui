@@ -121,7 +121,7 @@
 
 			.u-dropdown__menu__item {
 				height: 80rpx;
-				width: 150rpx;
+				width: 160rpx;
 				padding-left: 10rpx;
 				display: flex;
 				justify-content: center;

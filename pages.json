@@ -160,6 +160,15 @@
                 }
                 
                 }
+                ,{
+                    "path" : "views/other/other",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "关于我们",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
             ]
 	}],
 	"globalStyle": {

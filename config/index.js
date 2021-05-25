@@ -1,6 +1,6 @@
 const config = {
-	baseUrl: 'http://localhost:8889/platform-api',
-	prodUrl: 'http://xinrui.liliudong.com/platform-api',
+	baseUrl: 'https://match.anhuity.com.cn/api',
+	prodUrl: 'https://match.anhuity.com.cn/api',
 	//接口地址
 	interfaceUrl: function() {
 		if (process.env.NODE_ENV === 'development') {

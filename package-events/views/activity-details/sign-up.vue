@@ -1,8 +1,8 @@
 <template>
 	<view class="sign-up">
-		
+
 		<view class="sign-up_form">
-			<u-form :rules="rules" :model="form" ref="uForm" label-width="180" :label-style="labelStyle">
+			<u-form :model="form" ref="uForm" label-width="180" :label-style="labelStyle">
 				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="团队名称" prop="teamName">
 					<u-input input-align="right" v-model="form.teamName" placeholder="请输入团队名称(不超过8个字)" maxlength="8" />
 				</u-form-item>
@@ -10,7 +10,7 @@
 		</view>
 
 		<view class="sign-up_form" v-for="(item, indexparent) in form.athleteList" :key="indexparent">
-			<u-form :rules="rules" :model="item" ref="uForm" label-width="180" :label-style="labelStyle">
+			<u-form :model="item" ref="uForm" label-width="180" :label-style="labelStyle">
 				<u-form-item :required="true" :leftIconStyle="leftIconStyle"
 					:label="item.teamRole == '1' ? '队长姓名' : '队员姓名'" prop="name">
 					<u-input input-align="right" v-model="item.name" placeholder="请输入姓名" />
@@ -41,7 +41,7 @@
 				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="手机号" prop="phoneNo">
 					<u-input input-align="right" v-model="item.phoneNo" placeholder="请输入手机号码" maxlength="11" />
 				</u-form-item>
-				<u-form-item v-if="indexparent !== 0">
+				<u-form-item v-if="indexparent !== 0 && triggerStatus">
 					<view class="sign-delete">
 						<u-button type="error" size="mini" @click="deleteSign(item, indexparent)">删除</u-button>
 					</view>
@@ -156,7 +156,7 @@
 							required: true,
 							message: '请输入手机号',
 							// 可以单个或者同时写两个触发验证方式 
-							trigger: ['blur', 'change']
+							trigger: ['blur']
 						},
 						{
 							required: true,
@@ -168,24 +168,24 @@
 							},
 							message: '手机号码不正确',
 							// 触发器可以同时用blur和change
-							trigger: ['blur', 'change']
+							trigger: ['blur']
 						}
 					],
 					age: [{
 						required: true,
 						message: '请输入年龄',
-						trigger: ['blur', 'change']
+						trigger: ['blur']
 					}],
 					birthDay: [{
 						required: true,
 						message: '请输入出生日期',
-						trigger: ['blur', 'change']
+						trigger: ['blur']
 					}],
 
 					idCard: [{
 						required: true,
 						message: '请输入身份证号码',
-						trigger: ['blur', 'change']
+						trigger: ['blur']
 					}, {
 						// 自定义验证函数，见上说明
 						validator: (rule, value, callback) => {
@@ -195,12 +195,12 @@
 						},
 						message: '身份证号码不正确',
 						// 触发器可以同时用blur和change
-						trigger: ['blur', 'change']
+						trigger: ['blur']
 					}],
 					schoolUnit: [{
 						required: true,
 						message: '请输入选校单位',
-						trigger: ['blur', 'change']
+						trigger: ['blur']
 					}]
 				}
 			}
@@ -221,7 +221,6 @@
 		},
 		// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
 		onReady() {
-			// this.$refs.uForm.setRules(this.rules);
 		},
 		methods: {
 			showSelect(index) {
@@ -271,8 +270,8 @@
 						uni.navigateTo({
 							url: `/package-events/views/activity-details/view-enrollment-options?matchId=${this.form.matchId}`
 						})
-					},1000)
-		
+					}, 1000)
+
 				})
 			}
 		}
