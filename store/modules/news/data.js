@@ -1,9 +1,11 @@
+import config from '../../../config/index.js'
+
 /**
  * 新闻动态 本地数据
  */
 
-// 图片cdn地址
-const IMG_CDN = 'https://xcx.match.anhuity.com.cn/web/common/static/news/'
+// 图片目录
+const IMG_CDN = config.cdnDomain + '/web/common/static/news/'
 
 /**
  * 新闻动态列表

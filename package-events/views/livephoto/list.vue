@@ -1,19 +1,21 @@
 <template>
 	<view class="game-card">
-		<u-card v-if="listData && listData.length > 0" v-for="item in listData" :key="item.id" :show-head="false"
-			:show-foot="false" padding="20" class="card-wrap">
-			<view class="card-bd" slot="body">
-				<u-row @click="entryPhoto(item)">
-					<u-col span="6">
-						<image :lazy-load="true" :src="item.imgUrl" mode="aspectFill"></image>
-					</u-col>
-					<u-col span="6" class="card-bd--content">
-						<view class="card-bd--title u-line-2">{{ item.albumName }}</view>
-						<view class="card-bd--time u-p-10">{{ item.createTime }}</view>
-					</u-col>
-				</u-row>
-			</view>
-		</u-card>
+    <template v-if="listData && listData.length > 0">
+      <u-card v-for="item in listData" :key="item.id" :show-head="false"
+              :show-foot="false" padding="20" class="card-wrap">
+        <view class="card-bd" slot="body">
+          <u-row @click="entryPhoto(item)">
+            <u-col span="6">
+              <image :lazy-load="true" :src="item.imgUrl" mode="aspectFill"></image>
+            </u-col>
+            <u-col span="6" class="card-bd--content">
+              <view class="card-bd--title u-line-2">{{ item.albumName }}</view>
+              <view class="card-bd--time u-p-10">{{ item.createTime }}</view>
+            </u-col>
+          </u-row>
+        </view>
+      </u-card>
+    </template>
 		<no-data v-else></no-data>
 		<view class="placeholder"></view>
 		<u-loadmore v-if="listData && listData.length > 0" :status="status" :icon-type="iconType"
@@ -29,6 +31,7 @@
 	export default {
 		data() {
 			return {
+			  matchId: '',
 				contentText: {
 					loadmore: '上拉显示更多',
 					loading: '努力加载中',
@@ -52,7 +55,10 @@
 		},
 		methods: {
 			getLivePhotoListByPage() {
-				qLivePhotoListByPage(this.queryParams).then((res) => {
+				qLivePhotoListByPage({
+          matchId: this.matchId,
+          ...this.queryParams
+        }).then((res) => {
 					const {code , page} = res
 					if (code === 0) {
 						const records = page.records || []
@@ -83,9 +89,11 @@
 				this.getLivePhotoListByPage()
 			}
 		},
-		onLoad() {
+		onLoad(option) {
+		  this.matchId = option.id
 			this.fetchData()
-		}
+      console.log('list::', option)
+    }
 	}
 </script>
 

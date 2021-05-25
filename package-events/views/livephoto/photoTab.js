@@ -2,9 +2,15 @@ import chunkDataWithInUI from '@/utils/chunkArray.js'
 
 import {
 		qLivePhotoDetailByPage,
-		getLivePhotoBrowse,
-		uploadHeadPic
+		getLivePhotoBrowse
 	} from '@/api/competition.js'
+
+import config from '../../../config/index.js'
+
+// 头像上传
+const uploadHeadPic = function(id) {
+	return `${config.interfaceUrl()}/match/photo/searchFace/${id}`
+}
 
 export default {
 	data() {
@@ -66,7 +72,8 @@ export default {
 				this.loadStatus = 'loading'
 				const q = {
 					pageNo: this.page.photoNo,
-					pageSize: this.page.size
+					pageSize: this.page.size,
+					id: this.album.id
 				}
 				const page = await this.fetchData(q)
 				const records = page.records || []
@@ -91,6 +98,7 @@ export default {
 			} else {
 				this.loadStatus = 'loading'
 				const q = {
+					id: this.album.id,
 					pageNo: this.page.hotNo,
 					pageSize: this.page.size,
 					order: 1
@@ -115,6 +123,7 @@ export default {
 				this.pending = true
 				// const data = mockData.photos.slice(0, 5)
 				qLivePhotoDetailByPage({
+					albumId: q.id,
 					pageNum: q.pageNo,
 					pageSize: q.pageSize,
 					order: q.order
@@ -203,11 +212,9 @@ export default {
 					const filePath = temp.tempFilePaths[0]
 					uni.showLoading({
 						title: '请稍候'
-					})
+					})\
 					uni.uploadFile({
-						url: uploadHeadPic({
-							id
-						}),
+						url: uploadHeadPic(id),
 						fileType: 'image',
 						filePath,
 						name: 'headPic',

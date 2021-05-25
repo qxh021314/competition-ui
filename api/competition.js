@@ -66,11 +66,6 @@ function getLivePhotoLike(params) {
 	return $http.request(`/match/photo/like/${params.id}`, 'get', params)
 }
 
-// 头像上传
-function uploadHeadPic(params) {
-	return `/match/photo/searchFace/${params.id}`
-}
-
 // 团队的分组导航
 function arrangeList(params) {
 	return $http.request(`/match/arrange/list`, 'get', params)
@@ -118,7 +113,6 @@ export {
 	qLivePhotoDetailByPage,
 	getLivePhotoBrowse,
 	getLivePhotoLike,
-	uploadHeadPic,
 	arrangeList,
 	arrangeSave,
 	listAthleteByTeam,

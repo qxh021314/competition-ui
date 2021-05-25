@@ -1,9 +1,11 @@
+import config from '../../../config/index.js'
+
 /**
  * 放案 本地数据
  */
 
-// 图片cdn地址
-const IMG_CDN = 'https://xcx.match.anhuity.com.cn/web/common/static/scheme/'
+// 图片目录
+const IMG_CDN = config.cdnDomain + '/web/common/static/scheme/'
 
 /**
  * 方案列表

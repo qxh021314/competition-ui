@@ -9,6 +9,7 @@ const config = {
 			return config.prodUrl; //生产环境
 		}
 	},
+	cdnDomain: 'https://match.anhuity.com.cn', // 静态资源地址
 	debug: false
 }
 module.exports = config
