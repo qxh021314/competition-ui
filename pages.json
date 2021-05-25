@@ -3,7 +3,7 @@
 			"path": "pages/views/home/home",
 			"style": {
 				"navigationBarTitleText": "首页",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
 		},
 

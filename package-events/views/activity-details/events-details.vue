@@ -18,6 +18,7 @@
 					<text class="scheme--intro_menu_text">{{item.name}}</text>
 				</view>
 			</view>
+
 			<!-- 赛事简介 -->
 			<view class="scheme--intro">
 				<view class="scheme--intro_title">
@@ -42,19 +43,28 @@
 				</view>
 			</view>
 
-			<!-- 			赛事安排
-			<view class="scheme--intro">
-				<view class="scheme--intro_title">
-					<u-section font-size="35" title="赛事安排" :right="false"></u-section>
-				</view>
-				<view class="scheme--intro_menu">
-					<view class="scheme--intro_menu_icon" v-for="(item, index) in arranList" :key="index">
-						<u-icon :name="item.icon" size="70"></u-icon>
-						<text class="scheme--intro_menu_text">{{item.name}}</text>
+			<u-popup v-model="registeShow" mode="center" width="85%" border-radius="10" :closeable="true">
+				<view class="user-register">
+					<view class="user-register_title">选手绑定</view>
+					<!-- <view class="user-register_msg">提示</view> -->
+					<view class="user-register_form u-border-bottom">
+						<text class="user-register_form_name">姓名</text>
+						<view class="user-register_form_inp">
+							<u-input v-model="bindForm.userName" type="text" placeholder="请输入姓名" :border="false" />
+						</view>
+					</view>
+					<view class="user-register_form u-border-bottom">
+						<text class="user-register_form_name">身份证</text>
+						<view class="user-register_form_inp">
+							<u-input v-model="bindForm.userIdCard" type="text" placeholder="请输入身份证" :border="false" />
+						</view>
+					</view>
+					
+					<view class="user-register_btn" @click="registerUser()">
+						确定
 					</view>
 				</view>
-			</view> -->
-
+			</u-popup>
 
 		</view>
 	</view>
@@ -91,8 +101,26 @@
 						name: '赛事相册',
 						icon: '/static/photoalbum.png',
 						menuUrl: '/package-events/views/livephoto/list'
+					},
+					{
+						name: '场次',
+						icon: '/static/constitution.png',
+						menuUrl: '/package-events/views/constitution/constitution'
+					},
+					{
+						name: '选手认证',
+						icon: '/static/photoalbum.png',
+						menuUrl: '',
+						type: 'xxrz'
 					}
 				],
+				bindForm: {
+					matchId: '',
+					openId: '',
+					userName: '',
+					userIdCard: ''
+				},
+				registeShow: false,
 				textList: []
 			}
 		},
@@ -107,20 +135,34 @@
 				}).then((res) => {
 					this.recordObj = res.record
 					this.textList.push(res.record.matchNotice)
-					console.log(res);
 				})
 			},
-			// 
+
 			toHref(item) {
-				uni.navigateTo({
-					url: item.menuUrl + `?id=${this.paramsId}`
-				})
+
+				if (item.type && item.type == 'xxrz') {
+					this.registeShow = true
+				} else {
+					uni.navigateTo({
+						url: item.menuUrl + `?id=${this.paramsId}`
+					})
+				}
+
 			},
+
 			toRegister() {
 				uni.navigateTo({
 					url: `/package-events/views/activity-details/subject?matchId=${this.paramsId}`
 				})
 			},
+			
+			// 选手认证
+			registerUser() {
+				this.bindForm.openId = this.$userService.getOpenId()
+				this.bindForm.matchId = this.paramsId
+				let valid = this.$utils.identityCodeValid(this.bindForm.userIdCard)
+			},
+			
 			bannerToDetails() {
 
 			}
@@ -165,11 +207,12 @@
 
 			&_menu {
 				display: flex;
-				justify-content: space-around;
 				align-items: center;
 				margin: 20rpx 0;
+				flex-wrap: wrap;
 
 				&_icon {
+					flex: 0 0 25%;
 					display: flex;
 					flex-direction: column;
 					align-items: center;
@@ -189,6 +232,7 @@
 				justify-content: center;
 				align-items: center;
 				margin: 20rpx 0;
+
 				&_icon {
 					display: flex;
 					justify-content: center;
@@ -206,6 +250,50 @@
 
 				}
 			}
+		}
+	}
+
+	.user-register {
+
+		padding: 50rpx 30rpx;
+
+		&_title {
+			color: $global-color;
+			font-size: 35rpx;
+			font-weight: bold;
+			margin: 20rpx 0;
+		}
+
+		&_msg {
+			background-color: #fce4e6;
+			color: #7e7e7e;
+			padding: 20rpx;
+			border-radius: 10rpx;
+		}
+
+		&_form {
+			display: flex;
+			align-items: center;
+			margin: 20rpx 0;
+			font-size: 34rpx;
+			&_name {
+				margin: 20rpx 0;
+				width: 150rpx;
+			}
+			&_inp{
+				flex: 1;
+			}
+		}
+		
+		&_btn{
+			margin-top: 40rpx;
+			background-color: $global-color;
+			color: #FFFFFF;
+			text-align: center;
+			padding: 20rpx 0;
+			font-size: 34rpx;
+			letter-spacing: 3rpx;
+			border-radius: 20rpx;
 		}
 	}
 </style>

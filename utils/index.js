@@ -213,7 +213,8 @@ const $utils = {
 	 * @param {Object} text	手机号
 	 */
 	isPhone(text) {
-		if ((/^[1][0-9]{10}$/.test(text))) {
+		console.log(text);
+		if ((/^[1][3,4,5,6,7,8,9][0-9]{9}$/.test(text))) {
 			return true;
 		}
 		return false;
@@ -450,7 +451,60 @@ const $utils = {
 		}
 		return isParams
 	},
-	//
+	/**
+	 * 判断是否为空值
+	 * @param {Object} obj
+	 * @param {Array} keys 需要校验的参数
+	 */
+	verify(obj, rules) {
+		let keys = []
+		try {
+			Object.getOwnPropertyNames(rules).forEach(function(key) {
+				keys.push(key)
+			})
+			let isParams = true
+			// 数组的情况下
+			if (obj instanceof Array) {
+				for (let index in keys) {
+					let key = keys[index]
+					for (var indexobj = 0; indexobj < obj.length; indexobj++) {
+						let itemobj = obj[indexobj]
+						// 值为空时
+						if (!$utils.isNotBlank(itemobj[key])) {
+							let name = itemobj[key] ? (itemobj[key] + ':') : ""
+							$utils.toast(name + rules[key][0].message)
+							isParams = false
+							break
+						} else {
+							if ($utils.isNotBlank(rules[key][1]) && $utils.isNotBlank(rules[key][1].validator)) {
+								if (!rules[key][1].validator(itemobj[key])) {
+									let name = itemobj[key] ? (itemobj[key] + ':') : ""
+									$utils.toast(name + rules[key][1].message)
+									isParams = false
+									break
+								}
+							}
+						}
+					}
+				}
+			} else {
+				// 对象的情况下
+				for (let index in keys) {
+					let key = keys[index]
+					if (obj[key] == '' || obj[key] == null || obj[key] == undefined) {
+						$utils.toast('必填参数为空！')
+						isParams = false
+						break
+					}
+				}
+			}
+		} catch (e) {
+			isParams = false
+		}
+		return new Promise((resolve, reject) => {
+			resolve(isParams)
+		})
+	},
 	changeNull(obj) {
 		for (let key in obj) {
 			console.log(obj[key]);

@@ -49,9 +49,10 @@
 			// 编辑
 			getMyApplyInfo(e) {
 				uni.navigateTo({
-					url: `/package-events/views/activity-details/events-details?id=${e.matchId}`
+					url: `/package-events/views/activity-details/view-enrollment-options?matchId=${e.matchId}`
 				})
 			},
+			
 			// 获取列表
 			getListMyMatch() {
 				listMyMatch(this.queryParams).then((res) => {

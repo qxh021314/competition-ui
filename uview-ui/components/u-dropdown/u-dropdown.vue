@@ -22,7 +22,7 @@
 		<view class="u-dropdown__content" :style="[contentStyle, {
 			transition: `opacity ${duration / 1000}s linear`,
 			top: $u.addUnit(height),
-			height: contentHeight + 'px'
+			height: (isOpen ? contentHeight : 0) + 'px'
 		}]"
 		 @tap="maskClick" @touchmove.stop.prevent>
 			<view @tap.stop.prevent class="u-dropdown__content__popup" :style="[popupStyle]">
@@ -63,6 +63,10 @@
 			inactiveColor: {
 				type: String,
 				default: '#606266'
+			},
+			isOpen:  {
+				type: Boolean,
+				default: false
 			},
 			// 点击遮罩是否关闭菜单
 			closeOnClickMask: {

@@ -3,7 +3,7 @@
 		<view class="select-tabs_t">
 			<view v-for="(item, index) in list" :key="index" @click="selectGroup(item, index)"
 				:style="[ industryIndexList.indexOf(index) >= 0 ? styleAfter : styleBefore ]">
-				<text>{{ item.groupName }}</text>
+				<text>{{ item[name] }}</text>
 			</view>
 		</view>
 	</view>
@@ -12,6 +12,14 @@
 <script>
 	export default {
 		props: {
+			name: {
+				type: String,
+				default: 'name'
+			},
+			isCancel: {
+				type: Boolean,
+				default: false
+			},
 			list: {
 				type: Array,
 				default: function() {
@@ -19,30 +27,9 @@
 				}
 			}
 		},
+
 		data() {
 			return {
-				selectFeedbackData: [{
-					name: '功能建议',
-					val: '01'
-				}, {
-					name: '内容建议',
-					val: '02'
-				}, {
-					name: '问题反馈',
-					val: '03'
-				}, {
-					name: '界面建议',
-					val: '04'
-				}, {
-					name: '使用建议',
-					val: '05'
-				}, {
-					name: '产品建议',
-					val: '06'
-				}, {
-					name: '其他',
-					val: '99'
-				}],
 				styleBefore: {
 					backgroundColor: '#ffffff',
 					'color': '#000000'
@@ -51,31 +38,34 @@
 					backgroundColor: this.$utils.themeColor,
 					'color': '#ffffff'
 				},
-				industryIndexList: [] //
+				industryIndexList: []
 			}
 		},
-		onLoad() {},
+
+		mounted() {
+			if (!this.isCancel) {
+				this.industryIndexList = [0]
+			}
+		},
+
 		methods: {
 			selectGroup(item, index) {
-				if (this.industryIndexList.indexOf(index) == -1) {
-					this.industryIndexList = []
-					this.industryIndexList.push(index)
-					this.$emit('change', item)
+				if (this.isCancel){
+					if (this.industryIndexList.indexOf(index) == -1) {
+						this.industryIndexList = []
+						this.industryIndexList.push(index)
+						this.$emit('change', item)
+					} else {
+						this.industryIndexList = []
+						item.id = ''
+						this.$emit('change', item)
+					}
 				} else {
 					this.industryIndexList = []
-					item.id = ''
-					this.$emit('change', item)
+					this.industryIndexList.push(index)
+					this.$emit('change', item, index)
 				}
-				// if (this.industryIndexList.indexOf(index) >= 0) {
-				// 	item.id = ''
-				// 	console.log('---');
-				// 	this.$emit('change', item)
-				// } else {
-				// 	console.log('===');
-				// 	this.industryIndexList.push(index)
-				// 	this.$emit('change', item)
-				// }
-
+	
 			}
 		}
 	}

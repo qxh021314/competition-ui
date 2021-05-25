@@ -6,7 +6,7 @@
 		</view>
 
 		<view class="group-tabs">
-			<select-tabs v-if="grouplist && grouplist.length > 0" :list="grouplist" @change="changeGroup"></select-tabs>
+			<select-tabs name="groupName" :isCancel="true" v-if="grouplist && grouplist.length > 0" :list="grouplist" @change="changeGroup"></select-tabs>
 		</view>
 
 		<view class="" v-if="recordList && recordList.length > 0">

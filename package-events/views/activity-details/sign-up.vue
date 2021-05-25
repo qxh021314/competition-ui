@@ -140,67 +140,43 @@
 				show: false,
 				mode: "date",
 				rules: {
-					teamName: [{
-						required: true,
-						message: '请输入团队名称',
-						// 可以单个或者同时写两个触发验证方式 
-						trigger: ['blur', 'change']
-					}],
 					name: [{
-						required: true,
-						message: '请输入姓名',
+						message: '请输入姓名'
 						// 可以单个或者同时写两个触发验证方式 
-						trigger: ['blur', 'change']
 					}],
 					phoneNo: [{
-							required: true,
-							message: '请输入手机号',
-							// 可以单个或者同时写两个触发验证方式 
-							trigger: ['blur']
+							message: '请输入手机号'
 						},
 						{
-							required: true,
 							// 自定义验证函数，见上说明
-							validator: (rule, value, callback) => {
+							validator: (value) => {
 								// 上面有说，返回true表示校验通过，返回false表示不通过
 								// this.$u.test.mobile()就是返回true或者false的
-								return this.$u.test.mobile(value);
+								return this.$utils.isPhone(value);
 							},
-							message: '手机号码不正确',
-							// 触发器可以同时用blur和change
-							trigger: ['blur']
+							message: '手机号码不正确'
 						}
 					],
 					age: [{
-						required: true,
-						message: '请输入年龄',
-						trigger: ['blur']
+						message: '请输入年龄'
 					}],
 					birthDay: [{
-						required: true,
-						message: '请输入出生日期',
-						trigger: ['blur']
+						message: '请输入出生日期'
 					}],
 
 					idCard: [{
-						required: true,
-						message: '请输入身份证号码',
-						trigger: ['blur']
+						message: '请输入身份证号码'
 					}, {
 						// 自定义验证函数，见上说明
-						validator: (rule, value, callback) => {
+						validator: (value) => {
 							// 上面有说，返回true表示校验通过，返回false表示不通过
 							// this.$u.test.mobile()就是返回true或者false的
-							return this.$u.test.idCard(value)
+							return this.$utils.identityCodeValid(value)
 						},
-						message: '身份证号码不正确',
-						// 触发器可以同时用blur和change
-						trigger: ['blur']
+						message: '身份证号码不正确'
 					}],
 					schoolUnit: [{
-						required: true,
-						message: '请输入选校单位',
-						trigger: ['blur']
+						message: '请输入学校单位'
 					}]
 				}
 			}
@@ -220,8 +196,7 @@
 			this.form.openId = this.$userService.getOpenId()
 		},
 		// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
-		onReady() {
-		},
+		onReady() {},
 		methods: {
 			showSelect(index) {
 				this.birthDayIndex = index
@@ -243,16 +218,24 @@
 			},
 			// 添加队员
 			addPlayers() {
-				this.athleteObj.name = ''
-				this.form.athleteList.push(JSON.parse(JSON.stringify(this.athleteObj)))
+				this.$utils.verify(this.form.athleteList, this.rules).then((valid) => {
+					if (valid) {
+						this.athleteObj.name = ''
+						this.form.athleteList.push(JSON.parse(JSON.stringify(this.athleteObj)))
+					}
+				})
 			},
 			// 保存
 			savePlayers() {
-				athleteSaveBefore(this.form).then((res) => {
-					this.$utils.toast('您保存成功！')
-					uni.navigateTo({
-						url: `/package-events/views/activity-details/view-enrollment-options?matchId=${this.form.matchId}`
-					})
+				this.$utils.verify(this.form.athleteList, this.rules).then((valid) => {
+					if (valid) {
+						athleteSaveBefore(this.form).then((res) => {
+							this.$utils.toast('您保存成功！')
+							uni.navigateTo({
+								url: `/package-events/views/activity-details/view-enrollment-options?matchId=${this.form.matchId}`
+							})
+						})
+					}
 				})
 			},
 			// 删除队员
@@ -261,17 +244,21 @@
 			},
 			// 性别选择
 			radioGroupChange(e) {},
+
 			radioChange(e) {},
 			// 立即报名
 			insertAppUserCourse() {
-				athleteSave(this.form).then((res) => {
-					this.$utils.toast('您报名成功！')
-					setTimeout(() => {
-						uni.navigateTo({
-							url: `/package-events/views/activity-details/view-enrollment-options?matchId=${this.form.matchId}`
+				this.$utils.verify(this.form.athleteList, this.rules).then((valid) => {
+					if (valid) {
+						athleteSave(this.form).then((res) => {
+							this.$utils.toast('您报名成功！')
+							setTimeout(() => {
+								uni.navigateTo({
+									url: `/package-events/views/activity-details/view-enrollment-options?matchId=${this.form.matchId}`
+								})
+							}, 1000)
 						})
-					}, 1000)
-
+					}
 				})
 			}
 		}

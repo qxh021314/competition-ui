@@ -9,7 +9,7 @@
 					<view class="u-line-2 enrollment-card_title">
 						{{item.subjectName ? item.subjectName : item.matchName}}
 					</view>
-					<view class="u-line-1 willnum">
+					<view class="u-line-1 willnum" v-if="$utils.isNotBlank(item.name)">
 						报名人: {{item.name}}
 					</view>
 					<view class="u-line-1 willnumtime">
@@ -19,7 +19,7 @@
 			</view>
 			<view class="enrollment-card_foot" v-if="item.status">
 				<view class="enrollment-card_foot_status" :style="{backgroundColor: statusBack(item.status)}">{{$utils.getStatus(item.status)}}</view>
-				<u-icon v-if="item.status == '0'" name="edit-pen-fill" color="#2979ff" label-color="#2979ff" size="34" label="编辑"></u-icon>
+				<u-icon v-if="item.status == '0' || item.status == '3'" name="edit-pen-fill" color="#2979ff" label-color="#2979ff" size="34" label="编辑"></u-icon>
 				<view v-if="item.status == '2'" @click.stop="toGroup(item)">
 					<u-icon name="edit-pen-fill" color="#ffaa00" label-color="#ffaa00" size="34" label="进行分组"></u-icon>
 				</view>

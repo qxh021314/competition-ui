@@ -5,6 +5,9 @@
 				:current="current" @change="change"></u-tabs>
 		</view>
 
+		<select-tabs name="groupName" :isCancel="false" v-if="group1list && group1list.length > 0" :list="group1list"></select-tabs>
+		<select-tabs name="groupName" :isCancel="false" v-if="group1list && group1list.length > 0" :list="group1list"></select-tabs>
+
 		<view class="group-user">
 			<view class="players-list_flex">
 				<view class="players-list_user u-border" @click="changeBox(itemchild)"
@@ -13,14 +16,15 @@
 				</view>
 			</view>
 		</view>
-		
+
 		<view class="group-user group-user_card">
 			<u-section title="选中名单" :right="false"></u-section>
 			<view class="players-list_flex">
 				<view class="players-list_user u-border" v-for="(itemchild, indexchild) in pramsList['list' + current]"
 					:key="indexchild">
 					<text>{{itemchild.name}}</text>
-					<u-icon name="close-circle" size="40" class="close-circle_tip" color="#ff0000" @click="deleteCircle(itemchild, indexchild)"></u-icon>
+					<u-icon name="close-circle" size="40" class="close-circle_tip" color="#ff0000"
+						@click="deleteCircle(itemchild, indexchild)"></u-icon>
 				</view>
 			</view>
 		</view>
@@ -38,13 +42,27 @@
 		arrangeList,
 		arrangeSave
 	} from '@/api/competition.js'
+	import SelectTabs from '../../components/select-tabs.vue'
 	export default {
+		components: {
+			SelectTabs
+		},
 		data() {
 			return {
 				listData: [],
 				listTab: [],
 				pramsList: {},
 				saveList: [],
+				group1list: [{
+						groupName: '组1'
+					},
+					{
+						groupName: '组2'
+					},
+					{
+						groupName: '组3'
+					}
+				], // 
 				paramsObj: {
 					"id": "",
 					"arrangeId": "",
@@ -147,6 +165,7 @@
 		border-radius: 10rpx;
 		padding: 18rpx 0;
 		margin: 100rpx 20rpx;
+
 		text {
 			color: #FFFFFF;
 			letter-spacing: 10rpx;

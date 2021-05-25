@@ -6,7 +6,7 @@
 				<view class="u-navbar_left">
 					<!-- <text class="u-navbar_name">{{selectText}}</text> -->
 					<u-icon name="/static/filtrate.png" size="40"></u-icon>
-					<u-dropdown active-color="#860200">
+					<u-dropdown :isOpen="isOpen" active-color="#860200" @open="open" @close="close">
 						<u-dropdown-item v-model="show" :title="selectText" :options="list" @change="confirm">
 						</u-dropdown-item>
 					</u-dropdown>
@@ -31,6 +31,7 @@
 		data() {
 			return {
 				show: -1,
+				isOpen: false,
 				selectText: '筛选',
 				listData: [],
 				list: [{
@@ -57,18 +58,6 @@
 		},
 		onLoad() {
 			this.init()
-			// let comList = []
-			// let comObj = {
-			// 	value: 1,
-			// 	label: '变电'
-			// }
-			// for (var i = 0; i < 50; i++) {
-			// 	comObj.value = i
-			// 	comObj.label = '变电' + i
-			// 	comList.push(JSON.parse(JSON.stringify(comList)))
-			// }
-			// this.list = comList
-			// console.log(comList);
 		},
 		methods: {
 			confirm(e) {
@@ -82,6 +71,12 @@
 					this.listData = this.$store.state.scheme.list.filter(item => item.type === +this.show)
 				}
 				console.log('type::', this.show, arr)
+			},
+			open() {
+				this.isOpen = true
+			},
+			close() {
+				this.isOpen = false
 			}
 		},
 		watch: {

@@ -43,38 +43,32 @@
 					img: '/static/gywm.png',
 					name: '关于我们',
 					url: '/package-events/views/other/other',
-					color: this.$utils.themeColor,
-					oauth: true
+					type: 'gywm'
 				}, {
 					img: '/static/hxcp.png',
 					name: '核心产品',
 					url: '/package-events/views/product/index',
-					color: this.$utils.themeColor,
-					oauth: false
+					type: 'hxcp'
 				}, {
 					img: '/static/csal.png',
 					name: '成熟案例',
-					color: this.$utils.themeColor,
 					url: '/pages/views/scheme/scheme',
-					oauth: false
+					type: 'csal'
 				}, {
 					img: '/static/tycg.png',
 					name: '体育场馆',
-					color: this.$utils.themeColor,
 					url: '',
-					oauth: false
+					type: 'tycg'
 				}, {
 					img: '/static/jchd.png',
 					name: '精彩活动',
-					color: this.$utils.themeColor,
 					url: '/pages/views/activity/activity',
-					oauth: false
+					type: 'jchd'
 				}, {
 					img: '/static/gdss.png',
 					name: '更多搜索',
-					color: this.$utils.themeColor,
 					url: '',
-					oauth: false
+					type: 'gdss'
 				}],
 				lineColor: this.$utils.themeColor,
 				textList: ['功能正在开发中，敬请期待！'],
@@ -114,15 +108,15 @@
 		position: relative;
 	}
 	.titleNview-background {
-		position: absolute;
+		position: fixed;
 		// background-image: linear-gradient(to top, #ffffff 0%, $global-color 100%);
 		top: 0;
 		right: 0;
 		width: 100%;
-		height: 260rpx;
+		height: 300rpx;
 		transition: .4s;
 		background-color: $global-color;
-		border-radius: 0 0 30% 30%;
+		border-radius: 0 0 10% 10%;
 		// overflow: hidden;
 	}
 
