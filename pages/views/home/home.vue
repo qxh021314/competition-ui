@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="home">
 		<!-- 背景图 -->
 		<view class="titleNview-background"></view>
 
@@ -110,30 +110,34 @@
 	page {
 		// background-color: #FFFFFF;
 	}
-
+	.home{
+		position: relative;
+	}
 	.titleNview-background {
 		position: absolute;
 		// background-image: linear-gradient(to top, #ffffff 0%, $global-color 100%);
 		top: 0;
-		left: 0;
+		right: 0;
 		width: 100%;
-		height: 780rpx;
+		height: 260rpx;
 		transition: .4s;
+		background-color: $global-color;
+		border-radius: 0 0 30% 30%;
 		// overflow: hidden;
 	}
 
 	.titleNview-background::after {
-		content: '';
-		width: 140%;
-		height: 250rpx;
-		/* #ifndef MP */
-		height: 300rpx;
-		/* #endif */
-		position: absolute;
-		left: -20%;
-		top: 0;
-		border-radius: 0 0 50% 50%;
-		background-color: $global-color;
+		// content: '';
+		// width: 140%;
+		// height: 250rpx;
+		// /* #ifndef MP */
+		// height: 300rpx;
+		// /* #endif */
+		// position: absolute;
+		// left: -20%;
+		// top: 0;
+		// border-radius: 0 0 50% 50%;
+		// background-color: $global-color;
 	}
 
 	.compe-image {
