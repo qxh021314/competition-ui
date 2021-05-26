@@ -56,10 +56,10 @@
 					<view class="user-register_form u-border-bottom">
 						<text class="user-register_form_name">身份证</text>
 						<view class="user-register_form_inp">
-							<u-input v-model="bindForm.userIdCard" type="text" placeholder="请输入身份证" :border="false" />
+							<u-input v-model="bindForm.idCard" type="text" placeholder="请输入身份证" :border="false" />
 						</view>
 					</view>
-					
+
 					<view class="user-register_btn" @click="registerUser()">
 						确定
 					</view>
@@ -72,7 +72,8 @@
 
 <script>
 	import {
-		qMatchById
+		qMatchById,
+		setMatchAuth
 	} from '@/api/competition.js'
 	export default {
 		data() {
@@ -104,12 +105,12 @@
 					},
 					{
 						name: '场次',
-						icon: '/static/constitution.png',
-						menuUrl: '/package-events/views/constitution/constitution'
+						icon: '/static/screening.png',
+						menuUrl: '/package-events/views/screening/screening'
 					},
 					{
 						name: '选手认证',
-						icon: '/static/photoalbum.png',
+						icon: '/static/approve.png',
 						menuUrl: '',
 						type: 'xxrz'
 					}
@@ -118,7 +119,7 @@
 					matchId: '',
 					openId: '',
 					userName: '',
-					userIdCard: ''
+					idCard: ''
 				},
 				registeShow: false,
 				textList: []
@@ -150,19 +151,29 @@
 
 			},
 
+
+
 			toRegister() {
 				uni.navigateTo({
 					url: `/package-events/views/activity-details/subject?matchId=${this.paramsId}`
 				})
 			},
-			
+
 			// 选手认证
 			registerUser() {
 				this.bindForm.openId = this.$userService.getOpenId()
 				this.bindForm.matchId = this.paramsId
-				let valid = this.$utils.identityCodeValid(this.bindForm.userIdCard)
+				this.$utils.verify(this.bindForm, this.bindForm).then((valid) => {
+					if (valid) {
+						setMatchAuth(this.bindForm).then((res) => {
+							this.registeShow = false
+							this.bindForm.idCard = ''
+							this.bindForm.userName = ''
+						})
+					}
+				})
 			},
-			
+
 			bannerToDetails() {
 
 			}
@@ -276,16 +287,18 @@
 			align-items: center;
 			margin: 20rpx 0;
 			font-size: 34rpx;
+
 			&_name {
 				margin: 20rpx 0;
 				width: 150rpx;
 			}
-			&_inp{
+
+			&_inp {
 				flex: 1;
 			}
 		}
-		
-		&_btn{
+
+		&_btn {
 			margin-top: 40rpx;
 			background-color: $global-color;
 			color: #FFFFFF;

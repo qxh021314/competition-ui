@@ -2,7 +2,7 @@
 	<view>
 
 		<view class="sight-navbar">
-			<u-navbar :is-back="false" :border-bottom="false" title="方案" navbarInnerBackGround="#FFFFFF">
+			<u-navbar :is-back="false" :border-bottom="false" title="生态" navbarInnerBackGround="#FFFFFF">
 				<view class="u-navbar_left">
 					<!-- <text class="u-navbar_name">{{selectText}}</text> -->
 					<u-icon name="/static/filtrate.png" size="40"></u-icon>

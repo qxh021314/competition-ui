@@ -94,9 +94,23 @@ function resultList(params) {
 	return $http.request(`/match/result/list`, 'get', params)
 }
 
-// /match/result/getDetail?subjectId=1394899244638289922&id=13
+// 
 function getEnventsDetail(params) {
 	return $http.request(`/match/result/getDetail`, 'get', params)
+}
+
+function setMatchAuth(params) {
+	return $http.request(`/match/auth`, 'post', params)
+}
+
+// 场次信息
+function getScene(params) {
+	return $http.request(`/match/getScene?matchId=${params.matchId}`, 'get', params)
+}
+
+// 分组阵容阶段
+function stageListAll(params) {
+	return $http.request(`/match/stage/listAll?subjectId=${params.subjectId}`, 'get', params)
 }
 
 export {
@@ -119,5 +133,8 @@ export {
 	athleteSaveBefore,
 	stageList,
 	resultList,
-	getEnventsDetail
+	getEnventsDetail,
+	setMatchAuth,
+	getScene,
+	stageListAll
 }

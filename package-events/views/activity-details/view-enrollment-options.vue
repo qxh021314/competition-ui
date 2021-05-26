@@ -28,13 +28,28 @@
 			// 编辑
 			getMyApplyInfo(e, type) {
 				if (type && type == 'update') {
-					uni.navigateTo({
-						url: `/package-events/views/activity-details/sign-up?matchId=${this.matchId}&subjectId=${e.subjectId}&applyId=${e.id}&status=001&type=update`
+					this.$utils.togo('/package-events/views/activity-details/sign-up', {
+						matchId: this.matchId,
+						subjectId: e.subjectId,
+						applyId: e.id,
+						status: '001',
+						type: 'update',
+						teamId: e.teamId
 					})
+					// uni.navigateTo({
+					// 	url: `/package-events/views/activity-details/sign-up?matchId=${this.matchId}&subjectId=${e.subjectId}&applyId=${e.id}&status=001&type=update&teamId=${e.teamId}`
+					// })
 				} else {
-					uni.navigateTo({
-						url: `/package-events/views/activity-details/sign-up?matchId=${this.matchId}&subjectId=${e.subjectId}&applyId=${e.id}&status=001`
+					this.$utils.togo('/package-events/views/activity-details/sign-up', {
+						matchId: this.matchId,
+						subjectId: e.subjectId,
+						applyId: e.id,
+						status: '001',
+						teamId: e.teamId
 					})
+					// uni.navigateTo({
+					// 	url: `/package-events/views/activity-details/sign-up?matchId=${this.matchId}&subjectId=${e.subjectId}&applyId=${e.id}&status=001&teamId=${e.teamId}`
+					// })
 				}
 			},
 			// 获取列表

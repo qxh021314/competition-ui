@@ -49,22 +49,12 @@
 					name: '核心产品',
 					url: '/package-events/views/product/index',
 					type: 'hxcp'
-				}, {
-					img: '/static/csal.png',
-					name: '成熟案例',
-					url: '/pages/views/scheme/scheme',
-					type: 'csal'
-				}, {
+				},  {
 					img: '/static/tycg.png',
 					name: '体育场馆',
 					url: '',
 					type: 'tycg'
-				}, {
-					img: '/static/jchd.png',
-					name: '精彩活动',
-					url: '/pages/views/activity/activity',
-					type: 'jchd'
-				}, {
+				},  {
 					img: '/static/gdss.png',
 					name: '更多搜索',
 					url: '',

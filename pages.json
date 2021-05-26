@@ -22,7 +22,7 @@
 		}, {
 			"path": "pages/views/scheme/scheme",
 			"style": {
-				"navigationBarTitleText": "方案",
+				"navigationBarTitleText": "生态",
 				"enablePullDownRefresh": false,
 				"navigationStyle": "custom", // 隐藏系统导航栏
 				"navigationBarTextStyle": "white" // 状态栏字体为白色，只能为 white-白色，black-黑色 二选一
@@ -176,6 +176,15 @@
                 }
                 
                 }
+                ,{
+                    "path" : "views/screening/screening",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "场次",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
             ]
 	}],
 	"globalStyle": {
@@ -198,7 +207,7 @@
 			"pagePath": "pages/views/scheme/scheme",
 			"iconPath": "static/schemepre.png",
 			"selectedIconPath": "static/schemeaft.png",
-			"text": "方案"
+			"text": "生态"
 		}, {
 			"pagePath": "pages/views/activity/activity",
 			"iconPath": "static/activitypre.png",

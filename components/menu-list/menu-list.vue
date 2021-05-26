@@ -77,7 +77,7 @@
 	.swiper {
 		background-color: rgba(255, 255, 255, 1);
 		padding: 10rpx 0;
-		height: 320rpx;
+		height: 220rpx;
 	}
 
 	.menu-list {

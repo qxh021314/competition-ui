@@ -16,7 +16,7 @@
 					<u-input input-align="right" v-model="item.name" placeholder="请输入姓名" />
 				</u-form-item>
 				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="身份证" prop="idCard">
-					<u-input input-align="right" v-model="item.idCard" placeholder="请输入身份证号码" />
+					<u-input input-align="right" v-model="item.idCard" placeholder="请输入身份证号码" @blur="blurIdCard(item)"/>
 				</u-form-item>
 				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="性别" prop="sex">
 					<view class="sign-up_sex">
@@ -50,7 +50,8 @@
 		</view>
 
 
-		<u-calendar v-model="show" :mode="mode" @change="changeCal"></u-calendar>
+		<u-picker :end-year="endYear" v-model="show" mode="time" @confirm="confirm"></u-picker>
+		<!-- <u-calendar v-model="show" :mode="mode" @change="changeCal"></u-calendar> -->
 
 		<view class="sign-up_prompt">
 			<view class="sign-up_prompt_til">温馨提示：</view>
@@ -115,13 +116,14 @@
 					"matchId": '',
 					"openId": '',
 					"applyId": '',
+					"teamId": '',
 					"subjectId": '',
 					"athleteList": [{
 						"name": "",
 						"idCard": "",
 						"sex": 1,
 						"age": '',
-						"birthDay": "2020-09-09",
+						"birthDay": "",
 						"schoolUnit": "",
 						"phoneNo": "",
 						"teamRole": 1
@@ -132,7 +134,7 @@
 					"idCard": "",
 					"sex": 1,
 					"age": '',
-					"birthDay": "2020-09-09",
+					"birthDay": "",
 					"schoolUnit": "",
 					"phoneNo": "",
 					"teamRole": 0
@@ -181,9 +183,16 @@
 				}
 			}
 		},
+		computed: {
+			endYear() {
+				var date = new Date()
+				return date.getFullYear()
+			}
+		},
 		onLoad(option) {
 			this.form.matchId = option.matchId
 			this.form.applyId = option.applyId
+			this.form.teamId = option.teamId
 			this.form.subjectId = option.subjectId
 			console.log(this.form);
 			if (option.status && option.status == '001') {
@@ -202,15 +211,30 @@
 				this.birthDayIndex = index
 				this.show = true
 			},
+			confirm(e) {
+				console.log(e);
+				this.form.athleteList[this.birthDayIndex].birthDay = e.year + '-' + e.month + '-' + e.day
+			},
+			
+			blurIdCard(e) {
+				if (this.$utils.identityCodeValid(e.idCard)) {
+					e.birthDay = this.$utils.getBirthdayFromIdCard(e.idCard)
+					e.age = parseInt(this.endYear) - parseInt(e.birthDay.substring(0, 4))
+				}
+			},
+			
 			changeCal(e) {
+				console.log(e);
 				this.form.athleteList[this.birthDayIndex].birthDay = e.result
 			},
+			
 			// 进行编辑时获取的数据
 			getMyApplyInfo() {
 				getMyApplyInfo({
 					matchId: this.form.matchId,
 					subjectId: this.form.subjectId,
-					applyId: this.form.applyId,
+					id: this.form.applyId,
+					teamId: this.form.teamId,
 					openId: this.$userService.getOpenId()
 				}).then((res) => {
 					this.form = res.record

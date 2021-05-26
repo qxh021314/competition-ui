@@ -50,7 +50,10 @@
 	}
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+	page {
+		background-color: #FFFFFF;
+	}
 	.container {
 		padding: 35rpx 30rpx;
 
@@ -77,7 +80,7 @@
 			text-indent: 1em;
 			padding-bottom: 10rpx;
       line-height: 1.5;
-			
+
 			.image-box {
 				image {
 					padding: 20rpx;
@@ -94,10 +97,4 @@
 			}
 		}
 	}
-</style>
-
-<style>
- page {
-   background: #fff;
- }
 </style>

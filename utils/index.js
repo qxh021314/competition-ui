@@ -281,17 +281,20 @@ const $utils = {
 			return true;
 		}
 	},
-	// 每次跳转页面，校验登录状态，若没有用户信息自动跳转到登录页面
-	href(url, isVerify) {
-		if (isVerify && !$utils.isLogin()) {
-			uni.navigateTo({
-				url: '/pages/login/login'
-			})
-		} else {
-			uni.navigateTo({
-				url: url
-			});
+	// 获取身份证的出生年月
+	getBirthdayFromIdCard(idCard) {
+		var birthday = "";
+		if (idCard != null && idCard != "") {
+			if (idCard.length == 15) {
+				birthday = "19" + idCard.substr(6, 6);
+			} else if (idCard.length == 18) {
+				birthday = idCard.substr(6, 8);
+			}
+
+			birthday = birthday.replace(/(.{4})(.{2})/, "$1-$2-");
 		}
+
+		return birthday;
 	},
 	/**
 	 * 上传图片
@@ -458,11 +461,11 @@ const $utils = {
 	 */
 	verify(obj, rules) {
 		let keys = []
+		var isParams = true
 		try {
 			Object.getOwnPropertyNames(rules).forEach(function(key) {
 				keys.push(key)
 			})
-			let isParams = true
 			// 数组的情况下
 			if (obj instanceof Array) {
 				for (let index in keys) {
@@ -471,14 +474,14 @@ const $utils = {
 						let itemobj = obj[indexobj]
 						// 值为空时
 						if (!$utils.isNotBlank(itemobj[key])) {
-							let name = itemobj[key] ? (itemobj[key] + ':') : ""
+							let name = itemobj.name ? (itemobj.name + ':') : ""
 							$utils.toast(name + rules[key][0].message)
 							isParams = false
 							break
 						} else {
 							if ($utils.isNotBlank(rules[key][1]) && $utils.isNotBlank(rules[key][1].validator)) {
 								if (!rules[key][1].validator(itemobj[key])) {
-									let name = itemobj[key] ? (itemobj[key] + ':') : ""
+									let name = itemobj.name ? (itemobj.name + ':') : ""
 									$utils.toast(name + rules[key][1].message)
 									isParams = false
 									break

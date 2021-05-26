@@ -1,5 +1,5 @@
 <template>
-	<view class="select-tabs">
+	<view class="select-tabs u-border-bottom">
 		<view class="select-tabs_t">
 			<view v-for="(item, index) in list" :key="index" @click="selectGroup(item, index)"
 				:style="[ industryIndexList.indexOf(index) >= 0 ? styleAfter : styleBefore ]">

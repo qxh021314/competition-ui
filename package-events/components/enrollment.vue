@@ -21,7 +21,7 @@
 				<view class="enrollment-card_foot_status" :style="{backgroundColor: statusBack(item.status)}">{{$utils.getStatus(item.status)}}</view>
 				<u-icon v-if="item.status == '0' || item.status == '3'" name="edit-pen-fill" color="#2979ff" label-color="#2979ff" size="34" label="编辑"></u-icon>
 				<view v-if="item.status == '2'" @click.stop="toGroup(item)">
-					<u-icon name="edit-pen-fill" color="#ffaa00" label-color="#ffaa00" size="34" label="进行分组"></u-icon>
+					<u-icon name="edit-pen-fill" color="#ffaa00" label-color="#ffaa00" size="34" label="阵容"></u-icon>
 				</view>
 			</view>
 		</view>
@@ -74,8 +74,10 @@
 				}
 			},
 			toGroup(item) {
-				uni.navigateTo({
-					url: `/package-events/views/group-stage/grouping?teamId=${item.teamId}&subjectId=${item.subjectId}`
+				this.$utils.togo('/package-events/views/group-stage/grouping', {
+					subjectId: item.subjectId,
+					teamId: item.teamId,
+					teamRole: item.teamRole
 				})
 			}
 		}
