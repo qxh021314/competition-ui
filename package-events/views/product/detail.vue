@@ -31,14 +31,15 @@
 				return item instanceof Array;
 			},
 			showPreview(url, i) {
+			  const _url = url.filter(item => item !== '')
 				uni.previewImage({
 					current: i,
-					urls: url
+					urls: _url
 				})
 				console.log('preview::', url); // todo
 			},
 			fetchData(id) {
-			  let item = this.$store.state.news.detail.filter(item => item.id === +id)
+			  let item = this.$store.state.product.detail.filter(item => item.id === +id)
         item = item.length ? item[0] : {} // 后期可替换为接口数据
         this.detail = item
 			}
@@ -77,6 +78,7 @@
 			text-indent: 1em;
 			padding-bottom: 10rpx;
       line-height: 1.5;
+      min-height: 30rpx;
 			
 			.image-box {
 				image {

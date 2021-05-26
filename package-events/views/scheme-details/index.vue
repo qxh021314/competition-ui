@@ -68,14 +68,15 @@ export default {
   .sub-title {
     font-size: 36rpx;
     font-weight: bolder;
-    padding: 10rpx 0 20rpx;
+    padding: 20rpx 0;
   }
   
   .content {
     font-size: 34rpx;
     color: #333;
     text-indent: 1em;
-    padding-bottom: 30rpx;
+    padding-bottom: 10rpx;
+    line-height: 1.5;
     
     .image-box {
       image {
@@ -93,4 +94,10 @@ export default {
     }
   }
 }
+</style>
+
+<style>
+  page {
+    background: #fff;
+  }
 </style>

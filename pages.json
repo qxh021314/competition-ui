@@ -80,6 +80,13 @@
 				}
 
 			}, {
+				"path": "views/product/detail",
+				"style": {
+					"navigationBarTitleText": "详情",
+					"enablePullDownRefresh": false
+				}
+
+			}, {
 				"path": "views/scheme-details/index",
 				"style": {
 					"navigationBarTitleText": "详情",
