@@ -30,18 +30,20 @@ export default {
   },
   methods: {
     typeClass(n) {
-      if (+n < 0) return 'error'
+      const m = parseFloat(n)
+      if (m < 0) return 'error'
       
       return 'success'
     },
     formatPercent(n) {
-      const flag = n > 0 ? 1 : -1
+      const m = parseFloat(n)
+      const flag = m > 0 ? 1 : -1
       
-      if (Math.abs(n) > 100) {
-        return Math.abs(n % 100) || (flag * 100)
+      if (Math.abs(m) > 100) {
+        return Math.abs(m % 100) || (flag * 100)
       }
       
-      return Math.abs(n)
+      return Math.abs(m)
     }
   }
 }
