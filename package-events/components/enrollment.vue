@@ -70,8 +70,10 @@
 			},
 			update(item) {},
 			toHref(item) {
-				if (item.status && item.status == '0') {
-					this.$emit('change', item, 'update')
+				if (item.status) {
+					if (item.status == '0' || item.status == '3') {
+						this.$emit('change', item, 'update')
+					}
 				} else {
 					this.$emit('change', item)
 				}

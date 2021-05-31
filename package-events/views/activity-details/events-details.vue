@@ -42,9 +42,9 @@
 					</view>
 				</view>
 			</view>
-			
-			<u-cell-group>
-				<u-cell-item icon="tags" title="疫情防控小贴士" @click="toTips()"></u-cell-item>
+
+			<u-cell-group v-if="docList.length > 0">
+				<u-cell-item v-for="(item, index) in docList" :key="index" icon="tags" :title="item.docName" @click="toTips(item)"></u-cell-item>
 			</u-cell-group>
 
 			<u-popup v-model="registeShow" mode="center" width="85%" border-radius="10" :closeable="true">
@@ -77,8 +77,10 @@
 	import {
 		qMatchById,
 		setMatchAuth,
-		enabling
+		enabling,
+		getDocList
 	} from '@/api/competition.js'
+	import {previewDocument} from '@/utils/doc.js'
 	export default {
 		data() {
 			return {
@@ -92,6 +94,7 @@
 				listBanner: [],
 				paramsId: '',
 				recordObj: {},
+				docList: [],
 				objList: [{
 						name: '签位表',
 						icon: '/static/thedraw.png',
@@ -101,11 +104,6 @@
 						name: '选手名单',
 						icon: '/static/roster.png',
 						menuUrl: '/package-events/views/players/players'
-					},
-					{
-						name: '赛事章程',
-						icon: '/static/constitution.png',
-						menuUrl: '/package-events/views/constitution/constitution'
 					},
 					{
 						name: '赛事相册',
@@ -144,8 +142,18 @@
 			}
 			this.setenabling()
 			this.getqMatchById()
+			this.getDocList()
 		},
 		methods: {
+			
+			// 获取文件列表
+			getDocList() {
+				getDocList({
+					matchId: this.paramsId
+				}).then(res => {
+					this.docList = res.docList
+				})
+			},
 
 			getqMatchById() {
 				qMatchById({
@@ -177,11 +185,9 @@
 
 			},
 
-			// 疫情防护小贴士
-			toTips() {
-				uni.navigateTo({
-					url: `/package-events/views/tips/tips`
-				})
+			toTips(e) {
+				let doc = new previewDocument(e.docUrl)
+				doc.openDoc()
 			},
 
 			toRegister() {

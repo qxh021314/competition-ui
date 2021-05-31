@@ -94,7 +94,7 @@ function resultList(params) {
 	return $http.request(`/match/result/list`, 'get', params)
 }
 
-// 
+//
 function getEnventsDetail(params) {
 	return $http.request(`/match/result/getDetail`, 'get', params)
 }
@@ -137,6 +137,10 @@ function epidemicTips(params) {
 function qVenue(params) {
 	return $http.request(`/match/venue/queryVenue`, 'get', params)
 }
+// 获取赛事相关文件
+function getDocList(params) {
+	return $http.request(`/match/doc/list?matchId=${params.matchId}`, 'get', params)
+}
 
 export {
 	qMatchByPage,
@@ -166,5 +170,6 @@ export {
 	resultSave,
 	enabling,
 	epidemicTips,
+	getDocList,
 	qVenue
 }

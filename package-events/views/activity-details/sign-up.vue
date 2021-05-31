@@ -202,11 +202,13 @@
 			},
 
 			blurIdCard(e) {
-				if (this.$utils.identityCodeValid(e.idCard)) {
-					e.birthDay = this.$utils.getBirthdayFromIdCard(e.idCard)
-					e.age = parseInt(this.endYear) - parseInt(e.birthDay.substring(0, 4))
-				} else {
-					this.$utils.toast('身份证号码有误')
+				if (this.$utils.isNotBlank(e.idCard)) {
+					if (this.$utils.identityCodeValid(e.idCard)) {
+						e.birthDay = this.$utils.getBirthdayFromIdCard(e.idCard)
+						e.age = parseInt(this.endYear) - parseInt(e.birthDay.substring(0, 4))
+					} else {
+						this.$utils.toast('身份证号码有误')
+					}
 				}
 			},
 
@@ -238,6 +240,10 @@
 			},
 			// 保存
 			savePlayers() {
+				if (!this.$utils.isNotBlank(this.form.teamName)) {
+					this.$utils.toast('请输入团队名称!')
+					return
+				}
 				this.form.openId = this.$userService.getOpenId()
 				this.$utils.verify(this.form.athleteList, this.rules).then((valid) => {
 					if (valid) {
@@ -260,6 +266,10 @@
 			radioChange(e) {},
 			// 立即报名
 			insertAppUserCourse() {
+				if (!this.$utils.isNotBlank(this.form.teamName)) {
+					this.$utils.toast('请输入团队名称!')
+					return
+				}
 				this.form.openId = this.$userService.getOpenId()
 				this.$utils.modal('提示', '确认好相关信息可点击提交!', true, (res) => {
 					if (res) {

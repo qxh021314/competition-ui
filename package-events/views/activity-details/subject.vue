@@ -51,12 +51,15 @@
 
 <script>
 	import {
-		getApplyInfo
+		getApplyInfo,
+		getDocList
 	} from '@/api/competition.js'
+	import {previewDocument} from '@/utils/doc.js'
 	export default {
 		data() {
 			return {
 				matchId: '',
+				docList: [],
 				matchInfo: {},
 				recordList: []
 			}
@@ -64,8 +67,17 @@
 		onLoad(options) {
 			this.matchId = options.matchId
 			this.getApplyInfo()
+			this.getDocList()
 		},
 		methods: {
+			// 获取文件列表
+			getDocList() {
+				getDocList({
+					matchId: this.matchId
+				}).then(res => {
+					this.docList = res.docList
+				})
+			},
 			getApplyInfo() {
 				getApplyInfo({
 					matchId: this.matchId
@@ -76,9 +88,18 @@
 			},
 			// 赛事章程
 			toAssociation() {
-				uni.navigateTo({
-					url: `/package-events/views/constitution/constitution?id=${this.matchId}`
-				})
+				
+				if (this.docList.length == 1) {
+					let doc = new previewDocument(this.docList[0].docUrl)
+					doc.openDoc()
+				} else if (this.docList.length > 1) {
+					uni.navigateTo({
+						url: `/package-events/views/activity-details/events-details?id=${this.matchId}`
+					})
+				} else {
+					this.$utils.toast('暂无可浏览的信息！')
+				}
+				
 			},
 			toRegister(item) {
 				uni.navigateTo({
