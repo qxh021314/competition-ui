@@ -2,6 +2,7 @@
   <view class="list-wrap">
     <template v-if="listData && listData.length > 0">
       <u-card  v-for="item in listData" :key="item.id" :show-head="false"
+               border-radius="6"
                :show-foot="false" padding="20" class="card-wrap">
         <view class="card-bd" slot="body">
           <u-row @click="entry(item)">
@@ -43,6 +44,7 @@ export default {
 <style scoped lang="scss">
 .list-wrap {
   padding: 0;
+  padding-top: 20rpx;
 }
 
 

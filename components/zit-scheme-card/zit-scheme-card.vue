@@ -2,6 +2,7 @@
   <view class="list-wrap">
     <template v-if="listData && listData.length > 0">
       <u-card  v-for="item in listData" :key="item.id" :show-head="false"
+               :border="false"
                :show-foot="false" padding="20" class="card-wrap">
         <view class="card-bd" slot="body">
           <u-row @click="entry(item)">
