@@ -5,9 +5,10 @@
       <u-row>
         <u-col span="6" v-for="item in card.list" :key="item.name">
           <view class="u-flex px-10 py-15">
-            <u-circle-progress :type="typeClass(item.value)" width="120" border-width="12" :percent="formatPercent(item.value)">
-              <!--<view></view>-->
-            </u-circle-progress>
+            <u-icon :name="`/static/stadium/${item.icon}.png`" width="100" height="100"></u-icon>
+<!--            <u-circle-progress :type="typeClass(item.value)" width="120" border-width="12" :percent="formatPercent(item.value)">-->
+<!--              &lt;!&ndash;<view></view>&ndash;&gt;-->
+<!--            </u-circle-progress>-->
             <view class="u-p-l-10">
               <view class="u-font-xl s-title">{{ item.name }}</view>
               <view class="u-font-xl text-bold u-p-t-10">{{ item.value }}</view>
@@ -29,22 +30,22 @@ export default {
     }
   },
   methods: {
-    typeClass(n) {
-      const m = parseFloat(n)
-      if (m < 0) return 'error'
-      
-      return 'success'
-    },
-    formatPercent(n) {
-      const m = parseFloat(n)
-      const flag = m > 0 ? 1 : -1
-      
-      if (Math.abs(m) > 100) {
-        return Math.abs(m % 100) || (flag * 100)
-      }
-      
-      return Math.abs(m)
-    }
+    // typeClass(n) {
+    //   const m = parseFloat(n)
+    //   if (m < 0) return 'error'
+    //
+    //   return 'success'
+    // },
+    // formatPercent(n) {
+    //   const m = parseFloat(n)
+    //   const flag = m > 0 ? 1 : -1
+    //
+    //   if (Math.abs(m) > 100) {
+    //     return Math.abs(m % 100) || (flag * 100)
+    //   }
+    //
+    //   return Math.abs(m)
+    // }
   }
 }
 </script>

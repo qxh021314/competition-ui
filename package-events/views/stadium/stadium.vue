@@ -11,9 +11,11 @@
     
     <!--  scheme  -->
     <view class="card-box">
-      <view class="card-item">
-        <view class="title text-bold">解决方案</view>
-        <zit-scheme-card :list-data="schemeList"/>
+      <view class="card-item u-p-b-0">
+        <view class="title text-bold">{{ schemeInfo.title }}</view>
+        <view class="scheme-cover u-p-t-20" @click="showDetail">
+          <image :src="schemeInfo.cover" mode="widthFix"></image>
+        </view>
       </view>
     </view>
     
@@ -21,7 +23,7 @@
     <view class="card-box">
       <view class="card-item u-p-b-0">
         <view class="title text-bold">球馆位置</view>
-        <view>
+        <view class="u-p-t-20">
           <map style="width: 100%; height: 300px;"
                :latitude="latitude"
                :longitude="longitude"
@@ -39,7 +41,6 @@
 <script>
 
 import Card from './card.vue'
-import zitSchemeCard from '@/components/zit-scheme-card/zit-scheme-card.vue'
 import {qVenue} from '@/api/competition.js'
 
 import config from '../../../config/index.js'
@@ -56,19 +57,19 @@ export default {
         {
           title: '场馆环境',
           list: [
-            {icon: '', name: '场内温度', value: 0, field: 'temperature'},
-            {icon: '', name: '场内湿度', value: 0, field: 'humidity'},
-            {icon: '', name: '含氧量', value: 0, field: 'oxygen'},
-            {icon: '', name: 'pm2.5', value: 0, field: 'particulateMatter'}
+            {icon: 'icon5', name: '场内温度', value: 0, field: 'temperature'},
+            {icon: 'icon6', name: '场内湿度', value: 0, field: 'humidity'},
+            {icon: 'icon10', name: '含氧量', value: 0, field: 'oxygen'},
+            {icon: 'icon8', name: 'pm2.5', value: 0, field: 'particulateMatter'}
           ]
         },
         {
           title: '球馆能效',
           list: [
-            {icon: '', name: '市电', value: 0, field: 'utilityPower'},
-            {icon: '', name: '光伏发电', value: 0, field: 'photovoltaicPowerGeneration'},
-            {icon: '', name: '碳排放', value: 0, field: 'carbonEmission'},
-            {icon: '', name: '减碳量', value: 0, field: 'emissionReduction'}
+            {icon: 'gjd', name: '市电', value: 0, field: 'utilityPower'},
+            {icon: 'gjx', name: '光伏发电', value: 0, field: 'photovoltaicPowerGeneration'},
+            {icon: 'gld', name: '碳排放', value: 0, field: 'carbonEmission'},
+            {icon: 'glx', name: '减碳量', value: 0, field: 'emissionReduction'}
           ]
         }
       ],
@@ -77,22 +78,19 @@ export default {
         {imgUrl: `${IMG_CDN}2.jpeg`},
         {imgUrl: `${IMG_CDN}3.jpeg`}
       ],
-      schemeList: [],
+      schemeInfo: {
+        title: '负碳场馆解决方案',
+        cover: `${IMG_CDN}1-1.png`
+      },
       latitude,
       longitude,
-      covers: [{latitude, longitude, label: {content: '球馆'}}]
+      covers: [{latitude, longitude}]
     }
   },
   components: {
-    Card,
-    zitSchemeCard
+    Card
   },
   methods: {
-    onClickBanner(id) {
-      uni.navigateTo({
-        url: `/package-events/views/scheme-details/index?id=${id}`
-      })
-    },
     applyDataField(data) {
       const arr = deepClone(this.cards)
       for (let i = 0; i < arr.length; i++) {
@@ -111,8 +109,12 @@ export default {
         }
       })
     },
+    showDetail() {
+      uni.navigateTo({
+        url: `/package-events/views/stadium/detail`
+      })
+    },
     init() {
-      this.schemeList = this.$store.state.scheme.list
       this.getVenue()
     }
   },

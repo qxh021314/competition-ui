@@ -197,6 +197,14 @@
 					"enablePullDownRefresh": false
 				}
 
+			},
+			{
+				"path": "views/stadium/detail",
+				"style": {
+					"navigationBarTitleText": "方案详情",
+					"enablePullDownRefresh": false
+				}
+
 			}
 		]
 	}],
