@@ -74,7 +74,7 @@
             top: 15rpx;
             padding: 0 30rpx;
             color: #FFFFFF;
-            background-color: #09BB07;
+            background-color: $global-color;
             transform: rotate(-20deg);
         }
     }

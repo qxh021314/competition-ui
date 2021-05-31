@@ -1,5 +1,6 @@
 const config = {
 	baseUrl: 'https://match.anhuity.com.cn/api',
+	// baseUrl: 'http://localhost:8889/platform-api',
 	prodUrl: 'https://match.anhuity.com.cn/api',
 	//接口地址
 	interfaceUrl: function() {

@@ -36,8 +36,7 @@
 
 							<u-tr v-for="(item, index) in  itemparent.matchList" :key="index">
 								<u-td v-for="(itemchild,indexchild) in item" :key="indexchild">
-									<view class="zit-td" v-if="itemchild == 'del'"></view>
-									<view class="zit-td" v-else>
+									<view class="zit-td" @click="toHref(itemchild)">
 											{{itemchild.name}}
 									</view>
 								</u-td>
@@ -126,14 +125,18 @@
 				console.log(this.dataObj.teamList[0]);
 				let width = 0
 				if (this.dataObj.teamList[0]) {
-					width = Math.pow((130 + 12) * this.dataObj.teamList[0].teamList.length, 2) + Math.pow((75 + 20) * this
+					console.log(this.dataObj.teamList[0].teamList.length);
+					width = Math.pow(162 * this.dataObj.teamList[0].teamList.length, 2) + Math.pow(95 * this
 						.dataObj.teamList[0].teamList.length, 2)
 				}
 				return Math.sqrt(width) + 'rpx'
+				// return '0rpx'
 			}
 		},
 		onLoad(options) {
 			this.matchId = options.id
+		},
+		onShow() {
 			this.getApplyInfo()
 		},
 		methods: {
@@ -180,36 +183,43 @@
 
 			// 表格数据处理
 			dealTable(matchResult, teamList) {
-				console.log(teamList);
 				teamList.forEach((item, index) => {
 					item.matchList = []
-					console.log(item.teamList);
 					item.teamList.forEach((itemchild, indexchild) => {
 						let obj = {
-							name: itemchild.teamName
+							name: itemchild.teamName,
+							aTeamName: '',
+							bTeamName: '',
+							matchId: '',
+							id: ''
 						}
 						let objList = []
 						let objChildList = []
 						objChildList.push(JSON.parse(JSON.stringify(obj)))
 						if (matchResult && matchResult.length > 0) {
 							matchResult.forEach((filterItem, filterIndex) => {
-								
 								if (itemchild.id == filterItem.ateamId) {
 									obj.name = filterItem.ascore + '-' + filterItem.bscore
+									obj.id = filterItem.id
+									obj.matchId = filterItem.matchId
+									obj.ateamName = filterItem.ateamName
+									obj.bteamName = filterItem.bteamName
 									if(filterItem.ascore  == '-100' || filterItem.bscore == '-100') {
 										obj.name = ''
 									}
 									objChildList.push(JSON.parse(JSON.stringify(obj)))
 								}
-								
 								if (itemchild.id == filterItem.bteamId) {
 									obj.name = filterItem.bscore + '-' + filterItem.ascore
+									obj.id = filterItem.id
+									obj.matchId = filterItem.matchId
+									obj.ateamName = filterItem.ateamName
+									obj.bteamName = filterItem.bteamName
 									if(filterItem.ascore  == '-100' || filterItem.bscore == '-100') {
 										obj.name = ''
 									}
 									objChildList.push(JSON.parse(JSON.stringify(obj)))
 								}
-								
 							})
 						} else {
 							let leng = item.teamList.length - 1
@@ -219,9 +229,6 @@
 								})
 							}
 						}
-						
-						console.log(objChildList);
-						console.log(item.teamList);
 						// if (objChildList.length < item.teamList.length) {
 						// 	objChildList.push(JSON.parse(JSON.stringify({name: ''})))
 						// }
@@ -230,14 +237,12 @@
 							name: ''
 						});
 						objList.push(objChildList)
-						console.log(objList);
 						item.matchList.push(...objList)
 					})
 					let listTeam = [{}]
 					listTeam.push(...item.teamList)
 					item.teamList = listTeam
 				})
-				console.log(this.dataObj);
 				this.dataObj.teamList = teamList
 			},
 
@@ -258,11 +263,17 @@
 			},
 			// 比赛详情
 			toHref(e) {
-				console.log(e);
-				this.$store.commit('SET_SYS_CACHE', e)
-				uni.navigateTo({
-					url: `/package-events/views/group-stage/grouping-details?id=${e.id}&subjectId=${this.subjectId}`
-				})
+				if (this.$utils.isNotBlank(e.id)) {
+					this.$store.commit('SET_SYS_CACHE', e)
+					this.$utils.togo('/package-events/views/group-stage/grouping-details', {
+						id: e.id,
+						subjectId: this.subjectId,
+						matchId: e.matchId
+					})
+					// uni.navigateTo({
+					// 	url: `/package-events/views/group-stage/grouping-details?id=${e.id}&subjectId=${this.subjectId}`
+					// })
+				}
 			},
 
 			change(e) {
@@ -315,7 +326,7 @@
 		align-items: center;
 		justify-content: center;
 		height: 75rpx;
-		width: 130rpx;
+		width: 150rpx;
 		font-size: 30rpx;
 	}
 
@@ -326,7 +337,7 @@
 		height: 1rpx;
 		background-color: rgb(228, 231, 237);
 		transform-origin: left;
-		transform: rotate(31.8deg);
+		transform: rotate(29.8deg);
 	}
 
 	.group-name {

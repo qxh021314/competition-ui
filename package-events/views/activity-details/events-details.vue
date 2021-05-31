@@ -37,50 +37,59 @@
 				</view>
 				<view class="scheme--intro_btn">
 					<view class="scheme--intro_btn_icon" @click="toRegister()">
-						<u-icon name="file-text" size="50"></u-icon>
+						<!-- <u-icon name="file-text" size="50"></u-icon> -->
 						<text class="scheme--intro_btn_text">立即报名</text>
 					</view>
 				</view>
 			</view>
+			
+			<u-cell-group>
+				<u-cell-item icon="tags" title="疫情防控小贴士" @click="toTips()"></u-cell-item>
+			</u-cell-group>
 
 			<u-popup v-model="registeShow" mode="center" width="85%" border-radius="10" :closeable="true">
 				<view class="user-register">
-					<view class="user-register_title">选手绑定</view>
+					<view class="user-register_title">绑定</view>
 					<!-- <view class="user-register_msg">提示</view> -->
-					<view class="user-register_form u-border-bottom">
-						<text class="user-register_form_name">姓名</text>
-						<view class="user-register_form_inp">
-							<u-input v-model="bindForm.userName" type="text" placeholder="请输入姓名" :border="false" />
-						</view>
-					</view>
-					<view class="user-register_form u-border-bottom">
-						<text class="user-register_form_name">身份证</text>
-						<view class="user-register_form_inp">
-							<u-input v-model="bindForm.idCard" type="text" placeholder="请输入身份证" :border="false" />
-						</view>
-					</view>
-
+					<u-form :model="bindForm" ref="uForm" label-width="180" :label-style="labelStyle">
+						<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="姓名" prop="userName">
+							<u-input v-model="bindForm.userName" type="text" placeholder="请输入姓名" />
+						</u-form-item>
+						<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="手机号码" prop="userName">
+							<u-input v-model="bindForm.phoneNo" type="text" placeholder="请输入手机号码" maxlength="11" />
+						</u-form-item>
+						<u-form-item :leftIconStyle="leftIconStyle" label="身份证号码" prop="userName">
+							<u-input v-model="bindForm.idCard" type="text" placeholder="请输入身份证" />
+						</u-form-item>
+					</u-form>
 					<view class="user-register_btn" @click="registerUser()">
 						确定
 					</view>
+
 				</view>
 			</u-popup>
-
 		</view>
+		<user-oauth></user-oauth>
 	</view>
 </template>
 
 <script>
 	import {
 		qMatchById,
-		setMatchAuth
+		setMatchAuth,
+		enabling
 	} from '@/api/competition.js'
 	export default {
 		data() {
 			return {
-				listBanner: [{
-					imgUrl: "https://img.zcool.cn/community/015f52598d716700000021298c562f.jpg@1280w_1l_2o_100sh.jpg"
-				}],
+				labelStyle: {
+					padding: '0'
+				},
+				leftIconStyle: {
+					color: '#ff0000',
+					fontSize: '32rpx'
+				},
+				listBanner: [],
 				paramsId: '',
 				recordObj: {},
 				objList: [{
@@ -109,7 +118,7 @@
 						menuUrl: '/package-events/views/screening/screening'
 					},
 					{
-						name: '选手认证',
+						name: '认证',
 						icon: '/static/approve.png',
 						menuUrl: '',
 						type: 'xxrz'
@@ -119,23 +128,40 @@
 					matchId: '',
 					openId: '',
 					userName: '',
-					idCard: ''
+					idCard: '',
+					phoneNo: ''
 				},
 				registeShow: false,
 				textList: []
 			}
 		},
 		onLoad(options) {
-			this.paramsId = options.id
+			if (options.query) {
+				this.paramsId = options.query.scene
+			}
+			if (options.id) {
+				this.paramsId = options.id
+			}
+			this.setenabling()
 			this.getqMatchById()
 		},
 		methods: {
+
 			getqMatchById() {
 				qMatchById({
 					id: this.paramsId
 				}).then((res) => {
 					this.recordObj = res.record
 					this.textList.push(res.record.matchNotice)
+				})
+			},
+
+			setenabling() {
+				enabling({
+					"openId": this.$userService.getOpenId(),
+					"matchId": this.paramsId
+				}).then((res) => {
+					console.log(res);
 				})
 			},
 
@@ -151,7 +177,12 @@
 
 			},
 
-
+			// 疫情防护小贴士
+			toTips() {
+				uni.navigateTo({
+					url: `/package-events/views/tips/tips`
+				})
+			},
 
 			toRegister() {
 				uni.navigateTo({
@@ -163,7 +194,21 @@
 			registerUser() {
 				this.bindForm.openId = this.$userService.getOpenId()
 				this.bindForm.matchId = this.paramsId
-				this.$utils.verify(this.bindForm, this.bindForm).then((valid) => {
+				let rules = {
+					matchId: '',
+					openId: '',
+					userName: '',
+					phoneNo: ''
+				}
+				if (!this.$utils.isPhone(this.bindForm.phoneNo)) {
+					this.$utils.toast('手机号码有误！')
+					return
+				}
+				if (this.$utils.isNotBlank(this.bindForm.idCard) && !this.$utils.identityCodeValid(this.bindForm.idCard)) {
+					this.$utils.toast('身份证号码有误！')
+					return
+				}
+				this.$utils.verify(this.bindForm, rules).then((valid) => {
 					if (valid) {
 						setMatchAuth(this.bindForm).then((res) => {
 							this.registeShow = false
@@ -308,5 +353,10 @@
 			letter-spacing: 3rpx;
 			border-radius: 20rpx;
 		}
+	}
+
+	.u-cell {
+		// background-color: $global-color !important;
+		// color: #FFFFFF;
 	}
 </style>

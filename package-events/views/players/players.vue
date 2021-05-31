@@ -6,7 +6,8 @@
 		</view>
 
 		<view class="group-tabs">
-			<select-tabs name="groupName" :isCancel="true" v-if="grouplist && grouplist.length > 0" :list="grouplist" @change="changeGroup"></select-tabs>
+			<select-tabs name="groupName" :isCancel="true" v-if="grouplist && grouplist.length > 0" :list="grouplist"
+				@change="changeGroup"></select-tabs>
 		</view>
 
 		<view class="" v-if="recordList && recordList.length > 0">
@@ -18,14 +19,16 @@
 							:key="indexchild">
 							<u-icon v-if="itemchild.sex == 1" :label="itemchild.name" margin-left="30" name="man"
 								:color="titleColor" size="35"></u-icon>
-							<u-icon v-if="itemchild.sex == 0" :label="itemchild.name" margin-left="30" name="woman"
+							<u-icon v-else-if="itemchild.sex == 2" :label="itemchild.name" margin-left="30" name="woman"
 								color="#ff0000" size="35"></u-icon>
+							<u-icon v-else :label="itemchild.name" margin-left="30"
+								size="35"></u-icon>
 						</view>
 					</view>
 				</u-card>
 			</view>
 		</view>
-		
+
 		<view v-else>
 			<u-empty text="数据为空" mode="list"></u-empty>
 

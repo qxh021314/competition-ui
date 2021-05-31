@@ -128,8 +128,9 @@
 				getOpenId({
 					code: code
 				}).then((res) => {
-					console.log(res);
-					this.$store.commit('SET_OPEN_ID', res.openId)
+					 this.$store.dispatch('setOpenId', res.openId);
+					 this.$store.dispatch('setUserToken', res.token)
+					// this.$store.commit('SET_OPEN_ID', res.openId)
 				})
 			}
 		}

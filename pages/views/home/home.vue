@@ -19,19 +19,23 @@
 		<!-- 企业动态 -->
 		<view class="zit-busin">
 			<view class="zit-busin_title">
-				<u-section :line-color="lineColor" :sub-color="lineColor" font-size="33" title="企业动态" sub-title="更多动态" @click="showNewsListPage">
+				<u-section :line-color="lineColor" :sub-color="lineColor" font-size="33" title="企业动态" sub-title="更多动态"
+					@click="showNewsListPage">
 				</u-section>
 			</view>
 			<view class="zit-busin_content">
 				<zit-news-card></zit-news-card>
 			</view>
 		</view>
-		
+
 	</view>
 </template>
 
 <script>
 	import zitNewsCard from '@/components/zit-news-card/index.vue'
+	import {
+		homeBannerInfo
+	} from '@/api/system.js'
 	export default {
 		components: {
 			zitNewsCard
@@ -49,22 +53,21 @@
 					name: '核心产品',
 					url: '/package-events/views/product/index',
 					type: 'hxcp'
-				},  {
+				}, {
 					img: '/static/tycg.png',
 					name: '体育场馆',
-					url: '',
+					url: '/package-events/views/stadium/stadium',
 					type: 'tycg'
-				},  {
+				}, {
 					img: '/static/gdss.png',
 					name: '更多搜索',
 					url: '',
 					type: 'gdss'
 				}],
+				srvUrl: 'data:image/jpeg;base64,',
 				lineColor: this.$utils.themeColor,
-				textList: ['功能正在开发中，敬请期待！'],
-				listBanner: [{
-					imgUrl: "/static/16pic_5797042_b.jpg"
-				}]
+				textList: [],
+				listBanner: []
 			}
 		},
 		onReady() {
@@ -73,11 +76,20 @@
 				backgroundColor: this.$utils.themeColor
 			})
 		},
+		onLoad() {
+			this.getBanner()
+		},
 		methods: {
 			videoErrorCallback: function(e) {
 				uni.showModal({
 					content: e.target.errMsg,
 					showCancel: false
+				})
+			},
+			getBanner() {
+				homeBannerInfo().then((res) => {
+					this.listBanner = res.bannerList
+					this.textList.push(res.notice)
 				})
 			},
 			bannerToDetails() {},
@@ -94,11 +106,9 @@
 	page {
 		// background-color: #FFFFFF;
 	}
-	.home{
-		position: relative;
-	}
+
 	.titleNview-background {
-		position: fixed;
+		position: absolute;
 		// background-image: linear-gradient(to top, #ffffff 0%, $global-color 100%);
 		top: 0;
 		right: 0;
@@ -147,7 +157,8 @@
 			background-color: #FFFFFF;
 			padding: 20rpx 10rpx;
 		}
-		&_content{
+
+		&_content {
 			// background-color: #ffffff;
 		}
 	}

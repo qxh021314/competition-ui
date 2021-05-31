@@ -7,7 +7,7 @@
 		<view class="wd-user_info">
 			<view class="wd-flex">
 				<view class="wd-user_img">
-					<image :src="userInfo.avatarUrl ? userInfo.avatarUrl : '/static/roster.png'" mode=""></image>
+					<image :src="userInfo.avatarUrl ? userInfo.avatarUrl : '/static/wxactaurl.png'" mode=""></image>
 				</view>
 			</view>
 			<view class="wd-user_card">

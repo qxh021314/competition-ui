@@ -63,12 +63,12 @@ const $http = {
 						}, 500)
 					}
 
-					if (res.data.code == 406 && !loginLock) {
+					if (res.data.code == 401 && !loginLock) {
 						loginLock = true
 						$utils.modal('提示', "您还未登录，是否前往登录", true, (result) => {
 							if (result) {
 								uni.navigateTo({
-									url: '/pages/user/phone-login/index'
+									url: '/package-events/views/authorize/authorize'
 								})
 							}
 							loginLock = false
@@ -78,8 +78,6 @@ const $http = {
 					// 异常提示信息
 					if (res.data.code == 0) {
 						resolve(res.data)
-					} else if (res.data.code == 401) {
-						$utils.toast("登录信息已失效!")
 					} else {
 						$utils.toast(res.data.msg)
 					}

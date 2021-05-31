@@ -82,7 +82,7 @@
 
 			view {
 				flex: 0 0 23%;
-				padding: 20rpx 0;
+				padding: 10rpx 0;
 				margin: 1%;
 				text-align: center;
 				border: 1rpx solid #ebebeb;

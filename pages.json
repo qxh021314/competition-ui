@@ -28,7 +28,7 @@
 				"navigationBarTextStyle": "white" // 状态栏字体为白色，只能为 white-白色，black-黑色 二选一
 			}
 		}
-    ],
+	],
 
 	"subPackages": [{
 		"root": "package-events",
@@ -148,44 +148,57 @@
 					"enablePullDownRefresh": false
 				}
 
+			}, {
+				"path": "views/my-activity/my-activity",
+				"style": {
+					"navigationBarTitleText": "我的活动",
+					"enablePullDownRefresh": false
+				}
+
+			}, {
+				"path": "views/group-stage/grouping-details",
+				"style": {
+					"navigationBarTitleText": "比赛详情",
+					"enablePullDownRefresh": false
+				}
+
+			}, {
+				"path": "views/other/other",
+				"style": {
+					"navigationBarTitleText": "关于我们",
+					"enablePullDownRefresh": false
+				}
+
+			}, {
+				"path": "views/screening/screening",
+				"style": {
+					"navigationBarTitleText": "场次",
+					"enablePullDownRefresh": false
+				}
+
+			}, {
+				"path": "views/authorize/authorize",
+				"style": {
+					"navigationBarTitleText": "授权",
+					"enablePullDownRefresh": false
+				}
+
+			}, {
+				"path": "views/tips/tips",
+				"style": {
+					"navigationBarTitleText": "疫情防控小贴士",
+					"enablePullDownRefresh": false
+				}
+
+			}, {
+				"path": "views/stadium/stadium",
+				"style": {
+					"navigationBarTitleText": "体育场馆",
+					"enablePullDownRefresh": false
+				}
+
 			}
-		    ,{
-                    "path" : "views/my-activity/my-activity",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "我的活动",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "views/group-stage/grouping-details",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "比赛详情",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "views/other/other",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "关于我们",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-                ,{
-                    "path" : "views/screening/screening",
-                    "style" :                                                                                    
-                {
-                    "navigationBarTitleText": "场次",
-                    "enablePullDownRefresh": false
-                }
-                
-                }
-            ]
+		]
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

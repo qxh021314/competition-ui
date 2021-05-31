@@ -4,7 +4,10 @@
 		</zit-envents-card>
 		<no-data v-else></no-data>
 		<view class="placeholder"></view>
+		
+		<!-- 授权弹窗 -->
 		<u-loadmore v-if="listData && listData.length > 0" :status="status" :icon-type="iconType" :load-text="contentText" />
+		
 	</view>
 </template>
 
@@ -32,7 +35,12 @@
 			}
 		},
 		onLoad() {
-			this.getqMatchByPage()
+		},
+		onShow() {
+			if (this.listData && this.listData.length == 0) {
+				this.queryParams.pageNum = 1
+				this.getqMatchByPage()
+			}
 		},
 		onReachBottom() {
 			if (this.status == 'loading') {

@@ -15,8 +15,9 @@
 					:label="item.teamRole == '1' ? '队长姓名' : '队员姓名'" prop="name">
 					<u-input input-align="right" v-model="item.name" placeholder="请输入姓名" />
 				</u-form-item>
-				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="身份证" prop="idCard">
-					<u-input input-align="right" v-model="item.idCard" placeholder="请输入身份证号码" @blur="blurIdCard(item)"/>
+				<u-form-item label="身份证" prop="idCard">
+					<u-input input-align="right" v-model="item.idCard" placeholder="请输入身份证号码"
+						@blur="blurIdCard(item)" />
 				</u-form-item>
 				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="性别" prop="sex">
 					<view class="sign-up_sex">
@@ -35,7 +36,7 @@
 					<u-input input-align="right" v-model="item.birthDay" placeholder="请选择日期" type="select"
 						@click="showSelect(indexparent)" />
 				</u-form-item>
-				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="学校单位" prop="schoolUnit">
+				<u-form-item label="学校单位" prop="schoolUnit">
 					<u-input input-align="right" v-model="item.schoolUnit" placeholder="请输入学校单位" />
 				</u-form-item>
 				<u-form-item :required="true" :leftIconStyle="leftIconStyle" label="手机号" prop="phoneNo">
@@ -69,7 +70,6 @@
 
 			<view class="sign-up_btn" @click="insertAppUserCourse()"><text>提交</text></view>
 		</view>
-
 
 		<!-- 授权弹窗 -->
 		<user-oauth></user-oauth>
@@ -164,21 +164,6 @@
 					}],
 					birthDay: [{
 						message: '请输入出生日期'
-					}],
-
-					idCard: [{
-						message: '请输入身份证号码'
-					}, {
-						// 自定义验证函数，见上说明
-						validator: (value) => {
-							// 上面有说，返回true表示校验通过，返回false表示不通过
-							// this.$u.test.mobile()就是返回true或者false的
-							return this.$utils.identityCodeValid(value)
-						},
-						message: '身份证号码不正确'
-					}],
-					schoolUnit: [{
-						message: '请输入学校单位'
 					}]
 				}
 			}
@@ -215,19 +200,21 @@
 				console.log(e);
 				this.form.athleteList[this.birthDayIndex].birthDay = e.year + '-' + e.month + '-' + e.day
 			},
-			
+
 			blurIdCard(e) {
 				if (this.$utils.identityCodeValid(e.idCard)) {
 					e.birthDay = this.$utils.getBirthdayFromIdCard(e.idCard)
 					e.age = parseInt(this.endYear) - parseInt(e.birthDay.substring(0, 4))
+				} else {
+					this.$utils.toast('身份证号码有误')
 				}
 			},
-			
+
 			changeCal(e) {
 				console.log(e);
 				this.form.athleteList[this.birthDayIndex].birthDay = e.result
 			},
-			
+
 			// 进行编辑时获取的数据
 			getMyApplyInfo() {
 				getMyApplyInfo({
@@ -251,6 +238,7 @@
 			},
 			// 保存
 			savePlayers() {
+				this.form.openId = this.$userService.getOpenId()
 				this.$utils.verify(this.form.athleteList, this.rules).then((valid) => {
 					if (valid) {
 						athleteSaveBefore(this.form).then((res) => {
@@ -272,15 +260,20 @@
 			radioChange(e) {},
 			// 立即报名
 			insertAppUserCourse() {
-				this.$utils.verify(this.form.athleteList, this.rules).then((valid) => {
-					if (valid) {
-						athleteSave(this.form).then((res) => {
-							this.$utils.toast('您报名成功！')
-							setTimeout(() => {
-								uni.navigateTo({
-									url: `/package-events/views/activity-details/view-enrollment-options?matchId=${this.form.matchId}`
+				this.form.openId = this.$userService.getOpenId()
+				this.$utils.modal('提示', '确认好相关信息可点击提交!', true, (res) => {
+					if (res) {
+						this.$utils.verify(this.form.athleteList, this.rules).then((valid) => {
+							if (valid) {
+								athleteSave(this.form).then((res) => {
+									this.$utils.toast('您报名成功！')
+									setTimeout(() => {
+										uni.navigateTo({
+											url: `/package-events/views/activity-details/view-enrollment-options?matchId=${this.form.matchId}`
+										})
+									}, 1000)
 								})
-							}, 1000)
+							}
 						})
 					}
 				})

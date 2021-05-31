@@ -113,6 +113,27 @@ function stageListAll(params) {
 	return $http.request(`/match/stage/listAll?subjectId=${params.subjectId}`, 'get', params)
 }
 
+// 查询某一团队当前阶段的对手
+function listMatchTeam(params) {
+	return $http.request(`/match/team/listMatchTeam`, 'get', params)
+}
+
+// 保存比分接口
+function resultSave(params) {
+	return $http.request(`/match/result/save`, 'post', params)
+}
+
+// 扫码认证
+function enabling(params) {
+	return $http.request(`/match/enabling`, 'post', params)
+}
+
+// 疫情防控
+function epidemicTips(params) {
+	return $http.request(`/sys/config/epidemicTips`, 'get', params)
+}
+
+
 export {
 	qMatchByPage,
 	qMatchById,
@@ -136,5 +157,9 @@ export {
 	getEnventsDetail,
 	setMatchAuth,
 	getScene,
-	stageListAll
+	stageListAll,
+	listMatchTeam,
+	resultSave,
+	enabling,
+	epidemicTips
 }

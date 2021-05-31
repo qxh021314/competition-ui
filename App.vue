@@ -1,7 +1,13 @@
 <script>
+	import {refresh} from '@/api/system.js'
 	export default {
 		onLaunch: function() {
-			console.log('App Launch')
+			refresh({
+				openId: this.$userService.getOpenId()
+			}).then((res) => {
+				console.log(res);
+				this.$store.dispatch('setUserToken', res.token)
+			})
 		},
 		onShow: function() {
 			console.log('App Show')
