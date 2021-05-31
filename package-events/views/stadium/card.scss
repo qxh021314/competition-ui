@@ -1,0 +1,42 @@
+.container-stadium {
+  .card-box {
+    padding: 0 30rpx;
+  }
+
+  .card-item {
+    background: #fff;
+    border-radius: 12rpx;
+    margin-top: 40rpx;
+    padding: 20rpx 0;
+    overflow: hidden;
+  }
+
+  .title {
+    font-size: 36rpx;
+    padding: 10rpx 30rpx;
+  }
+
+  .s-title {
+    color: #6d6d72;
+  }
+
+  .px-10 {
+    padding-left: 10rpx;
+    padding-right: 10rpx;
+  }
+
+  .py-15 {
+    padding-top: 15rpx;
+    padding-bottom: 15rpx;
+  }
+
+  .text-bold {
+    font-weight: bold;
+  }
+
+
+  /* overrite */
+  .card-wrap .u-card {
+    border: 1rpx solid #e5e5e5;
+  }
+}

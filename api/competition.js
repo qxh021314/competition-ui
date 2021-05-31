@@ -133,6 +133,10 @@ function epidemicTips(params) {
 	return $http.request(`/sys/config/epidemicTips`, 'get', params)
 }
 
+// 查询场馆信息
+function qVenue(params) {
+	return $http.request(`/match/venue/queryVenue`, 'get', params)
+}
 
 export {
 	qMatchByPage,
@@ -161,5 +165,6 @@ export {
 	listMatchTeam,
 	resultSave,
 	enabling,
-	epidemicTips
+	epidemicTips,
+	qVenue
 }
