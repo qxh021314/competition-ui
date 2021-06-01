@@ -134,49 +134,6 @@ const $http = {
 	 */
 	downloadFile: function(url) {
 
-	},
-	/**
-	 * 统一下单请求
-	 */
-	payOrder: function(orderId) {
-		console.log(orderId);
-		return new Promise(function(resolve, reject) {
-			$http.request('/app/pay/prepay', 'POST', {
-				orderId: orderId,
-				tradeType: 'APP'
-			}).then((res) => {
-				console.log(res);
-				if (res.code === 0) {
-					let appOrderResult = res.appOrderResult;
-					uni.requestPayment({
-						provider: 'wxpay',
-						orderInfo: {
-							"appid": appOrderResult.appId,
-							"noncestr": appOrderResult.nonceStr,
-							"package": appOrderResult.packageValue,
-							"partnerid": appOrderResult.partnerId,
-							"prepayid": appOrderResult.prepayId,
-							"timestamp": appOrderResult.timeStamp,
-							"sign": appOrderResult.sign
-						},
-						success: function(res) {
-							console.log(res)
-							resolve(res);
-						},
-						fail: function(res) {
-							console.log(res)
-							reject(res);
-						},
-						complete: function(res) {
-							console.log(res)
-							reject(res);
-						}
-					});
-				} else {
-					reject(res);
-				}
-			});
-		});
 	}
 }
 

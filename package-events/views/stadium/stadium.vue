@@ -68,12 +68,12 @@ export default {
           ]
         },
         {
-          title: '球馆能效',
+          title: '园区能效',
           list: [
             {icon: 'gjd', name: '市电', value: 0, field: 'utilityPower'},
             {icon: 'gjx', name: '光伏发电', value: 0, field: 'photovoltaicPowerGeneration'},
             {icon: 'gld', name: '碳排放', value: 0, field: 'carbonEmission'},
-            {icon: 'glx', name: '减碳量', value: 0, field: 'emissionReduction'}
+            {icon: 'glx', name: '节约标煤', value: 0, field: 'emissionReduction'}
           ]
         }
       ],
