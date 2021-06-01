@@ -25,9 +25,12 @@
         <view class="title text-bold">球馆位置</view>
         <view class="u-p-t-20">
           <map style="width: 100%; height: 300px;"
+               @markertap="onClickMark"
                :latitude="latitude"
                :longitude="longitude"
                :markers="covers"
+               :enable-buildin="true"
+               :enable-3D="true"
                :min-scale="10"
                :max-scale="18">
           </map>
@@ -48,10 +51,11 @@ import config from '../../../config/index.js'
 const IMG_CDN = config.cdnDomain + '/web/common/static/stadium/'
 import deepClone from "../../../uview-ui/libs/function/deepClone";
 
+const latitude = 31.850421
+const longitude = 117.211915
+
 export default {
   data() {
-    const latitude = 31.850421
-    const longitude = 117.211915
     return {
       cards: [
         {
@@ -91,6 +95,13 @@ export default {
     Card
   },
   methods: {
+    onClickMark(evt) {
+      uni.openLocation({
+        latitude,
+        longitude,
+        name: '目的地'
+      })
+    },
     applyDataField(data) {
       const arr = deepClone(this.cards)
       for (let i = 0; i < arr.length; i++) {
