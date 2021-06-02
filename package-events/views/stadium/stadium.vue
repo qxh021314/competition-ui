@@ -51,8 +51,8 @@ import config from '../../../config/index.js'
 const IMG_CDN = config.cdnDomain + '/web/common/static/stadium/'
 import deepClone from "../../../uview-ui/libs/function/deepClone";
 
-const latitude = 31.850421
-const longitude = 117.211915
+const latitude = 31.843374 // 31.850421
+const longitude = 117.205406 // 117.211915
 
 export default {
   data() {
