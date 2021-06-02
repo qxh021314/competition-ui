@@ -7,7 +7,7 @@
 			</view>5
 			<view slot="foot">
 				<view class="u-flex u-row-around u-m-b-20">
-					<text>{{ albumTotal }}张相册</text>
+					<text>{{ albumTotal }}张照片</text>
 					<text>{{ album.browseCount }}次相册浏览</text>
 				</view>
 				<u-line></u-line>
