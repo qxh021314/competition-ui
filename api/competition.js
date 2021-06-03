@@ -142,6 +142,16 @@ function getDocList(params) {
 	return $http.request(`/match/doc/list?matchId=${params.matchId}`, 'get', params)
 }
 
+// 根据分组查询团队
+function getListTeam(params) {
+	return $http.request(`/match/team/listTeam`, 'get', params)
+}
+
+//  保存排名
+function setRanking(params) {
+	return $http.request(`/match/team/ranking`, 'post', params)
+}
+
 export {
 	qMatchByPage,
 	qMatchById,
@@ -171,5 +181,7 @@ export {
 	enabling,
 	epidemicTips,
 	getDocList,
-	qVenue
+	qVenue,
+	getListTeam,
+	setRanking
 }

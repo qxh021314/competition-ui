@@ -49,7 +49,7 @@
 			// 编辑
 			getMyApplyInfo(e) {
 				uni.navigateTo({
-					url: `/package-events/views/activity-details/events-details?id=${e.matchId}`
+					url: `/package-events/views/activity-details/events-details?id=${e.matchId}&status=${e.status}`
 				})
 			},
 			

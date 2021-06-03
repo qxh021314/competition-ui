@@ -36,7 +36,7 @@
 					{{recordObj.matchApply}}
 				</view>
 				<view class="scheme--intro_btn">
-					<view class="scheme--intro_btn_icon" @click="toRegister()">
+					<view class="scheme--intro_btn_icon"  :style="status !== '1' ? 'background-color: #8a8a8a' : ''" @click="toRegister()">
 						<!-- <u-icon name="file-text" size="50"></u-icon> -->
 						<text class="scheme--intro_btn_text">立即报名</text>
 					</view>
@@ -44,7 +44,8 @@
 			</view>
 
 			<u-cell-group v-if="docList.length > 0">
-				<u-cell-item v-for="(item, index) in docList" :key="index" icon="tags" :title="item.docName" @click="toTips(item)"></u-cell-item>
+				<u-cell-item v-for="(item, index) in docList" :key="index" icon="tags" :title="item.docName"
+					@click="toTips(item)"></u-cell-item>
 			</u-cell-group>
 
 			<u-popup v-model="registeShow" mode="center" width="85%" border-radius="10" :closeable="true">
@@ -80,7 +81,9 @@
 		enabling,
 		getDocList
 	} from '@/api/competition.js'
-	import {previewDocument} from '@/utils/doc.js'
+	import {
+		previewDocument
+	} from '@/utils/doc.js'
 	export default {
 		data() {
 			return {
@@ -120,6 +123,12 @@
 						icon: '/static/approve.png',
 						menuUrl: '',
 						type: 'xxrz'
+					},
+					{
+						name: '我的报名',
+						icon: '/static/bm.png',
+						menuUrl: '/package-events/views/activity-details/view-enrollment-options',
+						type: 'bm'
 					}
 				],
 				bindForm: {
@@ -130,10 +139,14 @@
 					phoneNo: ''
 				},
 				registeShow: false,
+				status: '',
 				textList: []
 			}
 		},
 		onLoad(options) {
+			if (options.status) {
+				this.status = options.status
+			}
 			if (options.query) {
 				this.paramsId = options.query.scene
 			}
@@ -145,7 +158,7 @@
 			this.getDocList()
 		},
 		methods: {
-			
+
 			// 获取文件列表
 			getDocList() {
 				getDocList({
@@ -161,6 +174,7 @@
 				}).then((res) => {
 					this.recordObj = res.record
 					this.textList.push(res.record.matchNotice)
+					this.$store.dispatch('setStaff', res.staff)
 				})
 			},
 
@@ -177,6 +191,10 @@
 
 				if (item.type && item.type == 'xxrz') {
 					this.registeShow = true
+				} else if (item.type && item.type == 'bm') {
+					uni.navigateTo({
+						url: item.menuUrl + `?matchId=${this.paramsId}`
+					})
 				} else {
 					uni.navigateTo({
 						url: item.menuUrl + `?id=${this.paramsId}`
@@ -191,9 +209,14 @@
 			},
 
 			toRegister() {
-				uni.navigateTo({
-					url: `/package-events/views/activity-details/subject?matchId=${this.paramsId}`
-				})
+				if (this.status !== '1') {
+					this.$utils.toast('当前不可报名!')
+				} else {
+					uni.navigateTo({
+						url: `/package-events/views/activity-details/subject?matchId=${this.paramsId}`
+					})
+				}
+
 			},
 
 			// 选手认证
@@ -217,6 +240,7 @@
 				this.$utils.verify(this.bindForm, rules).then((valid) => {
 					if (valid) {
 						setMatchAuth(this.bindForm).then((res) => {
+							this.$utils.toast('认证成功！')
 							this.registeShow = false
 							this.bindForm.idCard = ''
 							this.bindForm.userName = ''

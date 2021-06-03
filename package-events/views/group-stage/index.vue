@@ -18,9 +18,17 @@
 				:show-scrollbar="true">
 				<view class="">
 					<view class="" v-for="(itemparent, indexparent) in dataObj.teamList" :key="indexparent">
-						<view class="group-name">
-							{{itemparent.groupName}}
+						<view class="group-flex_tab">
+							<view class="group-name">
+								{{itemparent.groupName}}
+							</view>
+							<view class="" v-if="getStaff == '1'">
+								<u-button :ripple="true" size="mini"
+									:custom-style="{backgroundColor: $utils.themeColor, color: '#ffffff'}"
+									@click="toRanking(itemparent)">名次</u-button>
+							</view>
 						</view>
+
 
 						<u-table bg-color="#FFFFFF">
 							<u-tr>
@@ -32,12 +40,25 @@
 										{{item.teamName}}
 									</view>
 								</u-th>
+								<u-th>
+									<view class="zit-td" v-if="index == 0">
+										<view class="diagonal" :style="{'width': grpWidth}"></view>
+									</view>
+									<view class="zit-td" v-else>
+										名次
+									</view>
+								</u-th>
 							</u-tr>
 
 							<u-tr v-for="(item, index) in  itemparent.matchList" :key="index">
 								<u-td v-for="(itemchild,indexchild) in item" :key="indexchild">
 									<view class="zit-td" @click="toHref(itemchild)">
-											{{itemchild.name}}
+										{{itemchild.name}}
+									</view>
+								</u-td>
+								<u-td>
+									<view class="zit-td">
+										{{item[0].ranking}}
 									</view>
 								</u-td>
 							</u-tr>
@@ -131,6 +152,9 @@
 				}
 				return Math.sqrt(width) + 'rpx'
 				// return '0rpx'
+			},
+			getStaff() {
+				return this.$store.state.userService.staff
 			}
 		},
 		onLoad(options) {
@@ -140,6 +164,12 @@
 			this.getApplyInfo()
 		},
 		methods: {
+			// 跳转名次
+			toRanking(e) {
+				uni.navigateTo({
+					url: `../ranking/ranking?groupId=${e.groupId}`
+				})
+			},
 			getApplyInfo() {
 				getApplyInfo({
 					matchId: this.matchId
@@ -186,9 +216,11 @@
 				teamList.forEach((item, index) => {
 					item.matchList = []
 					item.teamList.forEach((itemchild, indexchild) => {
+						console.log(itemchild);
 						let obj = {
 							name: itemchild.teamName,
 							aTeamName: '',
+							ranking: itemchild.ranking || "",
 							bTeamName: '',
 							matchId: '',
 							id: ''
@@ -204,7 +236,8 @@
 									obj.matchId = filterItem.matchId
 									obj.ateamName = filterItem.ateamName
 									obj.bteamName = filterItem.bteamName
-									if(filterItem.ascore  == '-100' || filterItem.bscore == '-100') {
+									if (filterItem.ascore == '-100' || filterItem.bscore ==
+										'-100') {
 										obj.name = ''
 									}
 									objChildList.push(JSON.parse(JSON.stringify(obj)))
@@ -215,7 +248,8 @@
 									obj.matchId = filterItem.matchId
 									obj.ateamName = filterItem.ateamName
 									obj.bteamName = filterItem.bteamName
-									if(filterItem.ascore  == '-100' || filterItem.bscore == '-100') {
+									if (filterItem.ascore == '-100' || filterItem.bscore ==
+										'-100') {
 										obj.name = ''
 									}
 									objChildList.push(JSON.parse(JSON.stringify(obj)))
@@ -243,7 +277,9 @@
 					listTeam.push(...item.teamList)
 					item.teamList = listTeam
 				})
+				console.log(teamList);
 				this.dataObj.teamList = teamList
+				
 			},
 
 			// 分组
@@ -263,6 +299,7 @@
 			},
 			// 比赛详情
 			toHref(e) {
+				console.log(e);
 				if (this.$utils.isNotBlank(e.id)) {
 					this.$store.commit('SET_SYS_CACHE', e)
 					this.$utils.togo('/package-events/views/group-stage/grouping-details', {
@@ -387,5 +424,11 @@
 				}
 			}
 		}
+	}
+
+	.group-flex_tab {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 	}
 </style>

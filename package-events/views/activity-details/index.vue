@@ -61,7 +61,7 @@
 			},
 			toDetails(item) {
 				uni.navigateTo({
-					url: `/package-events/views/activity-details/events-details?id=${item.id}`
+					url: `/package-events/views/activity-details/events-details?id=${item.id}&status=${item.status}`
 				})
 			}
 		}

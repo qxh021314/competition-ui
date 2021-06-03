@@ -3,6 +3,7 @@ const userService = {
 	state: {
 		userEncryInfo: {},
 		openId: '',
+		staff: '',
 		sessionKey: '',
 		user_token: ''
 	},
@@ -16,9 +17,17 @@ const userService = {
 		},
 		SET_USER_TOKEN: (state, token) => {
 			state.user_token = token
+		},
+		SET_STAFF: (state, staff) => {
+			state.staff = staff
 		}
 	},
 	actions: {
+		setStaff({
+			commit
+		}, staff) {
+			commit('SET_STAFF', staff)
+		},
 		setOpenId({
 			commit
 		}, openId) {

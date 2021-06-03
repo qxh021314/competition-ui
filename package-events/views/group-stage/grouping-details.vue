@@ -20,10 +20,10 @@
 				</view>
 				<view class="group-card_vs_val group-card_vs_flex" v-else>
 					<u-input class="zit-inp" v-model="item.ascore" placeholder=" " type="number" input-align="center"
-						:border="true" :clearable="false" maxlength="1" />
+						:border="true" :clearable="false" maxlength="2" />
 					<u-line :color="$utils.themeColor" margin="0 20rpx" length="20" />
 					<u-input class="zit-inp" v-model="item.bscore" placeholder=" " type="number" input-align="center"
-						:border="true" :clearable="false" maxlength="1" />
+						:border="true" :clearable="false" maxlength="2" />
 				</view>
 				<view class="group-card_vs_name">
 					<view v-for="(item2, index2) in item.bathleteList" :key="index2">{{item2}}</view>

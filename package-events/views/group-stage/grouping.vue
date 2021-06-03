@@ -31,7 +31,7 @@
 					v-show="itemchild.stageId == paramsObj.stageId && itemchild.arrangeId == paramsObj.arrangeId">
 					<text>{{itemchild.name}}</text>
 					<u-icon name="close-circle" size="40" class="close-circle_tip" color="#ff0000"
-						v-if="teamRole == '1'" @click="deleteCircle(itemchild, indexchild)"></u-icon>
+						v-if="teamRole == '1' && showBtn" @click="deleteCircle(itemchild, indexchild)"></u-icon>
 				</view>
 			</view>
 		</view>
@@ -214,6 +214,7 @@
 				this.paramsObj.stageId = e.id
 				this.paramsObj.stageName = e.stageName
 				this.getArrangeList()
+				this.getListMatchTeam()
 			},
 			// 获取阵容分组
 			getStageListAll() {
@@ -276,6 +277,10 @@
 
 			// 选中某个复选框时，由checkbox时触发
 			changeBox(e) {
+				if (this.teamRole == '1' && this.showBtn && !this.$utils.isNotBlank(this.paramsObj.resultId)) {
+					this.$utils.toast('请先选择对抗队伍!')
+					return
+				}
 				if (this.teamRole == '1') {
 					if (this.pramsList.length > 0) {
 						let count = 0
@@ -315,7 +320,6 @@
 			},
 
 			confirmTeam(e) {
-				console.log(e);
 				this.vsTeamName = e[0].label
 				this.paramsObj.resultId = e[0].value
 				let list = uni.getStorageSync(this.teamId + this.paramsObj.resultId)

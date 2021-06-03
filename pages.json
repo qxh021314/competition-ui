@@ -206,7 +206,16 @@
 				}
 
 			}
-		]
+		    ,{
+                    "path" : "views/ranking/ranking",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "名次",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
 	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
