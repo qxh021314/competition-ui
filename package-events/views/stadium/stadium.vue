@@ -83,8 +83,8 @@ export default {
         {imgUrl: `${IMG_CDN}3.jpeg`}
       ],
       schemeInfo: {
-        title: '负碳场馆解决方案',
-        cover: `${IMG_CDN}1-1.png`
+        title: '智慧园区场景化管控系统解决方案',
+        cover: `${IMG_CDN}0-0.png`
       },
       latitude,
       longitude,
