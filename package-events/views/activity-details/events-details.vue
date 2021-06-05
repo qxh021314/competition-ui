@@ -139,7 +139,7 @@
 					phoneNo: ''
 				},
 				registeShow: false,
-				status: '',
+				status: '0',
 				textList: []
 			}
 		},
@@ -173,6 +173,7 @@
 					id: this.paramsId
 				}).then((res) => {
 					this.recordObj = res.record
+					this.status = res.record.status
 					this.textList.push(res.record.matchNotice)
 					this.$store.dispatch('setStaff', res.staff)
 				})

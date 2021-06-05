@@ -17,7 +17,7 @@
 			</view>
 			<view class="enrollment-card_foot" v-if="item.status">
 				<view class="enrollment-card_foot_status" :style="{backgroundColor: statusBack(item.status)}">
-					{{$utils.getStatus(item.status)}}</view>
+					{{activity ? $utils.getEnventStatus(item.status) : $utils.getStatus(item.status)}}</view>
 				<u-icon v-if="item.status == '0' || item.status == '3'" name="edit-pen-fill" color="#2979ff"
 					label-color="#2979ff" size="34" label="编辑"></u-icon>
 				<view v-if="item.arrangeEdit == '1'" @click.stop="toGroup(item)">
@@ -41,6 +41,10 @@
 				default: function() {
 					return []
 				}
+			},
+			activity: {
+				type: Boolean,
+				default: false
 			}
 		},
 		data() {
@@ -73,6 +77,8 @@
 				if (item.status) {
 					if (item.status == '0' || item.status == '3') {
 						this.$emit('change', item, 'update')
+					} else {
+						this.$emit('change', item)
 					}
 				} else {
 					this.$emit('change', item)

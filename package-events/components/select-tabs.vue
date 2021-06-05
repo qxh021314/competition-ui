@@ -81,8 +81,7 @@
 			flex-wrap: wrap;
 
 			view {
-				flex: 0 0 23%;
-				padding: 10rpx 0;
+				padding: 10rpx 20px;
 				margin: 1%;
 				text-align: center;
 				border: 1rpx solid #ebebeb;

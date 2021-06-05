@@ -41,10 +41,7 @@
 									</view>
 								</u-th>
 								<u-th>
-									<view class="zit-td" v-if="index == 0">
-										<view class="diagonal" :style="{'width': grpWidth}"></view>
-									</view>
-									<view class="zit-td" v-else>
+									<view class="zit-td">
 										名次
 									</view>
 								</u-th>

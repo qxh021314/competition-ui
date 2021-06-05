@@ -14,9 +14,9 @@
 					<view v-for="(item1, index1) in item.aathleteList" :key="index1">{{item1}}</view>
 				</view>
 				<view class="group-card_vs_val group-card_vs_flex" v-if="staff !== '1'">
-					<text>{{item.ascore}}</text>
+					<text>{{item.ascore == null ? '' : item.ascore}}</text>
 					<u-line :color="$utils.themeColor" margin="0 20rpx" length="20" />
-					<text>{{item.bscore}}</text>
+					<text>{{item.bscore == null ? '' : item.bscore}}</text>
 				</view>
 				<view class="group-card_vs_val group-card_vs_flex" v-else>
 					<u-input class="zit-inp" v-model="item.ascore" placeholder=" " type="number" input-align="center"

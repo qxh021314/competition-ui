@@ -1,7 +1,7 @@
 <template>
 	<view>
 		
-		<enrollment v-if="listData && listData.length > 0" :listData="listData" @change="getMyApplyInfo"></enrollment>
+		<enrollment v-if="listData && listData.length > 0" :activity="true" :listData="listData" @change="getMyApplyInfo"></enrollment>
 		<no-data v-else></no-data>
 
 		<view class="placeholder"></view>
