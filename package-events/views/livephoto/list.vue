@@ -10,7 +10,7 @@
             </u-col>
             <u-col span="6" class="card-bd--content">
               <view class="card-bd--title u-line-2">{{ item.albumName }}</view>
-              <view class="card-bd--time u-p-10">{{ item.createTime }}</view>
+              <view class="card-bd--time u-p-10 u-line-1">{{ item.createTime }}</view>
             </u-col>
           </u-row>
         </view>

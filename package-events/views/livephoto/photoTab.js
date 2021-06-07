@@ -243,8 +243,12 @@ export default {
 				this.isShowPopShare = !this.isShowPopShare
 			}
 		},
-		initData() {
+		initData(e) {
+			console.log('photo',e);
 			this.album = this.$store.state.livePhoto.album
+			if (e & e.albumId) {
+				this.album.id = e.albumId
+			}
 			this.fetchPhotos()
 			getLivePhotoBrowse({id: this.album.id}) // 上报浏览量
 		}

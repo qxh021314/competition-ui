@@ -9,9 +9,9 @@
 				<image v-else :src="getOssPicture(data.pictureUrl)" mode="aspectFill"></image>
 			</view>
 			<view class="footer u-flex u-row-between u-p-l-35 u-p-r-35 u-col-center">
-				<view @click="sharePic">
+				<view @click="sharePic" style="display: flex;align-items: center;">
 					<u-icon name="share" size="50"></u-icon>
-					<text class="u-p-l-20 c999 u-font-14">分享</text>
+					<u-button size="mini" plain defaultId="defashare" open-type="share">分享</u-button>
 				</view>
 				<view>
 					<u-button type="primary" @click="showOriginalPic" :disabled="isOriginal">查看高清</u-button>
@@ -38,7 +38,9 @@
 			},
 			data: {
 				type: Object,
-				default: {}
+				default: function() {
+					return {}
+				}
 			}
 		},
 		data() {
@@ -65,15 +67,15 @@
 				setTimeout(uni.hideLoading, 300) // 假loading
 			},
 			sharePic() {
-				uni.share({
-					provider: "weixin",
-					scene: "WXSceneSession",
-					type: 2,
-					imageUrl: this.data.pictureUrl,
-					fail: function(err) {
-						console.error(err);
-					}
-				})
+				// uni.share({
+				// 	provider: "weixin",
+				// 	scene: "WXSceneSession",
+				// 	type: 2,
+				// 	imageUrl: this.data.pictureUrl,
+				// 	fail: function(err) {
+				// 		console.error(err);
+				// 	}
+				// })
 				console.log('分享');
 			},
 			addLike() {

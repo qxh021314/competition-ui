@@ -126,11 +126,15 @@
 
 
 		<!-- popup - 合图 -->
-		<u-popup v-model="showPopPage" mode="right" length="100%" closeable close-icon-color="#eee"
-			close-icon-size="50">
+		<u-popup v-model="showPopPage" mode="right" length="100%" :closeable="true" close-icon-color="#eee"
+			close-icon-size="40">
 			<view class="pop-page">
 				<image :src="mergeImg" mode="widthFix" />
+				<view style="margin-top: 40rpx;">
+					<u-button type="primary" @click="saveAlbum()">下载</u-button>
+				</view>
 			</view>
+	
 		</u-popup>
 		<poster v-if="list.length" :list="list" background-color="#FFF" :width="750" :height="height"
 			@on-success="posterSuccess" ref="poster" />
@@ -142,7 +146,7 @@
 					<view class="u-m-b-20">
 						<u-icon name="grid" size="80" color="#333" />
 					</view>
-					<u-button plain open-type="share">二维码分享</u-button>
+					<u-button plain defaultId="codeshare" open-type="share">二维码分享</u-button>
 				</view>
 
 				<view>
@@ -173,7 +177,6 @@
 
 	// 配置小程序分享
 	// 链接
-	const MPLINK = 'mp://test'
 	// 二维码
 	const MPCODEIMG = 'https://ypjc-resource.c360dn.com/jony/galleryH5/resource/images/shareQr_new.png'
 
@@ -194,6 +197,7 @@
 				isActiveSelect: 0,
 				showPopPage: false,
 				height: 1200,
+				codealbum: '',
 				mergeImg: '', // 合并后的图片 - base64
 				isShowPopShare: false
 			}
@@ -218,11 +222,19 @@
 				if (this.currentTab === 1) this.fetchHotPhotos();
 			},
 			// <-
+			// 保存
+			saveAlbum() {
+				uni.saveImageToPhotosAlbum({
+					filePath: this.mergeImg
+				})
+			},
 
 			posterSuccess(e) {
 				this.showPopPage = true
 				uni.hideLoading()
 				this.mergeImg = e
+
+				console.log('---', e);
 			},
 			changeTab(n) {
 				this.currentTab = n
@@ -234,7 +246,7 @@
 					this.selected = []
 				}
 			},
-			
+
 			/**
 			 * @param {String} url
 			 * @param {Number} wsize 默认宽度
@@ -286,10 +298,10 @@
 				}
 				this.list = list
 			},
-			
+
 			copyShareLink() {
 				uni.setClipboardData({
-					data: MPLINK,
+					data: 'weixin://dl/business/?t=SzDmJlce9Hf',
 					success: () => {
 						this.togglePopShare(false)
 						uni.showToast({
@@ -299,15 +311,23 @@
 				})
 			}
 		},
-		onLoad() {
-			this.initData()
+		onLoad(options) {
+			this.initData(options)
 		},
 
-		onShareAppMessage() {
-			return {
+		onShareAppMessage(res) {
+			let shareObj = {
 				title: '分享二维码',
-				imageUrl: MPCODEIMG
+				path: `package-events/views/livephoto/livephoto?albumId=${this.album.id}`,
+				imageUrl: this.album.imgUrl
 			}
+			console.log(this.likePhotoItem.pictureUrl);
+			if (res.target.id == 'defashare') {
+				shareObj.title = '精彩瞬间'
+				shareObj.imageUrl = this.likePhotoItem.pictureUrl
+			}
+
+			return shareObj
 		}
 	}
 </script>

@@ -1,6 +1,6 @@
 <template>
 	<button
-		id="u-wave-btn"
+		:id="defaultId"
 		class="u-btn u-line-1 u-fix-ios-appearance"
 		:class="[
 			'u-size-' + size,
@@ -85,6 +85,10 @@
 export default {
 	name: 'u-button',
 	props: {
+		defaultId: {
+			type: String,
+			default: 'u-wave-btn'
+		},
 		// 是否细边框
 		hairLine: {
 			type: Boolean,
