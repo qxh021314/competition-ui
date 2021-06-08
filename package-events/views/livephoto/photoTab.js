@@ -137,11 +137,12 @@ export default {
 
 		/**
 		 * @param {Object} item id需不重复
+		 * @param {Array} allList 当前相册所有图片
 		 */
-		onClickPhotoItem(item) {
+		onClickPhotoItem(item, allList) {
 			if (!this.isActiveSelect) {
 				this.showLikePopPage = true
-				this.likePhotoItem = item
+				this.likePhotoItem = {...item, allList}
 				console.log('图片分享 ...')
 				return
 			}
@@ -150,7 +151,20 @@ export default {
 			if (pos !== -1) {
 				this.selected.splice(pos, 1)
 			} else {
-				this.selected.push(`${item.pictureUrl}`)
+				if (this.isActiveSelect === 1) {
+					const max = 9
+					// 拼图最多可选择9张
+					if (this.selected.length < max) {
+						this.selected.push(`${item.pictureUrl}`)
+					} else {
+						uni.showToast({
+							title: `最多可选择${max}张相片`,
+							icon: 'none'
+						})
+					}
+				} else {
+					this.selected.push(`${item.pictureUrl}`)
+				}
 			}
 
 			console.log('选择拼图')

@@ -4,17 +4,19 @@
 			<view class="u-flex u-row-right u-p-40">
 				<u-icon name="close" @click="close" size="50" />
 			</view>
-			<view class="bd">
-				<image v-if="isOriginal" :src="getOssPicture(data.pictureUrl, '', true)" mode="aspectFill"></image>
-				<image v-else :src="getOssPicture(data.pictureUrl)" mode="aspectFill"></image>
+			<view class="bd" @click="previewImg">
+<!--				<image v-if="isOriginal" :src="getOssPicture(data.pictureUrl, '', true)" mode="aspectFill"></image>-->
+				<image :src="getOssPicture(data.pictureUrl)" mode="aspectFill"></image>
 			</view>
 			<view class="footer u-flex u-row-between u-p-l-35 u-p-r-35 u-col-center">
-				<view @click="sharePic" style="display: flex;align-items: center;">
-					<u-icon name="share" size="50"></u-icon>
-					<u-button size="mini" plain defaultId="defashare" open-type="share">分享</u-button>
+				<view style="display: flex;align-items: center;">
+					<u-button size="mini" plain defaultId="defashare" open-type="share">
+            <u-icon name="share" size="50"></u-icon>
+          </u-button>
 				</view>
 				<view>
-					<u-button type="primary" @click="showOriginalPic" :disabled="isOriginal">查看高清</u-button>
+					<u-button type="primary" @click="showOriginalPic">查看高清</u-button>
+<!--					<u-button type="primary" @click="showOriginalPic" :disabled="isOriginal">查看高清</u-button>-->
 				</view>
 				<view @click="addLike" class="w150">
 					<u-icon :name="likeCount ? 'thumb-up-fill' : 'thumb-up'" size="50"></u-icon>
@@ -29,7 +31,7 @@
 	import {
 		getLivePhotoLike
 	} from '@/api/competition.js'
-
+ 
 	export default {
 		props: {
 			show: {
@@ -65,18 +67,7 @@
 				})
 				this.isOriginal = true
 				setTimeout(uni.hideLoading, 300) // 假loading
-			},
-			sharePic() {
-				// uni.share({
-				// 	provider: "weixin",
-				// 	scene: "WXSceneSession",
-				// 	type: 2,
-				// 	imageUrl: this.data.pictureUrl,
-				// 	fail: function(err) {
-				// 		console.error(err);
-				// 	}
-				// })
-				console.log('分享');
+        this.previewImg()
 			},
 			addLike() {
 				this.likeCount++
@@ -87,7 +78,24 @@
 				this.likeCount = 0
 				this.isOriginal = false
 				this.$emit('update:show', false)
-			}
+			},
+      previewImg() {
+        const pictures = this.data.allList.map(item => item.pictureUrl)
+        const pos = pictures.indexOf(this.data.pictureUrl)
+        uni.previewImage({
+          current: pos,
+          urls: pictures,
+          longPressActions: {
+            itemList: ['保存图片', '发送给朋友'],
+            fail: function(err) {
+              console.error(err)
+            }
+          },
+          fail: function (err) {
+            console.error(err)
+          }
+        })
+      }
 		},
 		watch: {
 			show(b) {
@@ -140,3 +148,4 @@
 		}
 	}
 </style>
+

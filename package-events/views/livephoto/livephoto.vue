@@ -23,7 +23,7 @@
 			<view v-if="currentTab === 0" class="u-p-20">
 				<u-row class="photo-item" v-for="(row, index) in photosUI" :key="index">
 					<u-col v-for="(item, indexchild) in row" :key="indexchild" v-if="item" class="photo-item-bd"
-						span="6" @click="onClickPhotoItem(item)">
+						span="6" @click="onClickPhotoItem(item, photos)">
 						<image :src="getOssPicture(item.pictureUrl)" mode="aspectFill" />
 						<view v-if="isActiveSelect" class="photo-item-select">
 							<u-icon v-if="selected.length && (selected.length===photos.length)" name="checkmark">
@@ -37,7 +37,7 @@
 
 			<view v-if="currentTab === 1" class="u-p-20">
 				<u-row class="photo-item hot" v-for="(item, index) in hotPhotos" :key="index">
-					<u-col class="photo-item-bd" @click="onClickPhotoItem(item)">
+					<u-col class="photo-item-bd" @click="onClickPhotoItem(item, hotPhotos)">
 						<image :src="getOssPicture(item.pictureUrl)" mode="aspectFill" />
 					</u-col>
 					<u-col>
@@ -60,7 +60,7 @@
 				<template v-else>
 					<u-row class="photo-item" v-for="(row, index) in myPhotosUI" :key="index">
 						<u-col v-for="(item, indexchild) in row" :key="indexchild" v-if="item" class="photo-item-bd"
-							span="6" @click="onClickPhotoItem(item)">
+							span="6" @click="onClickPhotoItem(item, myPhotos)">
 							<image :src="getOssPicture(item.pictureUrl)" mode="aspectFill" />
 							<view v-if="isActiveSelect" class="photo-item-select">
 								<u-icon v-if="selected.length && (selected.length===photos.length)" name="checkmark">
