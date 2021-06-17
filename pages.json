@@ -215,6 +215,33 @@
                 }
                 
                 }
+                ,{
+                    "path" : "views/wonderful-activity/index",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "精彩活动",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+                ,{
+                    "path" : "views/wonderful-activity/sign-up",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "活动详情",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+                ,{
+                    "path" : "views/wonderful-activity/sign-up-form",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "活动报名",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
             ]
 	}],
 	"globalStyle": {

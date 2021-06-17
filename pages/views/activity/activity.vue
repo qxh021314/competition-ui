@@ -1,10 +1,10 @@
 <template>
 	<view class="activity">
 
-		<view class="activity--card" v-for="index in 1" :key="index" @click="activityDetails()">
-			<view class="activity--card_title">精彩赛事</view>
+		<view class="activity--card" v-for="(item, index) in listCard" :key="index" @click="activityDetails(item.url)">
+			<view class="activity--card_title">{{item.name}}</view>
 			<view class="activity--card_img">
-				<image src="/static/events.png" mode=""></image>
+				<image :src="item.img" mode=""></image>
 			</view>
 		</view>
 	</view>
@@ -14,14 +14,17 @@
 	export default {
 		data() {
 			return {
-
+				listCard: [
+					{name: '精彩赛事', img: '/static/events.png', url: '/package-events/views/activity-details/index'},
+					{name: '精彩活动', img: '/static/hd.png', url: '/package-events/views/wonderful-activity/index'}
+				]
 			}
 		},
 		computed: {},
 		methods: {
-			activityDetails() {
+			activityDetails(url) {
 				uni.navigateTo({
-					url: '/package-events/views/activity-details/index'
+					url: url
 				})
 			}
 		}
@@ -40,7 +43,7 @@
 			justify-content: space-between;
 			align-items: center;
 			margin: 20rpx 0;
-
+			// background-color: rgba($color: $global-color, $alpha: 0.2);
 			&_title {
 				flex: 1;
 				text-align: center;

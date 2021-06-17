@@ -2,7 +2,7 @@
     <view>
         <view class="zit-scheme" v-for="(item, index) in listData" :key="index" @click="toDetails(item)">
             <view class="zit-scheme_img">
-                <image :src="item.mainPic" mode=""></image>
+                <image :src="item[mainImg]" mode=""></image>
             </view>
             <view class="zit-scheme_status" v-if="showStatus">
                 <text>{{$utils.getEnventStatus(item.status)}}</text>
@@ -19,6 +19,10 @@
         name: "zit-scheme-card",
         components: {tyVideo},
         props: {
+			mainImg: {
+				type: String,
+				default: "mainPic"
+			},
             title: {
                 type: Boolean,
                 default: false
